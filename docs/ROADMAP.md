@@ -1,12 +1,12 @@
 # AI Search Optimizer — Roadmap
 
-Status: **Building — foundation/extraction accepted**  
+Status: **Building — Phase 2 useful local Free workflow in progress**  
 Last reviewed: **10 September 2026**
 
 ```text
 Phase 0  product/repository foundation          COMPLETE
 Phase 1  standalone connector extraction       COMPLETE
-Phase 2  useful local Free workflow             NEXT
+Phase 2  useful local Free workflow             IN PROGRESS
 Phase 3  Kairoseth-connected customer UX        BLOCKED by Phase 2
 Phase 4  Custom Request + share + catalog       BLOCKED by shared/platform dependencies
 Phase 5  public distribution / WordPress.org    BLOCKED by prior acceptance
@@ -47,21 +47,50 @@ Phase 1 closes extraction only. It does **not** make the product public-release 
 
 Canonical closure: [`FOUNDATION_CLOSURE.md`](FOUNDATION_CLOSURE.md).
 
-## Phase 2 — useful Free local workflow — next
+## Phase 2 — useful Free local workflow — in progress
 
-Build the standalone value proposition:
+The core Free edition must be useful without a Kairoseth account and must not silently transmit site content to Kairoseth, AI providers or third-party analytics.
 
-1. EN/ES WordPress admin experience;
-2. readiness overview for `robots.txt`, sitemap and `llms.txt`;
-3. eligible public content inventory;
-4. deterministic source-grounded `llms.txt` builder/preview;
-5. validation with actionable findings;
-6. explicit local publication and safe replacement behavior;
-7. local publication verification;
-8. WooCommerce public-content awareness;
-9. Multisite UX and site-local isolation;
-10. uninstall/data-retention controls;
-11. responsive/accessibility where applicable.
+### Phase 2A — local analysis + deterministic preview — current
+
+Implementation scope:
+
+- EN/ES WordPress admin workspace;
+- local readiness overview for WordPress search visibility / `robots.txt`, sitemap and stored `llms.txt` state;
+- eligible published, non-password-protected public WordPress content inventory;
+- WooCommerce public products included automatically when the public `product` post type is present;
+- site-local Multisite awareness;
+- deterministic source-grounded `llms.txt` builder with no generated timestamps;
+- local validator for heading, size, resource presence, duplicate URLs and same-site URL scope;
+- exact SHA-256 of the preview;
+- read-only behavior: no new local mutation/publication action in this slice;
+- CI regression and package-content coverage for the new local modules.
+
+Phase 2A is not accepted until its PR CI, merge and post-merge CI are green.
+
+### Phase 2B — selection + safe local publication
+
+Blocked by Phase 2A acceptance. Add:
+
+- explicit content selection controls;
+- validation before mutation;
+- explicit human publication action;
+- safe replacement / compare-before-write behavior;
+- site-local `llms.txt` publication;
+- independent local public read-back and exact SHA-256 verification;
+- recoverable failure states and actionable diagnostics.
+
+### Phase 2C — Free release hardening
+
+Blocked by Phase 2B acceptance. Complete:
+
+- Multisite UX and site-local isolation acceptance;
+- WooCommerce behavior acceptance where claimed;
+- uninstall/data-retention controls;
+- responsive/accessibility acceptance;
+- install/update/deactivate/uninstall policy and tests;
+- security/privacy disclosure synchronization;
+- representative WordPress/PHP compatibility evidence.
 
 No Kairoseth account is required for these core Free functions.
 
