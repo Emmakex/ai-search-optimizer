@@ -13,7 +13,7 @@ Prepare, validate and publish WordPress content for the AI-search web with secur
 
 AI Search Optimizer is a WordPress-first AI Search and llms.txt optimization extension.
 
-The 0.4.0 release-candidate line provides an account-free local workflow for preparing a site-local llms.txt from public WordPress content.
+The accepted 0.4.0 release-candidate line provides an account-free local workflow for preparing a site-local llms.txt from public WordPress content. Current repository development continues as 0.5.0-dev and adds an optional Kairoseth connection-readiness and guided handoff surface without changing the accepted connector protocol.
 
 Current Free capabilities include:
 
@@ -33,13 +33,15 @@ Current Free capabilities include:
 * No FTP/SFTP, hosting-panel, database or WooCommerce API credentials.
 * No silent transmission of local site content to Kairoseth, AI providers or third-party analytics.
 
-Optional Kairoseth services may provide advanced site analysis, AI Search readiness evidence, curation, history, optional AI assistance and managed publication verification. Cloud functionality does not grant WordPress or Kairoseth roles from browser/model-controlled state.
+The 0.5.0-dev Phase 3 connection-readiness screen is optional. It checks local prerequisites such as HTTPS, WordPress Application Password availability, the dedicated deployer role and the exact site identity. It makes no automatic request to Kairoseth. The handoff opens only after the user chooses it and carries no site identifier, username, Application Password, token or organization data in the URL.
+
+Optional Kairoseth services may provide advanced site analysis, AI Search readiness evidence, curation, history, optional AI assistance and managed publication verification. Kairoseth organization/product authorization remains server-side. Cloud functionality does not grant WordPress or Kairoseth roles from browser, plugin or model-controlled state.
 
 AI Search Optimizer improves preparation and provides evidence. It does not guarantee rankings, indexing, crawling, citations, model ingestion or training inclusion by third-party search/AI providers.
 
 == Installation ==
 
-0.4.0 is the standalone Free release candidate. Until an official GitHub Release or WordPress.org listing exists, install only an accepted package whose SHA-256 is published with the release evidence. This repository does not yet claim public distribution.
+0.4.0 is the accepted standalone Free release candidate. Until an official GitHub Release or WordPress.org listing exists, install only an accepted package whose SHA-256 is published with the release evidence. The repository main branch may contain later development such as 0.5.0-dev and must not be treated as the accepted 0.4.0 package.
 
 == Frequently Asked Questions ==
 
@@ -53,7 +55,11 @@ No. Public WooCommerce products are discovered from the local WordPress site and
 
 = Is a Kairoseth account required? =
 
-No for the local Free workflow. Optional connected features may require authenticated Kairoseth access.
+No for the local Free workflow. The optional Kairoseth handoff opens the authenticated Kairoseth application only when requested. Advanced connected features may require an authorized Kairoseth account/product context.
+
+= Does the connection-readiness page send my site to Kairoseth? =
+
+No. The local readiness page does not call Kairoseth automatically and does not persist Kairoseth tokens or credentials. When you choose to open Kairoseth, the handoff URL contains no site or credential data.
 
 = What happens when I deactivate the plugin? =
 
@@ -64,6 +70,12 @@ Deactivation preserves the stored llms.txt deployment and the uninstall preferen
 Under Tools > AI Search Optimizer Data you can choose whether uninstall preserves or deletes the stored llms.txt deployment. Preserve is the default. Uninstall always removes the plugin setup marker, custom deployer role, administrator capability and the retention preference. Multisite cleanup runs site by site.
 
 == Changelog ==
+
+= 0.5.0-dev =
+* Opened the Phase 3 development line without reusing the accepted 0.4.0 version identity.
+* Added optional EN/ES Kairoseth connection-readiness and guided handoff UX.
+* Added local HTTPS, Application Password, least-privilege role and exact-site identity checks.
+* Preserved the inherited REST schema/namespace and server-authoritative Kairoseth connection model.
 
 = 0.4.0 =
 * First standalone Free release-candidate line based on accepted connector 0.3.2.
