@@ -12,10 +12,9 @@ if ($source === false) {
 
 $required = [
     'Plugin Name: AI Search Optimizer',
-    'Version: 0.4.0',
     'License: MIT',
     'Text Domain: ai-search-optimizer',
-    "const KAIROSETH_AIWR_CONNECTOR_VERSION = '0.4.0';",
+    'const KAIROSETH_AIWR_CONNECTOR_VERSION =',
     "const KAIROSETH_AIWR_SCHEMA_VERSION = '2';",
     "const KAIROSETH_AIWR_CAPABILITY = 'kairoseth_ai_web_readiness_deploy';",
     "const KAIROSETH_AIWR_DEPLOYER_ROLE = 'kairoseth_ai_web_deployer';",
@@ -40,6 +39,14 @@ foreach ($required as $needle) {
     if (strpos($source, $needle) === false) {
         $failures[] = "missing required contract: {$needle}";
     }
+}
+
+if (!preg_match('/^ \* Version:\s*\S+$/m', $source)) {
+    $failures[] = 'plugin Version header is missing or empty';
+}
+
+if (!preg_match("/const KAIROSETH_AIWR_CONNECTOR_VERSION = '[^']+';/", $source)) {
+    $failures[] = 'connector version constant is missing or empty';
 }
 
 $guard = <<<'PHP'
