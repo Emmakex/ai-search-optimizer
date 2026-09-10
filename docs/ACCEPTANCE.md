@@ -1,6 +1,6 @@
 # AI Search Optimizer — Acceptance
 
-Status: **Canonical acceptance definition — Phase 2A/2B/2C1 accepted; Phase 2C2 next; product not released**  
+Status: **Canonical acceptance definition — Phase 2A/2B/2C1/2C2 accepted; Phase 2C3 next; product not released**  
 Last reviewed: **10 September 2026**
 
 ## Engineering inheritance
@@ -149,34 +149,72 @@ final PR head                            e52bacde07bf6569dfb4486d3fda77acc475250
 merge SHA                                ac102413f55e15ce8ae93a0a9e78cb545d7d26e5
 ```
 
-This acceptance validates the code/package contract. Real install/deactivate/reactivate/uninstall execution remains a Phase 2C2 runtime gate.
-
 Canonical policy: [`DATA_RETENTION.md`](DATA_RETENTION.md). Canonical closure: [`PHASE2C1_CLOSURE.md`](PHASE2C1_CLOSURE.md).
 
-## Phase 2C2 — WordPress/PHP runtime compatibility — next
+## Phase 2C2 — WordPress/PHP runtime compatibility — accepted
 
-Phase 2C2 must establish representative real-runtime evidence for the packaged plugin. Required gates include:
+Representative runtime evidence uses the generated ZIP, not the repository source tree.
 
 ```text
-[ ] packaged ZIP installs on representative supported WordPress/PHP combinations
-[ ] activation succeeds without fatal/warning-level product failures
-[ ] administrator receives the expected least-privilege capability
-[ ] local public content can generate a valid deterministic artifact
-[ ] explicit local publication stores the expected SHA-256
-[ ] dynamic public /llms.txt returns the stored content
-[ ] independent verification passes in real WordPress runtime
-[ ] deactivation removes route/setup while preserving deployment data
-[ ] reactivation restores route/setup and preserved deployment becomes available again
-[ ] uninstall preserve mode keeps deployment data but removes plugin-owned security/setup state
-[ ] uninstall delete mode removes deployment data and plugin-owned security/setup state
-[ ] compatibility evidence records exact WordPress/PHP combinations
-[ ] prior contract/2A/2B/2C1 gates remain green
-[ ] PR CI PASS
-[ ] post-merge CI PASS
-[ ] blocking Phase 2C2 defects = 0
+[x] packaged ZIP installs on WordPress 5.6 / PHP 7.4
+[x] packaged ZIP installs on WordPress 6.8 / PHP 8.2
+[x] packaged ZIP installs on WordPress 7.1 / PHP 8.3
+[x] activation succeeds and grants the expected administrator capability/deployer role/setup marker
+[x] real public WordPress content generates a valid deterministic llms.txt artifact
+[x] local publication stores the exact expected SHA-256
+[x] public /llms.txt returns the stored content
+[x] independent public read-back/hash verification passes
+[x] deactivation removes active route/setup while preserving deployment and uninstall preference
+[x] reactivation restores setup and preserved deployment verifies publicly again
+[x] uninstall preserve removes plugin security/setup state while retaining deployment data
+[x] uninstall delete removes deployment data and plugin security/setup state
+[x] runtime harness freezes WordPress core to prevent fixture self-update races
+[x] prior contract/2A/2B/2C1 gates remain green
+[x] CI #19 PASS
+[x] post-merge CI #20 PASS
+[x] blocking Phase 2C2 defects = 0
 ```
 
-Multisite/WooCommerce runtime acceptance and responsive/accessibility remain Phase 2C3 gates.
+Evidence:
+
+```text
+PR #9                                    merged
+CI #18                                   FAIL — historical WordPress fixture self-update race before plugin installation
+CI #18 signature                         b4edb0c72807e8a6dd35cc3285aac513735bf810c442dbfd5f7b1f420b99e640
+final PR head                            7df89ac99642a1a0675d46e5028d734c0aae20e5
+CI #19                                   PASS
+merge SHA                                675f1f3bc9ed2572a94c497f21047c6a8c38a4e0
+post-merge CI #20                        PASS
+```
+
+CI #18 did not expose a plugin defect. The WordPress 5.6 fixture self-updated core files during bootstrap and produced a mixed core tree (`general-template.php` required a missing `wp-includes/php-compat/readonly.php`) before the plugin was installed. The runtime harness now disables core updates before first request; the minimum row and both newer rows pass the same full lifecycle contract.
+
+Canonical matrix: [`RUNTIME_COMPATIBILITY.md`](RUNTIME_COMPATIBILITY.md). Canonical closure: [`PHASE2C2_CLOSURE.md`](PHASE2C2_CLOSURE.md).
+
+## Phase 2C3 — Multisite/WooCommerce + UX hardening — next
+
+Required gates:
+
+```text
+[ ] packaged plugin network-activates on a real Multisite runtime
+[ ] main site and non-main site receive independent setup/deployment state
+[ ] each site's public /llms.txt resolves only its own deployment
+[ ] publishing on one site cannot mutate another site's deployment
+[ ] network deactivation preserves each site's deployment state
+[ ] network uninstall applies each site's preserve/delete preference independently
+[ ] WooCommerce installs/activates on a supported current runtime
+[ ] public published products appear in local inventory
+[ ] draft/private/password-protected products are excluded
+[ ] WooCommerce detection requires no consumer/API keys
+[ ] EN/ES admin copy remains complete for customer actions
+[ ] admin layout remains usable at narrow/mobile-width viewport
+[ ] controls have accessible names/focusable native semantics
+[ ] no horizontal overflow in the primary workflow
+[ ] prior runtime/security/2A/2B/2C1/2C2 gates remain green
+[ ] PR CI PASS
+[ ] post-merge CI PASS
+[ ] blocking Phase 2C3 defects = 0
+```
 
 ## Public Free release acceptance
 
@@ -194,7 +232,7 @@ Before the first public product release:
 [ ] WooCommerce behavior runtime acceptance where claimed
 [x] EN/ES customer UI baseline
 [ ] accessibility/responsive acceptance where UI is affected
-[ ] install/activate/update/deactivate/uninstall policy tested in real runtime
+[x] install/activate/update/deactivate/uninstall policy tested in real runtime
 [x] retained/deleted data documented
 [x] no silent telemetry/content transmission in local Free workflow
 [x] security/privacy disclosure covers current Free lifecycle behavior
@@ -202,7 +240,7 @@ Before the first public product release:
 [ ] changelog/version/tag aligned for release
 [ ] immutable package built for release
 [ ] release package checksum published
-[ ] representative WordPress/PHP compatibility evidence
+[x] representative WordPress/PHP compatibility evidence
 [ ] blocking defects = 0
 ```
 
