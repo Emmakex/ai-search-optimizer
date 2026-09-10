@@ -11,30 +11,35 @@ Prepare, validate and publish WordPress content for the AI-search web with secur
 
 == Description ==
 
-AI Search Optimizer is being developed as a WordPress-first AI Search and llms.txt optimization extension.
+AI Search Optimizer is a WordPress-first AI Search and llms.txt optimization extension.
 
-The 0.4.0 source baseline preserves the least-privilege WordPress publishing connector already validated by Kairoseth on real single-site and Multisite installations. It provides the secure connector foundation while the standalone Free workflow is developed.
+The current 0.4.0 development baseline provides an account-free local workflow for preparing a site-local llms.txt from public WordPress content.
 
-Current foundation capabilities include:
+Current Free capabilities include:
 
-* Site-local llms.txt serving.
-* SHA-256 integrity checking before serving deployed content.
+* Local AI Search readiness checks for robots.txt, sitemap and llms.txt state.
+* Eligible public WordPress content inventory and selection.
+* Public WooCommerce products included when available.
+* Deterministic source-grounded llms.txt generation with no generated timestamps.
+* Validation for structure, size, duplicate URLs and same-site URL scope.
+* Explicit human publication after validation.
+* Compare-before-write protection against stale-page replacement.
+* Site-local llms.txt serving with SHA-256 integrity checks.
+* Independent public read-back with redirects disabled.
+* Exact SHA-256 comparison between generated, stored and public content.
 * Exact WordPress single-site / Multisite identity reporting.
 * Dedicated least-privilege deployment capability and role.
-* Authenticated namespaced REST connection/deployment endpoints.
-* Compare-and-set protection against remote deployment drift.
-* Idempotent same-hash deployment behavior.
-* WooCommerce detection without WooCommerce API keys.
+* Authenticated namespaced REST connection/deployment endpoints retained for Kairoseth compatibility.
+* No FTP/SFTP, hosting-panel, database or WooCommerce API credentials.
+* No silent transmission of local site content to Kairoseth, AI providers or third-party analytics.
 
-The planned Free release will add useful account-free local readiness checks, public-content selection, deterministic llms.txt generation/validation and task-oriented English/Spanish WordPress UI before the plugin is declared publicly available.
-
-Optional Kairoseth services may provide advanced site analysis, AI Search readiness evidence, curation, history, optional AI assistance and managed publication verification. Cloud functionality is not permitted to silently grant roles or transmit provider credentials through the plugin.
+Optional Kairoseth services may provide advanced site analysis, AI Search readiness evidence, curation, history, optional AI assistance and managed publication verification. Cloud functionality does not grant WordPress or Kairoseth roles from browser/model-controlled state.
 
 AI Search Optimizer improves preparation and provides evidence. It does not guarantee rankings, indexing, crawling, citations, model ingestion or training inclusion by third-party search/AI providers.
 
 == Installation ==
 
-0.4.0 is not released yet. Installation instructions will be finalized together with the first accepted package and upgrade/uninstall policy.
+0.4.0 is still unreleased while release hardening is completed. The final install/update package will be published only after compatibility, lifecycle, security/privacy and package acceptance gates pass.
 
 == Frequently Asked Questions ==
 
@@ -44,13 +49,23 @@ No. External providers decide how they crawl, index, retrieve and cite content.
 
 = Does it require WooCommerce API keys? =
 
-No. The inherited WordPress connector contract does not use WooCommerce consumer keys.
+No. Public WooCommerce products are discovered from the local WordPress site and the inherited connector contract does not use WooCommerce consumer keys.
 
 = Is a Kairoseth account required? =
 
-The planned Free local workflow will not require a Kairoseth account. Optional connected features may require authenticated Kairoseth access.
+No for the local Free workflow. Optional connected features may require authenticated Kairoseth access.
+
+= What happens when I deactivate the plugin? =
+
+Deactivation preserves the stored llms.txt deployment and the uninstall preference. The plugin's dynamic public llms.txt route is unavailable while the plugin is inactive.
+
+= What happens when I uninstall the plugin? =
+
+Under Tools > AI Search Optimizer Data you can choose whether uninstall preserves or deletes the stored llms.txt deployment. Preserve is the default. Uninstall always removes the plugin setup marker, custom deployer role, administrator capability and the retention preference. Multisite cleanup runs site by site.
 
 == Changelog ==
 
 = 0.4.0 =
-* Unreleased standalone product foundation based on accepted connector 0.3.2.
+* Unreleased standalone line based on accepted connector 0.3.2.
+* Added account-free local readiness, content selection, deterministic llms.txt generation/validation and safe publication with public SHA-256 verification.
+* Added explicit uninstall data-retention controls and lifecycle cleanup.
