@@ -36,7 +36,7 @@ $expectedTestedWp = '7.1';
 $checks = array(
     array($version === $expectedDevelopmentVersion, "plugin development version expected {$expectedDevelopmentVersion}, received {$version}"),
     array($constantVersion === $version, "connector constant {$constantVersion} does not match plugin version {$version}"),
-    array($stableTag === $acceptedReleaseCandidate, "readme Stable tag must preserve accepted 0.4.0 boundary, received {$stableTag}"),
+    array($stableTag === $version, "readme Stable tag {$stableTag} must match plugin Version {$version} for WordPress.org package correctness"),
     array($readmeRequiresWp === $requiresWp, "readme/plugin WordPress minimum mismatch: {$readmeRequiresWp} vs {$requiresWp}"),
     array($readmeRequiresPhp === $requiresPhp, "readme/plugin PHP minimum mismatch: {$readmeRequiresPhp} vs {$requiresPhp}"),
     array($testedUpTo === $expectedTestedWp, "Tested up to expected {$expectedTestedWp}, received {$testedUpTo}"),

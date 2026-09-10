@@ -4,7 +4,7 @@ Tags: llms.txt, ai seo, ai search, geo, aeo
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.4.0
+Stable tag: 0.5.0-dev
 License: MIT
 License URI: https://opensource.org/license/mit/
 
