@@ -1,6 +1,6 @@
 # AI Search Optimizer — Roadmap
 
-Status: **Building — Phase 2C2 WordPress/PHP runtime compatibility next**  
+Status: **Building — Phase 2C3 Multisite/WooCommerce + UX hardening next**  
 Last reviewed: **10 September 2026**
 
 ```text
@@ -11,8 +11,8 @@ Phase 2  useful local Free workflow             IN PROGRESS
   2B     selection + safe local publication     COMPLETE
   2C     Free release hardening                 IN PROGRESS
     2C1  lifecycle + data retention             COMPLETE
-    2C2  WordPress/PHP runtime compatibility    NEXT
-    2C3  Multisite/WooCommerce + UX hardening   BLOCKED by 2C2
+    2C2  WordPress/PHP runtime compatibility    COMPLETE
+    2C3  Multisite/WooCommerce + UX hardening   NEXT
     2C4  release package + final acceptance     BLOCKED by 2C3
 Phase 3  Kairoseth-connected customer UX        BLOCKED by Phase 2
 Phase 4  Custom Request + share + catalog       BLOCKED by shared/platform dependencies
@@ -153,13 +153,30 @@ blocking Phase 2C1 defects               0
 
 Canonical policy: [`DATA_RETENTION.md`](DATA_RETENTION.md). Canonical closure: [`PHASE2C1_CLOSURE.md`](PHASE2C1_CLOSURE.md).
 
-#### Phase 2C2 — WordPress/PHP runtime compatibility — next
+#### Phase 2C2 — WordPress/PHP runtime compatibility — complete
 
-Build representative real-runtime CI that installs and activates the packaged plugin on supported WordPress/PHP combinations, validates activation/deactivation/reactivation, confirms public `llms.txt` publication/verification, and records the compatibility matrix as evidence rather than relying only on static contract tests.
+Accepted real-runtime matrix installs the generated plugin ZIP and exercises activation, public-content generation, validation, explicit publication, independent public SHA-256 verification, deactivation/reactivation recovery and uninstall preserve/delete behavior.
 
-#### Phase 2C3 — Multisite/WooCommerce + UX hardening
+```text
+WordPress 5.6 / PHP 7.4                  PASS
+WordPress 6.8 / PHP 8.2                  PASS
+WordPress 7.1 / PHP 8.3                  PASS
+PR #9                                    merged
+CI #18                                   FAIL — historical WordPress fixture self-update race
+CI #18 signature                         b4edb0c72807e8a6dd35cc3285aac513735bf810c442dbfd5f7b1f420b99e640
+CI #19                                   PASS
+merge SHA                                675f1f3bc9ed2572a94c497f21047c6a8c38a4e0
+post-merge CI #20                        PASS
+blocking Phase 2C2 defects               0
+```
 
-Blocked by 2C2 acceptance. Complete real Multisite site-isolation, current WooCommerce behavior, responsive layout and accessibility acceptance.
+CI #18 did not reach plugin installation on the failing minimum row: the WordPress 5.6 container self-updated core files during bootstrap and produced a mixed core tree. The runtime harness now freezes core updates before first request; all three matrix rows pass without reducing coverage.
+
+Canonical matrix: [`RUNTIME_COMPATIBILITY.md`](RUNTIME_COMPATIBILITY.md). Canonical closure: [`PHASE2C2_CLOSURE.md`](PHASE2C2_CLOSURE.md).
+
+#### Phase 2C3 — Multisite/WooCommerce + UX hardening — next
+
+Complete real Multisite site-isolation, current WooCommerce behavior, responsive layout and accessibility acceptance. The packaged plugin must prove that each Multisite blog owns independent deployment state and public `llms.txt`, WooCommerce public products are included only when eligible, and the EN/ES admin workflow remains usable at narrow desktop/mobile-width admin layouts.
 
 #### Phase 2C4 — release package + final acceptance
 
