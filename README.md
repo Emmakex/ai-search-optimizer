@@ -4,7 +4,7 @@
 
 [English](#english) · [Español](#español)
 
-Status: **Phase 2 complete — Free 0.4.0 release candidate accepted; not publicly distributed**
+Status: **Release candidate accepted — Phase 2 complete; Free 0.4.0 not publicly distributed**
 
 ```text
 Product: AI Search Optimizer
@@ -54,7 +54,7 @@ Current safeguards include:
 
 Phase 2 acceptance includes real generated-ZIP runtime evidence for WordPress 5.6/PHP 7.4, WordPress 6.8/PHP 8.2 and WordPress 7.1/PHP 8.3, plus Multisite isolation, WooCommerce 11.1.0, real-browser EN/ES acceptance and deterministic release-candidate packaging.
 
-### Accepted release-candidate identity
+### Release candidate identity
 
 ```text
 version            0.4.0
