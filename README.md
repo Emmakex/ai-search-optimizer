@@ -4,7 +4,7 @@
 
 [English](#english) · [Español](#español)
 
-Status: **Release candidate accepted — Phase 2 complete; Free 0.4.0 not publicly distributed**
+Status: **Development 0.5.0-dev — Phase 3 optional Kairoseth connection; accepted Free 0.4.0 RC preserved**
 
 ```text
 Product: AI Search Optimizer
@@ -12,17 +12,18 @@ System: Kairoseth Extensions
 Host: WordPress / WooCommerce
 Repository: Emmakex/ai-search-optimizer
 License: MIT
+Current development line: 0.5.0-dev
 Accepted Free release candidate: 0.4.0
 Accepted predecessor: Kairoseth AI Web Readiness Connector 0.3.2
 ```
 
-This repository owns the independently releasable WordPress plugin. The inherited connector identifiers remain compatible with Kairoseth Platform while the local Free workflow is now technically accepted for a later public-distribution action.
+This repository owns the independently releasable WordPress plugin. The local Free workflow remains useful without Kairoseth, while the current development line adds an optional guided connection to Kairoseth AI Search Optimizer without changing the inherited connector protocol.
 
 ## English
 
-### What the Free plugin does
+### Local Free workflow
 
-The accepted `0.4.0` Free release candidate works locally without requiring a Kairoseth account:
+The accepted Free workflow works locally without requiring a Kairoseth account:
 
 ```text
 inspect WordPress AI-search readiness
@@ -37,24 +38,40 @@ inspect WordPress AI-search readiness
 → verify exact SHA-256
 ```
 
-Current safeguards include:
+Safeguards include dedicated least-privilege WordPress capability/role, exact single-site/Multisite identity, deterministic source-grounded generation, compare-before-write, independent public verification, no arbitrary filesystem writes and no silent transmission of local site content to Kairoseth, AI providers or third-party analytics.
 
-- dedicated least-privilege WordPress capability and deployer role;
-- exact single-site / Multisite identity;
-- site-local `llms.txt` serving;
-- deterministic source-grounded generation with no generated timestamps;
-- validation of structure, size, duplicate URLs and same-site URL scope;
-- compare-before-write protection against stale-page replacement;
-- idempotent same-content publication;
-- independent public read-back with redirects disabled;
-- exact generated/stored/public SHA-256 verification;
-- no FTP/SFTP, hosting-panel, database or WooCommerce API credentials;
-- no arbitrary filesystem writes;
-- no silent transmission of local site content to Kairoseth, AI providers or third-party analytics.
+### Phase 3A — optional Kairoseth connection readiness
 
-Phase 2 acceptance includes real generated-ZIP runtime evidence for WordPress 5.6/PHP 7.4, WordPress 6.8/PHP 8.2 and WordPress 7.1/PHP 8.3, plus Multisite isolation, WooCommerce 11.1.0, real-browser EN/ES acceptance and deterministic release-candidate packaging.
+`0.5.0-dev` adds a dedicated **Tools → AI Search Optimizer · Kairoseth** page. It checks only local prerequisites for the already accepted Kairoseth WordPress connection contract:
 
-### Release candidate identity
+- exact WordPress home/root identity, Blog ID and Network ID;
+- HTTPS on the WordPress home URL;
+- native WordPress Application Password availability;
+- presence of the `Kairoseth AI Web Deployer` role and dedicated deployment capability;
+- exact inherited `/wp-json/kairoseth-ai-web-readiness/v1/connection` endpoint;
+- site-local `llms.txt` target.
+
+The page does **not** call Kairoseth automatically, collect an Application Password, persist Kairoseth tokens or decide whether a cloud connection exists. “Ready to connect” means only that the WordPress-side prerequisites are satisfied.
+
+The explicit handoff opens `https://kairoseth.com/app` only after a user clicks it. No site identifier, username, Application Password, token or organization data is placed in the handoff URL. Kairoseth resolves the authenticated account/organization/product server-side and validates WordPress through the inherited least-privilege REST contract.
+
+### Inherited managed-connection contract
+
+The accepted Kairoseth Platform integration continues to use:
+
+```text
+REST namespace     kairoseth-ai-web-readiness/v1
+GET                /connection
+GET                /deployment
+PUT                /deployment
+site pin            blogId + networkId + exact homeUrl
+safe mutation       expectedCurrentDeployed + expectedCurrentContentHash
+credential storage  encrypted server-side in Kairoseth
+```
+
+The standalone plugin does not introduce a second cloud authentication protocol.
+
+### Accepted 0.4.0 release candidate
 
 ```text
 version            0.4.0
@@ -66,38 +83,25 @@ package entries    11
 package SHA-256    27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c
 ```
 
-See [`docs/PHASE2C4_CLOSURE.md`](docs/PHASE2C4_CLOSURE.md) for the canonical acceptance record.
+The current `0.5.0-dev` source must not be treated as that accepted package. CI produces separate reproducible **development-package** evidence for Phase 3.
+
+See [`docs/PHASE2C4_CLOSURE.md`](docs/PHASE2C4_CLOSURE.md).
 
 ### Data and uninstall behavior
 
-Deactivation preserves the stored `llms.txt` deployment and the uninstall preference.
-
-Before uninstalling, an authorized administrator can choose under **Tools → AI Search Optimizer Data** whether uninstall should:
-
-- **preserve published `llms.txt` data** — the safe default, allowing recovery after reinstall; or
-- **delete published `llms.txt` data** — permanently remove the stored deployment for the current WordPress site.
-
-Uninstall always removes the plugin setup marker, custom deployer role, administrator capability and retention preference. Multisite cleanup is performed site by site. While the plugin is absent, its dynamic public `/llms.txt` route is not available even when stored deployment data was preserved.
+Deactivation preserves the stored `llms.txt` deployment and uninstall preference. Before uninstalling, an authorized administrator can choose under **Tools → AI Search Optimizer Data** whether to preserve published `llms.txt` data (safe default) or delete it. Uninstall always removes plugin setup/security state and performs Multisite cleanup site by site.
 
 See [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md).
 
-### Compatibility boundary
-
-The public product name changed, but the accepted connector protocol identifiers from `0.3.2` remain intentionally compatible in the `0.4.0` line. Existing Kairoseth Platform integrations must not break merely because the WordPress code moved repositories.
-
-See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) and [`docs/PROVENANCE.md`](docs/PROVENANCE.md).
-
 ### Release truth
 
-`0.4.0` is an **accepted release candidate**, not a claimed public release. There is no GitHub Release or WordPress.org listing yet. The target WordPress.org slug is `ai-search-optimizer` until actually approved/reserved.
-
-Public distribution is a separate Phase 5 action with its own tag/release, public-download and WordPress.org gates.
+`0.4.0` is an accepted release candidate, not a claimed public release. `0.5.0-dev` is unreleased development. There is currently no GitHub Release or WordPress.org listing claimed by this repository. `ai-search-optimizer` remains the target WordPress.org slug until actually approved/reserved.
 
 ## Español
 
-### Qué hace el plugin Free
+### Flujo Free local
 
-El release candidate Free `0.4.0` aceptado funciona localmente sin exigir una cuenta Kairoseth:
+El flujo Free aceptado funciona localmente sin exigir una cuenta Kairoseth:
 
 ```text
 analizar preparación AI Search de WordPress
@@ -112,24 +116,38 @@ analizar preparación AI Search de WordPress
 → verificar SHA-256 exacto
 ```
 
-Protecciones actuales:
+Las protecciones incluyen capability/rol WordPress de mínimo privilegio, identidad single-site/Multisite exacta, generación determinista basada en fuentes, compare-before-write, verificación pública independiente, ausencia de escrituras arbitrarias en filesystem y ninguna transmisión silenciosa del contenido local a Kairoseth, proveedores IA o analítica de terceros.
 
-- capability y rol WordPress dedicados de mínimo privilegio;
-- identidad exacta single-site / Multisite;
-- `llms.txt` site-local;
-- generación determinista basada en contenido público y sin timestamps generados;
-- validación de estructura, tamaño, URLs duplicadas y URLs externas al sitio;
-- compare-before-write frente a páginas desactualizadas;
-- publicación idempotente cuando el contenido no cambia;
-- lectura pública independiente sin seguir redirecciones;
-- verificación SHA-256 exacta entre contenido generado, guardado y público;
-- sin FTP/SFTP, panel de hosting, base de datos ni API keys de WooCommerce;
-- sin escrituras arbitrarias de filesystem;
-- sin transmisión silenciosa del contenido local a Kairoseth, proveedores IA o analítica de terceros.
+### Phase 3A — preparación para conexión opcional con Kairoseth
 
-La aceptación de Phase 2 incluye runtime real del ZIP generado en WordPress 5.6/PHP 7.4, WordPress 6.8/PHP 8.2 y WordPress 7.1/PHP 8.3, además de Multisite, WooCommerce 11.1.0, navegador real EN/ES y empaquetado determinista del release candidate.
+`0.5.0-dev` añade la página **Herramientas → AI Search Optimizer · Kairoseth**. Comprueba únicamente prerrequisitos locales del contrato WordPress ya aceptado:
 
-### Identidad del release candidate aceptado
+- raíz WordPress exacta, Blog ID y Network ID;
+- HTTPS en la URL principal;
+- disponibilidad nativa de Application Passwords de WordPress;
+- presencia del rol `Kairoseth AI Web Deployer` y su capability dedicada;
+- endpoint heredado exacto `/wp-json/kairoseth-ai-web-readiness/v1/connection`;
+- destino `llms.txt` site-local.
+
+La pantalla **no** llama automáticamente a Kairoseth, no recoge una Application Password, no guarda tokens Kairoseth y no decide si existe una conexión cloud. “Listo para conectar” solo significa que WordPress cumple los prerrequisitos locales.
+
+El acceso explícito abre `https://kairoseth.com/app` únicamente cuando el usuario pulsa el botón. La URL no transporta identificador del sitio, usuario, Application Password, token ni datos de organización. Kairoseth resuelve cuenta/organización/producto server-side y valida WordPress mediante el contrato REST de mínimo privilegio heredado.
+
+### Contrato de conexión gestionada heredado
+
+```text
+namespace REST      kairoseth-ai-web-readiness/v1
+GET                 /connection
+GET                 /deployment
+PUT                 /deployment
+pin del sitio       blogId + networkId + homeUrl exacta
+mutación segura     expectedCurrentDeployed + expectedCurrentContentHash
+credencial          cifrada server-side en Kairoseth
+```
+
+El plugin standalone no introduce un segundo protocolo de autenticación cloud.
+
+### Release candidate 0.4.0 aceptado
 
 ```text
 versión             0.4.0
@@ -137,36 +155,23 @@ commit fuente       4d68b111d1f796fdc9bfbc3e670eeecc69c09a76
 tree fuente         472e8c5e5bc20ed8f4eed412ab5515561b89ff16
 paquete             ai-search-optimizer-0.4.0.zip
 bytes               21745
-entradas             11
+entradas            11
 SHA-256             27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c
 ```
 
-Consulta [`docs/PHASE2C4_CLOSURE.md`](docs/PHASE2C4_CLOSURE.md) para la evidencia canónica.
+El código actual `0.5.0-dev` no debe confundirse con ese paquete aceptado. CI genera evidencia reproducible separada para paquetes de desarrollo de Phase 3.
+
+Consulta [`docs/PHASE2C4_CLOSURE.md`](docs/PHASE2C4_CLOSURE.md).
 
 ### Datos y desinstalación
 
-Desactivar el plugin conserva el despliegue `llms.txt` guardado y la preferencia de desinstalación.
-
-Antes de desinstalar, un administrador autorizado puede elegir en **Herramientas → Datos de AI Search Optimizer** si la desinstalación debe:
-
-- **conservar los datos publicados de `llms.txt`** — opción segura por defecto para poder recuperarlos al reinstalar; o
-- **eliminar los datos publicados de `llms.txt`** — borrar permanentemente el despliegue guardado del sitio WordPress actual.
-
-La desinstalación siempre elimina el marcador interno de configuración, el rol de despliegue, la capability del administrador y la preferencia de conservación. En Multisite la limpieza se realiza sitio por sitio. Mientras el plugin no esté instalado, su ruta dinámica pública `/llms.txt` no estará disponible aunque se hayan conservado los datos.
+Desactivar conserva el despliegue `llms.txt` y la preferencia de desinstalación. Antes de desinstalar, un administrador autorizado puede elegir en **Herramientas → Datos de AI Search Optimizer** entre conservar los datos publicados (opción segura por defecto) o eliminarlos. La desinstalación siempre limpia el estado de seguridad/configuración del plugin y en Multisite actúa sitio por sitio.
 
 Consulta [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md).
 
-### Compatibilidad
-
-Cambia el nombre público del producto, pero los identificadores técnicos heredados del conector aceptado `0.3.2` se mantienen en la línea `0.4.0` para no romper Kairoseth Platform.
-
-Consulta [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) y [`docs/PROVENANCE.md`](docs/PROVENANCE.md).
-
 ### Estado de release
 
-`0.4.0` es un **release candidate aceptado**, no una release pública afirmada. Todavía no existe GitHub Release ni ficha WordPress.org. `ai-search-optimizer` sigue siendo el slug objetivo hasta su aprobación/reserva real.
-
-La distribución pública es una acción separada de Phase 5 con gates propios de tag/release, descarga pública y WordPress.org.
+`0.4.0` es un release candidate aceptado, no una release pública afirmada. `0.5.0-dev` es desarrollo no publicado. Actualmente este repositorio no afirma disponer de GitHub Release ni ficha WordPress.org. `ai-search-optimizer` sigue siendo el slug objetivo hasta su aprobación/reserva real.
 
 ## Documentation / Documentación
 
@@ -174,6 +179,7 @@ La distribución pública es una acción separada de Phase 5 con gates propios d
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 - [`docs/ROADMAP.md`](docs/ROADMAP.md)
 - [`docs/ACCEPTANCE.md`](docs/ACCEPTANCE.md)
+- [`docs/KAIROSETH_CONNECTION.md`](docs/KAIROSETH_CONNECTION.md)
 - [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md)
 - [`docs/NAMING_SEO.md`](docs/NAMING_SEO.md)
 - [`docs/PROVENANCE.md`](docs/PROVENANCE.md)

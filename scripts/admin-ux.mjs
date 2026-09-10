@@ -17,6 +17,10 @@ const copy = locale === 'es'
       verify: 'Verificar llms.txt público',
       dataHeading: 'AI Search Optimizer — Datos y desinstalación',
       preserve: 'Conservar los datos publicados de llms.txt',
+      connectionHeading: 'Conectar AI Search Optimizer con Kairoseth',
+      connectionPrivacy: 'Esta comprobación no hace ninguna petición a Kairoseth ni envía contenido, credenciales, analítica o estado de conexión. Kairoseth solo se abre cuando eliges el botón de abajo.',
+      openKairoseth: 'Abrir Kairoseth AI Search Optimizer',
+      connectionEndpoint: 'Endpoint de conexión',
     }
   : {
       inventory: 'Eligible public content',
@@ -26,6 +30,10 @@ const copy = locale === 'es'
       verify: 'Verify public llms.txt',
       dataHeading: 'AI Search Optimizer — Data & uninstall',
       preserve: 'Preserve published llms.txt data',
+      connectionHeading: 'Connect AI Search Optimizer to Kairoseth',
+      connectionPrivacy: 'This readiness page makes no request to Kairoseth and sends no site content, credentials, analytics, or connection state. Kairoseth opens only when you choose the button below.',
+      openKairoseth: 'Open Kairoseth AI Search Optimizer',
+      connectionEndpoint: 'Connection endpoint',
     };
 
 function assert(condition, message) {
@@ -102,6 +110,38 @@ try {
       const publishHeight = await publish.evaluate((element) => element.getBoundingClientRect().height);
       assert(publishHeight >= 43, `${locale}/mobile: publish control is below touch target height (${publishHeight})`);
     }
+
+    await page.goto(`${baseUrl}/wp-admin/tools.php?page=ai-search-optimizer-kairoseth`, { waitUntil: 'networkidle' });
+    const connectionRoot = page.locator('.ai-search-optimizer-kairoseth');
+    await connectionRoot.waitFor({ state: 'visible' });
+    assert(await page.getByRole('heading', { name: copy.connectionHeading, exact: true }).isVisible(), `${locale}/${viewport.name}: Kairoseth connection heading missing`);
+    assert(await page.getByText(copy.connectionPrivacy, { exact: true }).isVisible(), `${locale}/${viewport.name}: Kairoseth no-transmission disclosure missing`);
+    assert(await page.getByText(copy.connectionEndpoint, { exact: true }).isVisible(), `${locale}/${viewport.name}: connection endpoint label missing`);
+
+    const handoff = page.getByRole('link', { name: copy.openKairoseth, exact: true });
+    assert(await handoff.isVisible(), `${locale}/${viewport.name}: Kairoseth handoff missing`);
+    assert(await handoff.getAttribute('href') === 'https://kairoseth.com/app', `${locale}/${viewport.name}: Kairoseth handoff URL changed`);
+    assert(await handoff.getAttribute('target') === '_blank', `${locale}/${viewport.name}: Kairoseth handoff must open separately`);
+    const rel = (await handoff.getAttribute('rel')) || '';
+    assert(rel.includes('noopener') && rel.includes('noreferrer'), `${locale}/${viewport.name}: Kairoseth handoff rel protections missing`);
+
+    const endpointCode = connectionRoot.locator('code').filter({ hasText: '/wp-json/kairoseth-ai-web-readiness/v1/connection' });
+    assert(await endpointCode.count() === 1, `${locale}/${viewport.name}: inherited connection endpoint not shown exactly once`);
+
+    const connectionDimensions = await connectionRoot.evaluate((element) => ({
+      clientWidth: element.clientWidth,
+      scrollWidth: element.scrollWidth,
+      left: element.getBoundingClientRect().left,
+      right: element.getBoundingClientRect().right,
+      viewport: document.documentElement.clientWidth,
+    }));
+    assert(connectionDimensions.scrollWidth <= connectionDimensions.clientWidth + 1, `${locale}/${viewport.name}: connection page overflows horizontally`);
+    assert(connectionDimensions.left >= -1 && connectionDimensions.right <= connectionDimensions.viewport + 1, `${locale}/${viewport.name}: connection page escapes viewport bounds`);
+
+    if (viewport.name === 'mobile') {
+      const handoffHeight = await handoff.evaluate((element) => element.getBoundingClientRect().height);
+      assert(handoffHeight >= 43, `${locale}/mobile: Kairoseth handoff is below touch target height (${handoffHeight})`);
+    }
   }
 
   await page.setViewportSize({ width: 390, height: 844 });
@@ -116,7 +156,7 @@ try {
   assert(lifecycleDims.scrollWidth <= lifecycleDims.clientWidth + 1, `${locale}/mobile: lifecycle page overflows horizontally`);
 
   assert(pageErrors.length === 0, `${locale}: browser page errors: ${pageErrors.join(' | ')}`);
-  console.log(`PASS: browser admin UX locale=${locale} desktop=1280x900 mobile=390x844 overflow=contained accessible-controls=present`);
+  console.log(`PASS: browser admin UX locale=${locale} desktop=1280x900 mobile=390x844 overflow=contained accessible-controls=present Kairoseth-readiness=present`);
 } finally {
   await browser.close();
 }
