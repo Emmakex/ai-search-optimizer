@@ -1,12 +1,15 @@
 # AI Search Optimizer — Roadmap
 
-Status: **Building — Phase 2 useful local Free workflow in progress**  
+Status: **Building — Phase 2B safe local publication next**  
 Last reviewed: **10 September 2026**
 
 ```text
 Phase 0  product/repository foundation          COMPLETE
 Phase 1  standalone connector extraction       COMPLETE
 Phase 2  useful local Free workflow             IN PROGRESS
+  2A     local analysis + deterministic preview COMPLETE
+  2B     selection + safe local publication     NEXT
+  2C     Free release hardening                 BLOCKED by 2B
 Phase 3  Kairoseth-connected customer UX        BLOCKED by Phase 2
 Phase 4  Custom Request + share + catalog       BLOCKED by shared/platform dependencies
 Phase 5  public distribution / WordPress.org    BLOCKED by prior acceptance
@@ -43,34 +46,45 @@ repository cleanliness                   PASS
 blocking extraction defects              0
 ```
 
-Phase 1 closes extraction only. It does **not** make the product public-release ready.
-
 Canonical closure: [`FOUNDATION_CLOSURE.md`](FOUNDATION_CLOSURE.md).
 
 ## Phase 2 — useful Free local workflow — in progress
 
 The core Free edition must be useful without a Kairoseth account and must not silently transmit site content to Kairoseth, AI providers or third-party analytics.
 
-### Phase 2A — local analysis + deterministic preview — current
+### Phase 2A — local analysis + deterministic preview — complete
 
-Implementation scope:
+Accepted implementation:
 
-- EN/ES WordPress admin workspace;
+- EN/ES WordPress admin workspace under Tools → AI Search Optimizer;
 - local readiness overview for WordPress search visibility / `robots.txt`, sitemap and stored `llms.txt` state;
 - eligible published, non-password-protected public WordPress content inventory;
-- WooCommerce public products included automatically when the public `product` post type is present;
-- site-local Multisite awareness;
-- deterministic source-grounded `llms.txt` builder with no generated timestamps;
-- local validator for heading, size, resource presence, duplicate URLs and same-site URL scope;
+- WooCommerce public products included automatically when present;
+- current-site Multisite boundary communicated;
+- deterministic source-grounded `llms.txt` builder with stable ordering and no generated timestamps;
+- static-homepage/resource deduplication;
+- validator for heading, size, resource presence, duplicate URLs and same-site URL scope;
 - exact SHA-256 of the preview;
-- read-only behavior: no new local mutation/publication action in this slice;
-- CI regression and package-content coverage for the new local modules.
+- read-only Phase 2A path with no new publication/state mutation;
+- no local content transmission to Kairoseth, AI providers or third-party analytics;
+- package and CI coverage for local modules.
 
-Phase 2A is not accepted until its PR CI, merge and post-merge CI are green.
+Evidence:
 
-### Phase 2B — selection + safe local publication
+```text
+PR #3                                    merged
+PR head                                  828d1f1188aaf282f5b1fcce055fd912021df75b
+PR CI #5                                 PASS
+merge SHA                                61b33412484a20a505726c808ec64bc9dc8953a3
+post-merge CI #6                         PASS
+blocking Phase 2A defects                0
+```
 
-Blocked by Phase 2A acceptance. Add:
+Canonical closure: [`PHASE2A_CLOSURE.md`](PHASE2A_CLOSURE.md).
+
+### Phase 2B — selection + safe local publication — next
+
+Add:
 
 - explicit content selection controls;
 - validation before mutation;
