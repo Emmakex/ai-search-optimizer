@@ -29,7 +29,7 @@ jobs:
         run: bash scripts/ci-run.sh "PHP syntax" bash -c 'find ai-search-optimizer.php uninstall.php includes tests -name "*.php" -type f -print0 | xargs -0 -n1 php -l'
 
       - name: Shell syntax
-        run: bash scripts/ci-run.sh "Shell syntax" bash -n scripts/build-plugin.sh scripts/build-release-candidate.sh scripts/runtime-wordpress.sh scripts/runtime-multisite-woocommerce.sh scripts/runtime-admin-ux.sh
+        run: bash scripts/ci-run.sh "Shell syntax" bash -n scripts/build-plugin.sh scripts/build-release-candidate.sh scripts/build-development-package.sh scripts/runtime-wordpress.sh scripts/runtime-multisite-woocommerce.sh scripts/runtime-admin-ux.sh
 
       - name: Contract and security regression
         run: bash scripts/ci-run.sh "Contract and security regression" php tests/contract-check.php
@@ -46,8 +46,11 @@ jobs:
       - name: Responsive and accessibility regression
         run: bash scripts/ci-run.sh "Responsive and accessibility regression" php tests/ux-hardening-check.php
 
-      - name: Release metadata alignment
-        run: bash scripts/ci-run.sh "Release metadata alignment" php tests/release-metadata-check.php
+      - name: Kairoseth connection readiness regression
+        run: bash scripts/ci-run.sh "Kairoseth connection readiness regression" php tests/kairoseth-connection-readiness-check.php
+
+      - name: Development and release metadata alignment
+        run: bash scripts/ci-run.sh "Development and release metadata alignment" php tests/release-metadata-check.php
 
       - name: Build plugin package
         run: bash scripts/ci-run.sh "Build plugin package" bash scripts/build-plugin.sh
@@ -131,8 +134,8 @@ jobs:
           PHP_VERSION: '8.3'
         run: bash scripts/ci-run.sh "Real browser admin UX EN/ES" bash scripts/runtime-admin-ux.sh
 
-  release_candidate:
-    name: Release candidate package evidence
+  package_evidence:
+    name: Reproducible development package evidence
     needs: [validate, runtime, multisite_woocommerce, admin_ux]
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -141,20 +144,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build reproducible release candidate
-        run: bash scripts/ci-run.sh "Release candidate reproducibility" bash scripts/build-release-candidate.sh
+      - name: Build reproducible development package
+        run: bash scripts/ci-run.sh "Development package reproducibility" bash scripts/build-development-package.sh
 
-      - name: Verify release candidate package contents
-        run: bash scripts/ci-run.sh "Release candidate package contents" bash scripts/check-package.sh
+      - name: Verify development package contents
+        run: bash scripts/ci-run.sh "Development package contents" bash scripts/check-package.sh
 
-      - name: Publish CI release-candidate evidence
+      - name: Publish CI development-package evidence
         uses: actions/upload-artifact@v4
         with:
-          name: ai-search-optimizer-release-candidate-${{ github.sha }}
+          name: ai-search-optimizer-development-package-${{ github.sha }}
           path: |
             dist/ai-search-optimizer-*.zip
             dist/ai-search-optimizer-*.sha256
-            dist/release-manifest.txt
+            dist/development-manifest.txt
           if-no-files-found: error
           retention-days: 30
           compression-level: 0
