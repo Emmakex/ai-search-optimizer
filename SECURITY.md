@@ -1,14 +1,14 @@
 # Security Policy
 
-AI Search Optimizer is a WordPress extension that can publish site-local AI Search artifacts and optionally connect to Kairoseth services. Security-sensitive changes follow least privilege, exact site identity and explicit mutation authority.
+AI Search Optimizer is a local-first WordPress extension that prepares and can publish site-local AI Search artifacts. Optional Kairoseth interaction is limited to explicit support/custom-development navigation and is not required for accepted Free functionality.
 
 ## Supported versions
 
 `0.4.0` is the accepted standalone Free release candidate and remains identified by its accepted source commit/tree/package SHA-256. It is not yet claimed as publicly distributed through GitHub Releases or WordPress.org.
 
-`0.5.0-dev` is the current Phase 3 development line. It is not a release candidate or public release. Development packages must remain reproducible and must not overwrite or redefine the accepted 0.4.0 package identity.
+`0.5.0-dev` is the current development line. It is not a release candidate or public release. Development packages must remain reproducible and must not overwrite or redefine the accepted 0.4.0 package identity.
 
-A new blocking security finding affecting the accepted candidate before public distribution must reopen the relevant acceptance decision. Public-user support begins when an official distribution channel is published.
+A new blocking security finding affecting an accepted candidate before public distribution must reopen the relevant acceptance decision.
 
 ## Reporting a vulnerability
 
@@ -20,31 +20,74 @@ Include only the minimum evidence needed to reproduce the issue. Never post real
 
 - no provider/Kairoseth production secrets in distributed plugin code;
 - no FTP/SFTP, hosting-panel or database credentials required;
-- WooCommerce consumer keys are not required for local Free behavior or the inherited deployment contract;
+- WooCommerce consumer keys are not required for local Free behavior;
 - WordPress publication uses a dedicated capability and least-privilege identity;
 - explicit local publication and retention-setting changes are nonce protected;
-- exact blog/network/home identity is checked before managed mutation;
+- exact blog/network/home identity is checked before inherited managed mutation;
 - content SHA-256 is verified before storage/serving;
 - compare-and-set expected remote state prevents silent overwrite after drift;
 - local public verification performs an independent read-back and does not follow redirects;
-- Kairoseth organization/product authority remains server-side;
-- browser/plugin/model-controlled state cannot grant cloud roles or entitlements;
-- customer-facing remote transmission must be explicit and documented;
+- browser/plugin/model-controlled state cannot grant Kairoseth roles or entitlements;
+- local Free functionality is not gated by a remote license, account, trial or quota;
+- external support/custom interaction is explicit and documented;
 - uninstall performs no outbound network requests and no arbitrary filesystem writes.
 
-## Phase 3 optional Kairoseth connection
+## Optional contextual support/custom development
 
-The Phase 3A connection-readiness surface is deliberately non-authoritative and non-mutating with respect to Kairoseth:
+The WordPress.org-facing model follows the accepted AI Transparency extension pattern.
 
-- it performs no automatic request to Kairoseth;
-- it stores no Kairoseth access token, refresh token, session, entitlement or organization/product role;
-- it does not collect or store a WordPress Application Password;
-- it checks only local prerequisites: HTTPS, native WordPress Application Password availability, the dedicated deployer role/capability and exact WordPress site identity;
-- its external handoff is the fixed `https://kairoseth.com/app` URL with no site, username, credential, token or organization data in query/fragment parameters;
-- “ready” means only that the WordPress-side prerequisites are satisfied; it never asserts that a Kairoseth connection exists;
-- Kairoseth validates WordPress through the inherited authenticated `kairoseth-ai-web-readiness/v1` endpoints and stores the WordPress credential encrypted server-side;
-- the existing exact Blog ID / Network ID / home URL pin and compare-and-set deployment protocol remain unchanged;
-- Kairoseth outage or absence does not disable the accepted local Free workflow.
+**Tools → AI Search Optimizer Support** is local and read-only with respect to AI Search Optimizer state. Loading it performs no Kairoseth request.
+
+Only an explicit administrator action may open:
+
+```text
+https://kairoseth.com/custom-requests
+```
+
+The generated external URL is limited to these keys:
+
+```text
+source
+extensionSlug
+extensionName
+extensionVersion
+hostPlatform
+hostPlatformVersion
+locale
+requestType
+```
+
+Accepted WordPress request types are:
+
+```text
+implementation_support
+business_customization
+```
+
+The plugin does **not** automatically include or transmit:
+
+```text
+site/home URL
+administrator/customer identity
+llms.txt body
+selected resources/content
+AI Search findings
+stored deployment body/hash
+WordPress users
+plugin/theme inventory
+WooCommerce customer/order data
+credentials/API keys/Application Passwords/tokens
+cookies/nonces/session identifiers
+prompts/conversations/logs
+server paths/IP/database contents
+arbitrary WordPress options
+```
+
+If support requires any such information, the user chooses whether to provide it on the external Kairoseth form.
+
+Kairoseth is not a license server, entitlement dependency or feature-unlock requirement for the Free plugin.
+
+The earlier Phase 3A connection-readiness page was an accepted development experiment but is superseded before stable/public release. The inherited `kairoseth-ai-web-readiness/v1` REST contract remains only for backward compatibility unless separately removed through a versioned compatibility decision.
 
 ## Data retention and uninstall
 
@@ -59,6 +102,12 @@ Uninstall always removes the plugin setup marker, retention preference, custom d
 
 See [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md).
 
+## WordPress.org security boundary
+
+WordPress.org policy compliance is blocking before public directory submission. The repository CI must run the official WordPress Plugin Check and preserve the local-first/no-silent-transmission boundary.
+
+See [`docs/WORDPRESS_ORG_POLICY.md`](docs/WORDPRESS_ORG_POLICY.md).
+
 ## Release integrity
 
 The accepted `0.4.0` release-candidate package is identified by:
@@ -69,7 +118,7 @@ source tree        472e8c5e5bc20ed8f4eed412ab5515561b89ff16
 package SHA-256    27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c
 ```
 
-The repository build process normalizes package metadata. Release-candidate acceptance requires a byte-reproducible package with a release manifest; Phase 3 development uses a separate reproducible development manifest/artifact so later code cannot be confused with the accepted 0.4.0 candidate.
+The repository build process normalizes package metadata. Release-candidate acceptance requires a byte-reproducible package with a release manifest; development uses a separate reproducible development manifest/artifact so later code cannot be confused with the accepted 0.4.0 candidate.
 
 See [`docs/PHASE2C4_CLOSURE.md`](docs/PHASE2C4_CLOSURE.md).
 
