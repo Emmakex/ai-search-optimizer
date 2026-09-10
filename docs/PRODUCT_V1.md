@@ -2,7 +2,7 @@
 
 [English](#english) · [Español](#español)
 
-Status: **Incubating / Building — release not accepted yet**  
+Status: **Building — local Free product accepted; WordPress.org-first support/custom path in development**  
 Last reviewed: **10 September 2026**
 
 ## English
@@ -17,52 +17,69 @@ Host: WordPress / WooCommerce
 Repository: Emmakex/ai-search-optimizer
 License: MIT
 Text domain: ai-search-optimizer
-Standalone baseline: 0.4.0 unreleased
+Current development line: 0.5.0-dev
+Accepted Free release candidate: 0.4.0
 ```
 
 ### User problem
 
 WordPress site owners need a practical way to inspect and prepare public content for AI/search/agent consumption without being forced into a cloud account for basic functionality.
 
-### Free v1 promise
+### Free promise
 
-Free must provide useful local functionality before public release:
+The WordPress.org plugin must provide useful functionality on its own:
 
 1. inspect public AI Search readiness signals relevant to the plugin;
 2. detect `robots.txt`, sitemap and `llms.txt` state;
 3. select eligible public WordPress content;
-4. produce a deterministic, source-grounded `llms.txt` preview;
+4. produce deterministic, source-grounded `llms.txt`;
 5. validate the generated artifact;
-6. publish the site-local `llms.txt` under explicit user control;
-7. show actionable status and diagnostics;
-8. support WordPress Multisite correctly;
-9. recognize WooCommerce public content without requiring WooCommerce API keys.
+6. publish the site-local `llms.txt` under explicit administrator control;
+7. independently verify the public result and exact SHA-256;
+8. show actionable status/diagnostics;
+9. support WordPress Multisite correctly;
+10. recognize public WooCommerce content without WooCommerce API keys.
 
-### Optional Kairoseth-connected layer
+No Kairoseth account, paid entitlement, remote license or trial unlock is required for these accepted local features.
 
-A connected Kairoseth Platform workflow may add advanced whole-site analysis, Importance / AI Readiness evidence, source-grounded curation, immutable revisions, history/diff, optional provider-neutral AI assistance, managed publication orchestration and independent public hash verification.
+### Optional Kairoseth path
 
-The plugin never grants Kairoseth organization roles or entitlements. Those remain server-authoritative.
-
-### Commercial boundary
+The plugin may offer contextual links for:
 
 ```text
-Free    useful WordPress-local AI Search + llms.txt workflow
-Pro     deferred until repeated reusable demand justifies it
-Custom  contextual Kairoseth Custom Request for bespoke work
+Get optimization support
+Request a custom improvement / custom development
 ```
 
-Custom must use the shared Kairoseth Custom Requests path before the product is marked Available in the Kairoseth Extensions catalog.
+Those links are not part of the Free feature entitlement. Loading the WordPress support page performs no external request. Only an explicit administrator CTA opens `https://kairoseth.com/custom-requests` with a strict non-sensitive context allow-list.
+
+The user decides what contact, business or technical information to submit after arriving on Kairoseth.
+
+### Product boundary
+
+```text
+Free     complete useful WordPress-local AI Search + llms.txt workflow
+CTA      optional contextual support
+Custom   optional development / integration / automation work
+```
+
+A separate paid local feature tier is deferred. The WordPress.org plugin must never use trial expiry, quota or paid feature locks for functionality shipped locally in the directory package.
+
+### Privacy baseline
+
+The Free workflow processes public WordPress content and local WordPress state. No telemetry or remote transmission is assumed by default.
+
+The contextual support link must never automatically attach site URL, administrator identity, `llms.txt` body, selected resources, findings, plugin/theme inventory, WooCommerce customer/order data, credentials, prompts, conversations, logs or database contents.
 
 ### Claims boundary
 
-Allowed: readiness, source-grounded optimization, deterministic artifacts, publication and verification.
+Allowed: technical readiness, source-grounded optimization, deterministic artifacts, explicit publication and verification.
 
-Not allowed: guaranteed ranking, citation, indexing, crawling, model ingestion, training inclusion or provider endorsement. GEO/AEO/LLMO/AI SEO may be used as market/search terms only without guaranteed-outcome claims.
+Not allowed: guaranteed ranking, citation, indexing, crawling, model ingestion, training inclusion or provider endorsement. GEO/AEO/LLMO/AI SEO may be used only as descriptive/search terminology without guaranteed-outcome claims.
 
-### Data and privacy baseline
+### WordPress.org boundary
 
-The local Free workflow should operate on public WordPress content and local WordPress state. No telemetry or remote transmission is assumed by default. Any Kairoseth-connected feature must be explicit, documented and limited to the data needed for the requested operation. Provider credentials must never be embedded in the distributed plugin.
+WordPress.org compatibility is a blocking product requirement, not a final packaging afterthought. See [`WORDPRESS_ORG_POLICY.md`](WORDPRESS_ORG_POLICY.md).
 
 ## Español
 
@@ -76,25 +93,41 @@ Host: WordPress / WooCommerce
 Repositorio: Emmakex/ai-search-optimizer
 Licencia: MIT
 Text domain: ai-search-optimizer
-Baseline standalone: 0.4.0 sin publicar
+Línea de desarrollo: 0.5.0-dev
+Release candidate Free aceptada: 0.4.0
 ```
 
-### Promesa Free v1
+### Promesa Free
 
-La versión Free debe aportar valor local real antes de publicarse: inspeccionar señales de preparación AI Search, detectar `robots.txt`/sitemap/`llms.txt`, seleccionar contenido público, generar y validar `llms.txt` determinista, publicarlo con control explícito, mostrar diagnósticos accionables, soportar Multisite y reconocer contenido WooCommerce sin API keys WooCommerce.
+El plugin para WordPress.org debe aportar valor completo por sí mismo: analizar señales AI Search, detectar `robots.txt`/sitemap/`llms.txt`, seleccionar contenido público, generar y validar `llms.txt` determinista, publicar bajo control explícito, verificar públicamente SHA-256, mostrar diagnósticos, soportar Multisite y reconocer contenido WooCommerce público sin API keys.
 
-### Capa Kairoseth opcional
+Ninguna de esas funciones requiere cuenta Kairoseth, entitlement de pago, licencia remota ni desbloqueo trial.
 
-La conexión con Kairoseth Platform podrá añadir análisis global, Importance / AI Readiness, curación basada en fuentes, revisiones/historial, asistencia IA provider-neutral opcional, publicación gestionada y verificación pública independiente.
+### Ruta Kairoseth opcional
 
-El plugin nunca concede roles ni entitlements de organización Kairoseth; son server-authoritative.
-
-### Modelo comercial
+El plugin puede ofrecer CTAs contextuales para:
 
 ```text
-Free    workflow local útil de AI Search + llms.txt
-Pro     diferido hasta que exista demanda reutilizable repetida
-Custom  Kairoseth Custom Request contextual
+Obtener soporte de optimización
+Solicitar una mejora / desarrollo a medida
 ```
 
-No se permiten garantías de ranking, citación, indexación, crawling, ingestión o entrenamiento por terceros.
+Cargar la página de soporte no contacta Kairoseth. Solo un clic explícito del administrador abre `https://kairoseth.com/custom-requests` con contexto técnico no sensible allow-listed. El usuario decide después qué información enviar.
+
+### Modelo del producto
+
+```text
+Free     workflow local completo AI Search + llms.txt
+CTA      soporte contextual opcional
+Custom   desarrollo / integración / automatización opcionales
+```
+
+No se introduce un tier local de pago por ahora. El plugin de WordPress.org no usará expiración trial, cuotas ni bloqueos de funciones locales incluidas en el paquete.
+
+### Privacidad
+
+No se transmite automáticamente URL del sitio, identidad del administrador, contenido `llms.txt`, recursos seleccionados, hallazgos, inventario plugins/temas, datos de clientes/pedidos WooCommerce, credenciales, prompts, conversaciones, logs ni base de datos.
+
+### WordPress.org
+
+La compatibilidad con WordPress.org es un requisito bloqueante desde desarrollo. Consulta [`WORDPRESS_ORG_POLICY.md`](WORDPRESS_ORG_POLICY.md).
