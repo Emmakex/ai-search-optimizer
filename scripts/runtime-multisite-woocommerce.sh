@@ -135,7 +135,8 @@ ACTUAL_PHP="$(docker exec "$WP_CONTAINER" php -r 'echo PHP_MAJOR_VERSION.".".PHP
 wp option update permalink_structure '/%postname%/' >/dev/null
 wp core multisite-convert --title='AI Search Optimizer Network' >/dev/null
 wp rewrite flush --hard >/dev/null
-wp plugin install /tmp/ai-search-optimizer.zip --activate-network >/dev/null
+wp plugin install /tmp/ai-search-optimizer.zip >/dev/null
+wp plugin activate ai-search-optimizer --network >/dev/null
 
 assert_site_eval "$MAIN_URL" '
 if (!is_multisite() || get_current_blog_id() !== 1) { fwrite(STDERR, "Main Multisite identity invalid.\n"); exit(1); }
@@ -178,15 +179,85 @@ for id in "$MAIN_PAGE" "$PUBLIC_PRODUCT" "$DRAFT_PRODUCT" "$PRIVATE_PRODUCT" "$P
   [[ "$id" =~ ^[0-9]+$ ]] || { echo "Runtime content creation failed: $id" >&2; exit 1; }
 done
 
-assert_site_eval "$SITE2_URL" '
-$inventory = kairoseth_aiwr_local_inventory(100);
-$ids = array_map(function ($item) { return isset($item["id"]) ? (int) $item["id"] : 0; }, $inventory);
-$public = (int) getenv("AISO_PUBLIC_PRODUCT_ID");
-$draft = (int) getenv("AISO_DRAFT_PRODUCT_ID");
-$private = (int) getenv("AISO_PRIVATE_PRODUCT_ID");
-$password = (int) getenv("AISO_PASSWORD_PRODUCT_ID");
-if (!in_array($public, $ids, true)) { fwrite(STDERR, "Published WooCommerce product missing from inventory.\n"); exit(1); }
-foreach (array($draft, $private, $password) as $blocked) {
-    if (in_array($blocked, $ids, true)) { fwrite(STDERR, "Non-public WooCommerce product leaked into inventory.\n"); exit(1); }
+PRODUCT_ASSERTION="
+\$inventory = kairoseth_aiwr_local_inventory(100);
+\$ids = array_map(function (\$item) { return isset(\$item['id']) ? (int) \$item['id'] : 0; }, \$inventory);
+if (!in_array($PUBLIC_PRODUCT, \$ids, true)) { fwrite(STDERR, 'Published WooCommerce product missing from inventory.\\n'); exit(1); }
+foreach (array($DRAFT_PRODUCT, $PRIVATE_PRODUCT, $PASSWORD_PRODUCT) as \$blocked) {
+    if (in_array(\$blocked, \$ids, true)) { fwrite(STDERR, 'Non-public WooCommerce product leaked into inventory.\\n'); exit(1); }
+}
+"
+assert_site_eval "$SITE2_URL" "$PRODUCT_ASSERTION" >/dev/null
+
+assert_site_eval "$MAIN_URL" '
+foreach (kairoseth_aiwr_local_inventory(100) as $item) {
+    if (isset($item["url"]) && strpos((string) $item["url"], "/shop/") !== false) {
+        fwrite(STDERR, "Subsite content leaked into main-site inventory.\n");
+        exit(1);
+    }
 }
 ' >/dev/null
+
+MAIN_HASH="$(publish_site "$MAIN_URL")"
+[[ "$MAIN_HASH" =~ ^[a-f0-9]{64}$ ]] || { echo "Invalid main-site publication hash: $MAIN_HASH" >&2; exit 1; }
+MAIN_HASH_BEFORE_SUB="$(wp --url="$MAIN_URL" eval '$d=get_option(KAIROSETH_AIWR_DEPLOYMENT_OPTION,null); echo is_array($d)&&isset($d["contentHash"])?$d["contentHash"]:"";')"
+SUB_HASH="$(publish_site "$SITE2_URL")"
+[[ "$SUB_HASH" =~ ^[a-f0-9]{64}$ ]] || { echo "Invalid subsite publication hash: $SUB_HASH" >&2; exit 1; }
+[[ "$MAIN_HASH" != "$SUB_HASH" ]] || { echo "Main/subsite deployments unexpectedly have identical hashes." >&2; exit 1; }
+MAIN_HASH_AFTER_SUB="$(wp --url="$MAIN_URL" eval '$d=get_option(KAIROSETH_AIWR_DEPLOYMENT_OPTION,null); echo is_array($d)&&isset($d["contentHash"])?$d["contentHash"]:"";')"
+[[ "$MAIN_HASH_BEFORE_SUB" == "$MAIN_HASH_AFTER_SUB" && "$MAIN_HASH_AFTER_SUB" == "$MAIN_HASH" ]] || { echo "Subsite publication mutated main-site deployment." >&2; exit 1; }
+
+SUB_STORED_HASH="$(wp --url="$SITE2_URL" eval '$d=get_option(KAIROSETH_AIWR_DEPLOYMENT_OPTION,null); echo is_array($d)&&isset($d["contentHash"])?$d["contentHash"]:"";')"
+[[ "$SUB_STORED_HASH" == "$SUB_HASH" ]] || { echo "Subsite stored deployment hash mismatch." >&2; exit 1; }
+
+HOST_PORT="$(docker port "$WP_CONTAINER" 80/tcp | head -n1 | awk -F: '{print $NF}')"
+[[ -n "$HOST_PORT" ]] || { echo "Could not resolve WordPress host port." >&2; exit 1; }
+MAIN_PUBLIC_HASH="$(curl -fsS -H "Host: $WP_CONTAINER" "http://127.0.0.1:${HOST_PORT}/llms.txt" | sha256sum | awk '{print $1}')"
+SUB_PUBLIC_HASH="$(curl -fsS -H "Host: $WP_CONTAINER" "http://127.0.0.1:${HOST_PORT}/shop/llms.txt" | sha256sum | awk '{print $1}')"
+[[ "$MAIN_PUBLIC_HASH" == "$MAIN_HASH" ]] || { echo "Main public hash mismatch." >&2; exit 1; }
+[[ "$SUB_PUBLIC_HASH" == "$SUB_HASH" ]] || { echo "Subsite public hash mismatch." >&2; exit 1; }
+
+wp plugin deactivate ai-search-optimizer --network >/dev/null
+assert_site_eval "$MAIN_URL" '
+$d=get_option("kairoseth_ai_web_readiness_deployment",null);
+if (!is_array($d) || empty($d["contentHash"])) { fwrite(STDERR,"Main deployment lost on network deactivation.\n"); exit(1); }
+if (get_option("kairoseth_ai_web_readiness_setup_version",null)!==null) { fwrite(STDERR,"Main setup marker survived network deactivation.\n"); exit(1); }
+' >/dev/null
+assert_site_eval "$SITE2_URL" '
+$d=get_option("kairoseth_ai_web_readiness_deployment",null);
+if (!is_array($d) || empty($d["contentHash"])) { fwrite(STDERR,"Subsite deployment lost on network deactivation.\n"); exit(1); }
+if (get_option("kairoseth_ai_web_readiness_setup_version",null)!==null) { fwrite(STDERR,"Subsite setup marker survived network deactivation.\n"); exit(1); }
+' >/dev/null
+
+wp plugin activate ai-search-optimizer --network >/dev/null
+assert_site_eval "$MAIN_URL" '
+$v=kairoseth_aiwr_local_verify_current_publication();
+if (empty($v["verified"])) { fwrite(STDERR,"Main deployment did not recover after network reactivation.\n"); exit(1); }
+' >/dev/null
+assert_site_eval "$SITE2_URL" '
+$v=kairoseth_aiwr_local_verify_current_publication();
+if (empty($v["verified"])) { fwrite(STDERR,"Subsite deployment did not recover after network reactivation.\n"); exit(1); }
+' >/dev/null
+
+wp --url="$MAIN_URL" option update kairoseth_ai_web_readiness_uninstall_mode preserve >/dev/null
+wp --url="$SITE2_URL" option update kairoseth_ai_web_readiness_uninstall_mode delete >/dev/null
+wp plugin deactivate ai-search-optimizer --network >/dev/null
+wp eval 'define("WP_UNINSTALL_PLUGIN", "ai-search-optimizer/ai-search-optimizer.php"); include WP_PLUGIN_DIR . "/ai-search-optimizer/uninstall.php";' >/dev/null
+
+assert_site_eval "$MAIN_URL" '
+$d=get_option("kairoseth_ai_web_readiness_deployment",null);
+if (!is_array($d) || empty($d["contentHash"])) { fwrite(STDERR,"Main preserve policy removed deployment during network uninstall.\n"); exit(1); }
+if (get_option("kairoseth_ai_web_readiness_uninstall_mode",null)!==null || get_option("kairoseth_ai_web_readiness_setup_version",null)!==null) { fwrite(STDERR,"Main plugin metadata survived uninstall.\n"); exit(1); }
+$admin=get_role("administrator");
+if ($admin && $admin->has_cap("kairoseth_ai_web_readiness_deploy")) { fwrite(STDERR,"Main administrator capability survived uninstall.\n"); exit(1); }
+if (get_role("kairoseth_ai_web_deployer")) { fwrite(STDERR,"Main deployer role survived uninstall.\n"); exit(1); }
+' >/dev/null
+assert_site_eval "$SITE2_URL" '
+if (get_option("kairoseth_ai_web_readiness_deployment",null)!==null) { fwrite(STDERR,"Subsite delete policy preserved deployment during network uninstall.\n"); exit(1); }
+if (get_option("kairoseth_ai_web_readiness_uninstall_mode",null)!==null || get_option("kairoseth_ai_web_readiness_setup_version",null)!==null) { fwrite(STDERR,"Subsite plugin metadata survived uninstall.\n"); exit(1); }
+$admin=get_role("administrator");
+if ($admin && $admin->has_cap("kairoseth_ai_web_readiness_deploy")) { fwrite(STDERR,"Subsite administrator capability survived uninstall.\n"); exit(1); }
+if (get_role("kairoseth_ai_web_deployer")) { fwrite(STDERR,"Subsite deployer role survived uninstall.\n"); exit(1); }
+' >/dev/null
+
+echo "PASS: Multisite isolation + WooCommerce $ACTUAL_WOO on WordPress $ACTUAL_WP / PHP $ACTUAL_PHP main_hash=$MAIN_HASH sub_hash=$SUB_HASH lifecycle=network-activate/new-site/deactivate/reactivate/uninstall-per-site"
