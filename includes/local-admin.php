@@ -237,18 +237,20 @@ function kairoseth_aiwr_local_finding_text($finding) {
 }
 
 function kairoseth_aiwr_local_selected_keys($inventory, $action) {
-    if ($action !== '' && isset($_POST['aiso_selection_present'])) {
-        $posted = isset($_POST['aiso_selected']) && is_array($_POST['aiso_selected'])
-            ? wp_unslash($_POST['aiso_selected'])
-            : array();
-        $keys = array();
-        foreach ($posted as $key) {
-            $key = is_string($key) ? sanitize_text_field($key) : '';
-            if ($key !== '') {
-                $keys[] = $key;
+    if ($action !== '') {
+        $nonce = isset($_POST['aiso_nonce']) ? sanitize_text_field(wp_unslash($_POST['aiso_nonce'])) : '';
+        if ($nonce !== '' && wp_verify_nonce($nonce, 'aiso_local_workflow') && isset($_POST['aiso_selection_present'])) {
+            $posted = isset($_POST['aiso_selected']) && is_array($_POST['aiso_selected'])
+                ? array_map('sanitize_text_field', wp_unslash($_POST['aiso_selected']))
+                : array();
+            $keys = array();
+            foreach ($posted as $key) {
+                if (is_string($key) && $key !== '') {
+                    $keys[] = $key;
+                }
             }
+            return $keys;
         }
-        return $keys;
     }
 
     $keys = array();
@@ -262,13 +264,25 @@ function kairoseth_aiwr_local_selected_keys($inventory, $action) {
 }
 
 function kairoseth_aiwr_local_request_action() {
-    if (!isset($_SERVER['REQUEST_METHOD']) || strtoupper((string) $_SERVER['REQUEST_METHOD']) !== 'POST') {
+    $request_method = isset($_SERVER['REQUEST_METHOD'])
+        ? strtoupper(sanitize_text_field(wp_unslash($_SERVER['REQUEST_METHOD'])))
+        : '';
+    if ($request_method !== 'POST') {
         return '';
     }
+
+    $nonce = isset($_POST['aiso_nonce']) ? sanitize_text_field(wp_unslash($_POST['aiso_nonce'])) : '';
+    if ($nonce === '' || !wp_verify_nonce($nonce, 'aiso_local_workflow')) {
+        return 'invalid_nonce';
+    }
+
     return isset($_POST['aiso_action']) ? sanitize_key(wp_unslash($_POST['aiso_action'])) : '';
 }
 
 function kairoseth_aiwr_local_process_action($action, $preview, $selected_count) {
+    if ($action === 'invalid_nonce') {
+        return array('ok' => false, 'code' => 'invalid_nonce', 'verification' => null);
+    }
     if (!in_array($action, array('preview', 'publish', 'verify'), true)) {
         return null;
     }

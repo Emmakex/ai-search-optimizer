@@ -1,12 +1,12 @@
 <?php
 
-if (!defined('ABSPATH') && PHP_SAPI !== 'cli') {
+if (!defined('ABSPATH')) {
     exit;
 }
 
 function kairoseth_aiwr_local_plain_text($value, $max_length = 180) {
     $text = is_string($value) ? $value : '';
-    $text = html_entity_decode(strip_tags($text), ENT_QUOTES, 'UTF-8');
+    $text = html_entity_decode(wp_strip_all_tags($text), ENT_QUOTES, 'UTF-8');
     $text = preg_replace('/\s+/u', ' ', $text);
     $text = trim(is_string($text) ? $text : '');
 
@@ -163,7 +163,7 @@ function kairoseth_aiwr_local_validate_llms($content, $home_url, $max_bytes = 52
         $findings[] = array('code' => 'too_large', 'severity' => 'error');
     }
 
-    $home_host = parse_url($home_url, PHP_URL_HOST);
+    $home_host = wp_parse_url($home_url, PHP_URL_HOST);
     if (!is_string($home_host) || $home_host === '') {
         $findings[] = array('code' => 'invalid_home_url', 'severity' => 'error');
         $home_host = '';
@@ -184,7 +184,7 @@ function kairoseth_aiwr_local_validate_llms($content, $home_url, $max_bytes = 52
         }
         $seen[$key] = true;
 
-        $host = parse_url($url, PHP_URL_HOST);
+        $host = wp_parse_url($url, PHP_URL_HOST);
         if (!is_string($host) || $host === '' || ($home_host !== '' && strcasecmp($home_host, $host) !== 0)) {
             $findings[] = array('code' => 'external_url', 'severity' => 'error', 'value' => $url);
         }

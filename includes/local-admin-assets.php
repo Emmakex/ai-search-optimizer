@@ -1,6 +1,6 @@
 <?php
 
-if (!defined('ABSPATH') && PHP_SAPI !== 'cli') {
+if (!defined('ABSPATH')) {
     exit;
 }
 

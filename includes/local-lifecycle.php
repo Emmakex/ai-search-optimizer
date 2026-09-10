@@ -1,6 +1,6 @@
 <?php
 
-if (!defined('ABSPATH') && PHP_SAPI !== 'cli') {
+if (!defined('ABSPATH')) {
     exit;
 }
 
@@ -71,7 +71,10 @@ function kairoseth_aiwr_local_render_lifecycle_page() {
 
     $saved = false;
     $nonce_error = false;
-    if (isset($_SERVER['REQUEST_METHOD']) && strtoupper((string) $_SERVER['REQUEST_METHOD']) === 'POST') {
+    $request_method = isset($_SERVER['REQUEST_METHOD'])
+        ? strtoupper(sanitize_text_field(wp_unslash($_SERVER['REQUEST_METHOD'])))
+        : '';
+    if ($request_method === 'POST') {
         $nonce = isset($_POST['aiso_retention_nonce']) ? sanitize_text_field(wp_unslash($_POST['aiso_retention_nonce'])) : '';
         if ($nonce === '' || !wp_verify_nonce($nonce, 'aiso_retention_settings')) {
             $nonce_error = true;

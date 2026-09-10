@@ -5,21 +5,27 @@ All notable standalone AI Search Optimizer changes are recorded here.
 ## 0.5.0-dev — Unreleased
 
 ### Added
-- Optional EN/ES **Kairoseth connection readiness** page under WordPress Tools.
-- Local HTTPS prerequisite check for the exact WordPress home URL.
-- Local WordPress Application Password availability check.
-- Local verification that the dedicated Kairoseth AI Web Deployer role retains the inherited deployment capability.
-- Exact WordPress Blog ID / Network ID / home URL / REST connection endpoint / `llms.txt` target display before handoff.
-- Guided least-privilege setup instructions and explicit user-initiated handoff to `https://kairoseth.com/app`.
-- Browser and static regression coverage for the Phase 3A connection-readiness boundary.
-- Reproducible **development-package** evidence so later development is not mislabeled as the accepted 0.4.0 release candidate.
+- Optional EN/ES **AI Search Optimizer Support** page under WordPress Tools.
+- Explicit **Improve with Kairoseth** action for implementation guidance and optimization help.
+- Explicit **Request custom development** action for tailored workflows, integrations, automation and additional features.
+- Strict server-owned support context containing only plugin identity/version, WordPress version, locale and bounded request type.
+- Fail-closed validation of the exact `https://kairoseth.com/custom-requests` destination.
+- Static and real-browser regression coverage for the contextual support privacy boundary.
+- Official WordPress Plugin Check as a blocking CI dependency before development-package evidence.
+- Reproducible development-package evidence so later development is not mislabeled as the accepted 0.4.0 release candidate.
+
+### Changed
+- The Phase 3 customer strategy now follows the same WordPress.org-first local-Free model as Kairoseth AI Transparency: useful local functionality first, optional explicit support/improvement CTA, and bespoke development when requested.
+- The former connection-readiness admin surface is superseded as the primary customer flow. The inherited REST connector remains available for compatible managed integrations but is not a license, entitlement or required Free workflow.
+- Browser runtime credentials are generated ephemerally and passed through the test environment instead of being hardcoded in the acceptance script.
 
 ### Security / privacy
-- The readiness page performs no automatic request to Kairoseth.
-- No site identifier, username, Application Password, token or organization data is placed in the handoff URL.
-- No Kairoseth token, credential or cloud connection state is persisted by Phase 3A.
-- Kairoseth organization/product authorization remains server-authoritative.
-- The inherited WordPress REST namespace, schema, site pin and compare-and-set deployment protocol remain unchanged.
+- Loading the support page performs no automatic request to Kairoseth.
+- The support URL does not automatically include site URL, llms.txt content/hash, content inventory, administrator identity, WooCommerce content, credentials, tokens, prompts, logs or database content.
+- The two allowed request types are fixed by plugin code: `implementation_support` and `business_customization`.
+- Kairoseth re-normalizes extension identity server-side and ignores client-supplied product names or unknown context.
+- No Kairoseth token, credential, entitlement or support state is persisted by the plugin support bridge.
+- The inherited WordPress REST namespace, schema, exact site pin and compare-and-set deployment protocol remain unchanged.
 
 ## 0.4.0 — Release candidate
 

@@ -7,6 +7,10 @@ $lifecyclePath = $root . '/includes/local-lifecycle.php';
 $uninstallPath = $root . '/uninstall.php';
 $pluginPath = $root . '/ai-search-optimizer.php';
 
+if (!defined('ABSPATH')) {
+    define('ABSPATH', $root . '/');
+}
+
 require_once $lifecyclePath;
 
 function lifecycle_fail(string $message): void {
@@ -49,29 +53,29 @@ foreach ($requiredLifecycle as $needle) {
 
 $requiredUninstall = array(
     "if (!defined('WP_UNINSTALL_PLUGIN'))",
-    "const AISO_UNINSTALL_CAPABILITY = 'kairoseth_ai_web_readiness_deploy';",
-    "const AISO_UNINSTALL_ROLE = 'kairoseth_ai_web_deployer';",
-    "const AISO_UNINSTALL_DEPLOYMENT_OPTION = 'kairoseth_ai_web_readiness_deployment';",
-    "const AISO_UNINSTALL_SETUP_OPTION = 'kairoseth_ai_web_readiness_setup_version';",
-    "const AISO_UNINSTALL_MODE_OPTION = 'kairoseth_ai_web_readiness_uninstall_mode';",
-    "\$administrator->remove_cap(AISO_UNINSTALL_CAPABILITY)",
-    "'role' => AISO_UNINSTALL_ROLE",
-    "\$user->remove_role(AISO_UNINSTALL_ROLE)",
-    'remove_role(AISO_UNINSTALL_ROLE)',
-    'delete_option(AISO_UNINSTALL_SETUP_OPTION)',
-    'delete_option(AISO_UNINSTALL_MODE_OPTION)',
+    "const KAIROSETH_AISO_UNINSTALL_CAPABILITY = 'kairoseth_ai_web_readiness_deploy';",
+    "const KAIROSETH_AISO_UNINSTALL_ROLE = 'kairoseth_ai_web_deployer';",
+    "const KAIROSETH_AISO_UNINSTALL_DEPLOYMENT_OPTION = 'kairoseth_ai_web_readiness_deployment';",
+    "const KAIROSETH_AISO_UNINSTALL_SETUP_OPTION = 'kairoseth_ai_web_readiness_setup_version';",
+    "const KAIROSETH_AISO_UNINSTALL_MODE_OPTION = 'kairoseth_ai_web_readiness_uninstall_mode';",
+    "\$administrator->remove_cap(KAIROSETH_AISO_UNINSTALL_CAPABILITY)",
+    "'role' => KAIROSETH_AISO_UNINSTALL_ROLE",
+    "\$user->remove_role(KAIROSETH_AISO_UNINSTALL_ROLE)",
+    'remove_role(KAIROSETH_AISO_UNINSTALL_ROLE)',
+    'delete_option(KAIROSETH_AISO_UNINSTALL_SETUP_OPTION)',
+    'delete_option(KAIROSETH_AISO_UNINSTALL_MODE_OPTION)',
     "if (\$mode === 'delete')",
-    'delete_option(AISO_UNINSTALL_DEPLOYMENT_OPTION)',
+    'delete_option(KAIROSETH_AISO_UNINSTALL_DEPLOYMENT_OPTION)',
     'is_multisite()',
     "'fields' => 'ids'",
-    'switch_to_blog((int) $site_id)',
+    'switch_to_blog((int) $kairoseth_aiso_site_id)',
     'restore_current_blog()',
 );
 foreach ($requiredUninstall as $needle) {
     lifecycle_assert(strpos($uninstall, $needle) !== false, "missing uninstall contract: {$needle}");
 }
 
-lifecycle_assert(substr_count($uninstall, 'delete_option(AISO_UNINSTALL_DEPLOYMENT_OPTION)') === 1, 'deployment deletion must have one bounded uninstall point');
+lifecycle_assert(substr_count($uninstall, 'delete_option(KAIROSETH_AISO_UNINSTALL_DEPLOYMENT_OPTION)') === 1, 'deployment deletion must have one bounded uninstall point');
 lifecycle_assert(strpos($uninstall, 'delete_site_option(') === false, 'site-local data must not be deleted through a network-global option API');
 lifecycle_assert(strpos($uninstall, 'wp_remote_') === false, 'uninstall must not make remote requests');
 lifecycle_assert(strpos($uninstall, 'file_put_contents(') === false, 'uninstall must not mutate arbitrary filesystem paths');

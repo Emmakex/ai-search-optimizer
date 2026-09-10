@@ -7,6 +7,20 @@ $corePath = $root . '/includes/local-core.php';
 $publishPath = $root . '/includes/local-publish.php';
 $adminPath = $root . '/includes/local-admin.php';
 
+if (!defined('ABSPATH')) {
+    define('ABSPATH', $root . '/');
+}
+if (!function_exists('wp_strip_all_tags')) {
+    function wp_strip_all_tags($text) {
+        return strip_tags((string) $text);
+    }
+}
+if (!function_exists('wp_parse_url')) {
+    function wp_parse_url($url, $component = -1) {
+        return parse_url($url, $component);
+    }
+}
+
 require_once $corePath;
 require_once $publishPath;
 

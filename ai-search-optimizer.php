@@ -185,6 +185,7 @@ function kairoseth_aiwr_public_llms() {
     header('Cache-Control: no-cache, must-revalidate');
     header('X-Content-Type-Options: nosniff');
     header('X-Kairoseth-Content-SHA256: ' . $actual_hash);
+    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Validated text/plain bytes must remain identical to the stored SHA-256 payload.
     echo $content;
     exit;
 }
