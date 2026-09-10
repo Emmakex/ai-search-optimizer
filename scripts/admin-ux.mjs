@@ -17,10 +17,10 @@ const copy = locale === 'es'
       verify: 'Verificar llms.txt público',
       dataHeading: 'AI Search Optimizer — Datos y desinstalación',
       preserve: 'Conservar los datos publicados de llms.txt',
-      connectionHeading: 'Conectar AI Search Optimizer con Kairoseth',
-      connectionPrivacy: 'Esta comprobación no hace ninguna petición a Kairoseth ni envía contenido, credenciales, analítica o estado de conexión. Kairoseth solo se abre cuando eliges el botón de abajo.',
-      openKairoseth: 'Abrir Kairoseth AI Search Optimizer',
-      connectionEndpoint: 'Endpoint de conexión',
+      supportHeading: 'Soporte de AI Search Optimizer',
+      supportLocalFirst: 'Cargar esta página no envía nada a Kairoseth. El análisis, selección de contenido, generación de llms.txt, validación, publicación y verificación pública siguen disponibles sin una cuenta externa.',
+      supportCta: 'Abrir soporte Kairoseth',
+      customCta: 'Solicitar desarrollo a medida',
     }
   : {
       inventory: 'Eligible public content',
@@ -30,10 +30,10 @@ const copy = locale === 'es'
       verify: 'Verify public llms.txt',
       dataHeading: 'AI Search Optimizer — Data & uninstall',
       preserve: 'Preserve published llms.txt data',
-      connectionHeading: 'Connect AI Search Optimizer to Kairoseth',
-      connectionPrivacy: 'This readiness page makes no request to Kairoseth and sends no site content, credentials, analytics, or connection state. Kairoseth opens only when you choose the button below.',
-      openKairoseth: 'Open Kairoseth AI Search Optimizer',
-      connectionEndpoint: 'Connection endpoint',
+      supportHeading: 'AI Search Optimizer Support',
+      supportLocalFirst: 'Loading this page sends nothing to Kairoseth. Analysis, content selection, llms.txt generation, validation, publication and public verification remain available without an external account.',
+      supportCta: 'Open Kairoseth support',
+      customCta: 'Request custom development',
     };
 
 function assert(condition, message) {
@@ -111,36 +111,66 @@ try {
       assert(publishHeight >= 43, `${locale}/mobile: publish control is below touch target height (${publishHeight})`);
     }
 
-    await page.goto(`${baseUrl}/wp-admin/tools.php?page=ai-search-optimizer-kairoseth`, { waitUntil: 'networkidle' });
-    const connectionRoot = page.locator('.ai-search-optimizer-kairoseth');
-    await connectionRoot.waitFor({ state: 'visible' });
-    assert(await page.getByRole('heading', { name: copy.connectionHeading, exact: true }).isVisible(), `${locale}/${viewport.name}: Kairoseth connection heading missing`);
-    assert(await page.getByText(copy.connectionPrivacy, { exact: true }).isVisible(), `${locale}/${viewport.name}: Kairoseth no-transmission disclosure missing`);
-    assert(await page.getByText(copy.connectionEndpoint, { exact: true }).isVisible(), `${locale}/${viewport.name}: connection endpoint label missing`);
+    const kairosethRequests = [];
+    const captureKairoseth = (request) => {
+      try {
+        if (new URL(request.url()).hostname === 'kairoseth.com') kairosethRequests.push(request.url());
+      } catch {}
+    };
+    page.on('request', captureKairoseth);
+    await page.goto(`${baseUrl}/wp-admin/tools.php?page=ai-search-optimizer-support`, { waitUntil: 'networkidle' });
+    page.off('request', captureKairoseth);
 
-    const handoff = page.getByRole('link', { name: copy.openKairoseth, exact: true });
-    assert(await handoff.isVisible(), `${locale}/${viewport.name}: Kairoseth handoff missing`);
-    assert(await handoff.getAttribute('href') === 'https://kairoseth.com/app', `${locale}/${viewport.name}: Kairoseth handoff URL changed`);
-    assert(await handoff.getAttribute('target') === '_blank', `${locale}/${viewport.name}: Kairoseth handoff must open separately`);
-    const rel = (await handoff.getAttribute('rel')) || '';
-    assert(rel.includes('noopener') && rel.includes('noreferrer'), `${locale}/${viewport.name}: Kairoseth handoff rel protections missing`);
+    const supportRoot = page.locator('.ai-search-optimizer-support');
+    await supportRoot.waitFor({ state: 'visible' });
+    assert(kairosethRequests.length === 0, `${locale}/${viewport.name}: support page made an automatic Kairoseth request`);
+    assert(await page.getByRole('heading', { name: copy.supportHeading, exact: true }).isVisible(), `${locale}/${viewport.name}: support heading missing`);
+    assert(await page.getByText(copy.supportLocalFirst, { exact: true }).isVisible(), `${locale}/${viewport.name}: local-first support disclosure missing`);
 
-    const endpointCode = connectionRoot.locator('code').filter({ hasText: '/wp-json/kairoseth-ai-web-readiness/v1/connection' });
-    assert(await endpointCode.count() === 1, `${locale}/${viewport.name}: inherited connection endpoint not shown exactly once`);
+    const supportLink = page.getByRole('link', { name: copy.supportCta, exact: true });
+    const customLink = page.getByRole('link', { name: copy.customCta, exact: true });
+    assert(await supportLink.isVisible(), `${locale}/${viewport.name}: support CTA missing`);
+    assert(await customLink.isVisible(), `${locale}/${viewport.name}: custom-development CTA missing`);
 
-    const connectionDimensions = await connectionRoot.evaluate((element) => ({
+    for (const [kind, link, requestType] of [
+      ['support', supportLink, 'implementation_support'],
+      ['custom', customLink, 'business_customization'],
+    ]) {
+      const href = await link.getAttribute('href');
+      assert(Boolean(href), `${locale}/${viewport.name}: ${kind} CTA has no href`);
+      const url = new URL(href);
+      assert(url.origin === 'https://kairoseth.com', `${locale}/${viewport.name}: ${kind} CTA origin changed`);
+      assert(url.pathname === '/custom-requests', `${locale}/${viewport.name}: ${kind} CTA path changed`);
+      const keys = Array.from(url.searchParams.keys());
+      const expectedKeys = ['source', 'extensionSlug', 'extensionName', 'extensionVersion', 'hostPlatform', 'hostPlatformVersion', 'locale', 'requestType'];
+      assert(JSON.stringify(keys) === JSON.stringify(expectedKeys), `${locale}/${viewport.name}: ${kind} CTA query allow-list changed (${keys.join(',')})`);
+      assert(url.searchParams.get('source') === 'extension', `${locale}/${viewport.name}: ${kind} source context changed`);
+      assert(url.searchParams.get('extensionSlug') === 'ai-search-optimizer', `${locale}/${viewport.name}: ${kind} extension slug changed`);
+      assert(url.searchParams.get('extensionName') === 'AI Search Optimizer', `${locale}/${viewport.name}: ${kind} extension name changed`);
+      assert(url.searchParams.get('extensionVersion') === '0.5.0-dev', `${locale}/${viewport.name}: ${kind} extension version changed`);
+      assert(url.searchParams.get('hostPlatform') === 'wordpress', `${locale}/${viewport.name}: ${kind} host platform changed`);
+      assert(url.searchParams.get('locale') === locale, `${locale}/${viewport.name}: ${kind} locale changed`);
+      assert(url.searchParams.get('requestType') === requestType, `${locale}/${viewport.name}: ${kind} request type changed`);
+      assert(await link.getAttribute('target') === '_blank', `${locale}/${viewport.name}: ${kind} CTA must open separately`);
+      const rel = (await link.getAttribute('rel')) || '';
+      assert(rel.includes('noopener') && rel.includes('noreferrer'), `${locale}/${viewport.name}: ${kind} CTA rel protections missing`);
+    }
+
+    const supportDimensions = await supportRoot.evaluate((element) => ({
       clientWidth: element.clientWidth,
       scrollWidth: element.scrollWidth,
       left: element.getBoundingClientRect().left,
       right: element.getBoundingClientRect().right,
       viewport: document.documentElement.clientWidth,
     }));
-    assert(connectionDimensions.scrollWidth <= connectionDimensions.clientWidth + 1, `${locale}/${viewport.name}: connection page overflows horizontally`);
-    assert(connectionDimensions.left >= -1 && connectionDimensions.right <= connectionDimensions.viewport + 1, `${locale}/${viewport.name}: connection page escapes viewport bounds`);
+    assert(supportDimensions.scrollWidth <= supportDimensions.clientWidth + 1, `${locale}/${viewport.name}: support page overflows horizontally`);
+    assert(supportDimensions.left >= -1 && supportDimensions.right <= supportDimensions.viewport + 1, `${locale}/${viewport.name}: support page escapes viewport bounds`);
 
     if (viewport.name === 'mobile') {
-      const handoffHeight = await handoff.evaluate((element) => element.getBoundingClientRect().height);
-      assert(handoffHeight >= 43, `${locale}/mobile: Kairoseth handoff is below touch target height (${handoffHeight})`);
+      const supportHeight = await supportLink.evaluate((element) => element.getBoundingClientRect().height);
+      const customHeight = await customLink.evaluate((element) => element.getBoundingClientRect().height);
+      assert(supportHeight >= 43, `${locale}/mobile: support CTA is below touch target height (${supportHeight})`);
+      assert(customHeight >= 43, `${locale}/mobile: custom CTA is below touch target height (${customHeight})`);
     }
   }
 
@@ -156,7 +186,7 @@ try {
   assert(lifecycleDims.scrollWidth <= lifecycleDims.clientWidth + 1, `${locale}/mobile: lifecycle page overflows horizontally`);
 
   assert(pageErrors.length === 0, `${locale}: browser page errors: ${pageErrors.join(' | ')}`);
-  console.log(`PASS: browser admin UX locale=${locale} desktop=1280x900 mobile=390x844 overflow=contained accessible-controls=present Kairoseth-readiness=present`);
+  console.log(`PASS: browser admin UX locale=${locale} desktop=1280x900 mobile=390x844 overflow=contained accessible-controls=present contextual-support=privacy-bounded`);
 } finally {
   await browser.close();
 }
