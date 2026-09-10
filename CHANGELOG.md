@@ -5,21 +5,28 @@ All notable standalone AI Search Optimizer changes are recorded here.
 ## 0.5.0-dev — Unreleased
 
 ### Added
-- Optional EN/ES **Kairoseth connection readiness** page under WordPress Tools.
-- Local HTTPS prerequisite check for the exact WordPress home URL.
-- Local WordPress Application Password availability check.
-- Local verification that the dedicated Kairoseth AI Web Deployer role retains the inherited deployment capability.
-- Exact WordPress Blog ID / Network ID / home URL / REST connection endpoint / `llms.txt` target display before handoff.
-- Guided least-privilege setup instructions and explicit user-initiated handoff to `https://kairoseth.com/app`.
-- Browser and static regression coverage for the Phase 3A connection-readiness boundary.
+- Optional EN/ES **AI Search Optimizer Support** page under WordPress Tools.
+- Explicit administrator CTAs for optimization/implementation support and custom development/improvement.
+- Strict contextual URL allow-list for `source`, extension identity/version, WordPress platform/version, locale and bounded request type.
+- Official WordPress Plugin Check as a blocking development gate.
+- Browser/static privacy regressions for the contextual support model.
 - Reproducible **development-package** evidence so later development is not mislabeled as the accepted 0.4.0 release candidate.
 
+### Changed
+- Adopted the WordPress.org-first product model already used by `Emmakex/AI-Transparency`: complete local Free functionality + optional contextual support/custom development.
+- Retired the Phase 3A cloud connection-readiness screen from the public development UX before any stable/public release.
+- Kairoseth Platform onboarding PR #223 was intentionally closed without merge; no production route dependency was introduced.
+- The inherited Kairoseth WordPress REST namespace/schema remains for compatibility only and is no longer the customer-facing commercial path of the directory plugin.
+
 ### Security / privacy
-- The readiness page performs no automatic request to Kairoseth.
-- No site identifier, username, Application Password, token or organization data is placed in the handoff URL.
-- No Kairoseth token, credential or cloud connection state is persisted by Phase 3A.
-- Kairoseth organization/product authorization remains server-authoritative.
-- The inherited WordPress REST namespace, schema, site pin and compare-and-set deployment protocol remain unchanged.
+- Loading the support page performs no automatic request to Kairoseth.
+- The support/custom links do not automatically include the site URL, administrator identity, `llms.txt` content, selected resources, findings, WooCommerce customer/order data, credentials, prompts, conversations, logs or database contents.
+- No Kairoseth token, credential, entitlement or cloud connection state is stored by the contextual support feature.
+- External navigation starts only after an explicit administrator action and uses the canonical `https://kairoseth.com/custom-requests` destination.
+
+### Historical Phase 3A development evidence
+- The earlier optional connection-readiness experiment was technically accepted in PR #15 / CI #38 and post-merge CI #39.
+- Its accepted evidence remains part of engineering history, but the UX is superseded before public release by the WordPress.org-first contextual-support model.
 
 ## 0.4.0 — Release candidate
 
