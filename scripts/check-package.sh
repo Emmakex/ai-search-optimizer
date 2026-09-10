@@ -12,6 +12,7 @@ ai-search-optimizer/
 ai-search-optimizer/LICENSE
 ai-search-optimizer/ai-search-optimizer.php
 ai-search-optimizer/includes/
+ai-search-optimizer/includes/local-admin-assets.php
 ai-search-optimizer/includes/local-admin.php
 ai-search-optimizer/includes/local-core.php
 ai-search-optimizer/includes/local-lifecycle.php
