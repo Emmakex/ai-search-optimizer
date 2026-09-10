@@ -11,6 +11,9 @@ cat > /tmp/ai-search-optimizer-expected-files.txt <<'EOF'
 ai-search-optimizer/
 ai-search-optimizer/LICENSE
 ai-search-optimizer/ai-search-optimizer.php
+ai-search-optimizer/includes/
+ai-search-optimizer/includes/local-admin.php
+ai-search-optimizer/includes/local-core.php
 ai-search-optimizer/readme.txt
 EOF
 
