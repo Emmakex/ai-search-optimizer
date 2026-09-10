@@ -4,7 +4,7 @@ AI Search Optimizer is a WordPress extension that can publish site-local AI Sear
 
 ## Supported versions
 
-`0.4.0` is the current standalone release candidate. It is not yet claimed as publicly distributed through GitHub Releases or WordPress.org. Security issues found during release-candidate acceptance are treated as blocking defects; public-user support begins when an official distribution channel is published.
+`0.4.0` is the accepted standalone Free release candidate. It is not yet claimed as publicly distributed through GitHub Releases or WordPress.org. A new blocking security finding before public distribution must reopen release-candidate acceptance. Public-user support begins when an official distribution channel is published.
 
 ## Reporting a vulnerability
 
@@ -43,7 +43,17 @@ See [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md).
 
 ## Release integrity
 
-The accepted release-candidate package must be generated from an exact source commit/tree using the repository build script. CI requires two consecutive package builds to be byte-identical and records the package SHA-256, byte size and entry count in a release manifest. A package whose checksum does not match the published acceptance evidence must not be treated as accepted.
+The accepted `0.4.0` release-candidate package is identified by:
+
+```text
+source commit      4d68b111d1f796fdc9bfbc3e670eeecc69c09a76
+source tree        472e8c5e5bc20ed8f4eed412ab5515561b89ff16
+package SHA-256    27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c
+```
+
+The repository build process normalizes package metadata, requires two consecutive package builds to be byte-identical and records the package SHA-256, byte size and entry count in a release manifest. A package whose checksum does not match the accepted evidence must not be treated as the accepted candidate.
+
+See [`docs/PHASE2C4_CLOSURE.md`](docs/PHASE2C4_CLOSURE.md).
 
 ## Diagnostics
 

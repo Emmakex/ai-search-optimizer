@@ -4,7 +4,7 @@
 
 [English](#english) · [Español](#español)
 
-Status: **Release candidate — Phase 2C4 final acceptance in progress; not publicly released**
+Status: **Release candidate accepted — Phase 2 complete; Free 0.4.0 not publicly distributed**
 
 ```text
 Product: AI Search Optimizer
@@ -12,17 +12,17 @@ System: Kairoseth Extensions
 Host: WordPress / WooCommerce
 Repository: Emmakex/ai-search-optimizer
 License: MIT
-Standalone release candidate: 0.4.0
+Accepted Free release candidate: 0.4.0
 Accepted predecessor: Kairoseth AI Web Readiness Connector 0.3.2
 ```
 
-This repository owns the independently releasable WordPress plugin. The inherited connector identifiers remain compatible with Kairoseth Platform while the standalone Free workflow is finalized for public distribution.
+This repository owns the independently releasable WordPress plugin. The inherited connector identifiers remain compatible with Kairoseth Platform while the local Free workflow is now technically accepted for a later public-distribution action.
 
 ## English
 
 ### What the Free plugin does
 
-The `0.4.0` release-candidate line works locally without requiring a Kairoseth account:
+The accepted `0.4.0` Free release candidate works locally without requiring a Kairoseth account:
 
 ```text
 inspect WordPress AI-search readiness
@@ -52,7 +52,21 @@ Current safeguards include:
 - no arbitrary filesystem writes;
 - no silent transmission of local site content to Kairoseth, AI providers or third-party analytics.
 
-Release hardening already has accepted real-runtime evidence for WordPress 5.6/PHP 7.4, WordPress 6.8/PHP 8.2 and WordPress 7.1/PHP 8.3, plus Multisite isolation, WooCommerce 11.1.0 and EN/ES browser acceptance. Phase 2C4 adds deterministic package/checksum evidence and the final Free release-candidate decision.
+Phase 2 acceptance includes real generated-ZIP runtime evidence for WordPress 5.6/PHP 7.4, WordPress 6.8/PHP 8.2 and WordPress 7.1/PHP 8.3, plus Multisite isolation, WooCommerce 11.1.0, real-browser EN/ES acceptance and deterministic release-candidate packaging.
+
+### Release candidate identity
+
+```text
+version            0.4.0
+source commit      4d68b111d1f796fdc9bfbc3e670eeecc69c09a76
+source tree        472e8c5e5bc20ed8f4eed412ab5515561b89ff16
+package            ai-search-optimizer-0.4.0.zip
+package bytes      21745
+package entries    11
+package SHA-256    27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c
+```
+
+See [`docs/PHASE2C4_CLOSURE.md`](docs/PHASE2C4_CLOSURE.md) for the canonical acceptance record.
 
 ### Data and uninstall behavior
 
@@ -75,15 +89,15 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) and [`docs/PROVENANCE.md`](do
 
 ### Release truth
 
-`0.4.0` is a release candidate, not a claimed public release. There is no GitHub Release or WordPress.org listing yet. The target WordPress.org slug is `ai-search-optimizer` until actually approved/reserved.
+`0.4.0` is an **accepted release candidate**, not a claimed public release. There is no GitHub Release or WordPress.org listing yet. The target WordPress.org slug is `ai-search-optimizer` until actually approved/reserved.
 
-The accepted package must be tied to an exact source commit/tree and accompanied by a SHA-256 manifest. Public distribution remains a separate action after Phase 2C4 acceptance.
+Public distribution is a separate Phase 5 action with its own tag/release, public-download and WordPress.org gates.
 
 ## Español
 
 ### Qué hace el plugin Free
 
-La línea release candidate `0.4.0` funciona localmente sin exigir una cuenta Kairoseth:
+El release candidate Free `0.4.0` aceptado funciona localmente sin exigir una cuenta Kairoseth:
 
 ```text
 analizar preparación AI Search de WordPress
@@ -113,7 +127,21 @@ Protecciones actuales:
 - sin escrituras arbitrarias de filesystem;
 - sin transmisión silenciosa del contenido local a Kairoseth, proveedores IA o analítica de terceros.
 
-El hardening de release ya dispone de evidencia runtime aceptada en WordPress 5.6/PHP 7.4, WordPress 6.8/PHP 8.2 y WordPress 7.1/PHP 8.3, además de Multisite, WooCommerce 11.1.0 y navegador real EN/ES. Phase 2C4 añade paquete determinista, manifest/checksum y la decisión final del release candidate Free.
+La aceptación de Phase 2 incluye runtime real del ZIP generado en WordPress 5.6/PHP 7.4, WordPress 6.8/PHP 8.2 y WordPress 7.1/PHP 8.3, además de Multisite, WooCommerce 11.1.0, navegador real EN/ES y empaquetado determinista del release candidate.
+
+### Identidad del release candidate aceptado
+
+```text
+versión             0.4.0
+commit fuente       4d68b111d1f796fdc9bfbc3e670eeecc69c09a76
+tree fuente         472e8c5e5bc20ed8f4eed412ab5515561b89ff16
+paquete             ai-search-optimizer-0.4.0.zip
+bytes               21745
+entradas             11
+SHA-256             27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c
+```
+
+Consulta [`docs/PHASE2C4_CLOSURE.md`](docs/PHASE2C4_CLOSURE.md) para la evidencia canónica.
 
 ### Datos y desinstalación
 
@@ -136,9 +164,9 @@ Consulta [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) y [`docs/PROVENANCE.md`]
 
 ### Estado de release
 
-`0.4.0` es un release candidate, no una release pública afirmada. Todavía no existe GitHub Release ni ficha WordPress.org. `ai-search-optimizer` sigue siendo el slug objetivo hasta su aprobación/reserva real.
+`0.4.0` es un **release candidate aceptado**, no una release pública afirmada. Todavía no existe GitHub Release ni ficha WordPress.org. `ai-search-optimizer` sigue siendo el slug objetivo hasta su aprobación/reserva real.
 
-El paquete aceptado debe quedar ligado a un commit/tree exacto y acompañado por manifest y SHA-256. La distribución pública será una acción separada después de aceptar Phase 2C4.
+La distribución pública es una acción separada de Phase 5 con gates propios de tag/release, descarga pública y WordPress.org.
 
 ## Documentation / Documentación
 
@@ -149,6 +177,7 @@ El paquete aceptado debe quedar ligado a un commit/tree exacto y acompañado por
 - [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md)
 - [`docs/NAMING_SEO.md`](docs/NAMING_SEO.md)
 - [`docs/PROVENANCE.md`](docs/PROVENANCE.md)
+- [`docs/PHASE2C4_CLOSURE.md`](docs/PHASE2C4_CLOSURE.md)
 - [`docs/ENGINEERING_RULES.md`](docs/ENGINEERING_RULES.md)
 
 ## License

@@ -26,7 +26,7 @@ All notable standalone AI Search Optimizer changes are recorded here.
 ### Changed
 - Public plugin name from `Kairoseth AI Web Readiness Connector` to `AI Search Optimizer`.
 - Main standalone plugin filename to `ai-search-optimizer.php`.
-- Root and WordPress readmes describe the implemented Free workflow and release-candidate boundary.
+- Root and WordPress readmes describe the implemented Free workflow and accepted release-candidate boundary.
 
 ### Compatibility
 - Based on accepted connector 0.3.2.
@@ -34,9 +34,13 @@ All notable standalone AI Search Optimizer changes are recorded here.
 - Existing `kairoseth-ai-web-readiness/v1` REST namespace, capability, role, options and query-var identifiers are intentionally preserved for Kairoseth Platform compatibility.
 - Deactivation preserves stored deployment data; uninstall behavior for that deployment is explicitly user-selectable.
 
-### Release status
-- 0.4.0 is the current standalone release candidate under final Phase 2C4 acceptance.
-- No GitHub Release or WordPress.org listing is claimed yet.
+### Acceptance evidence
+- Phase 2 / Free release-candidate decision: GO for later public distribution.
+- Accepted source commit: `4d68b111d1f796fdc9bfbc3e670eeecc69c09a76`.
+- Accepted source tree: `472e8c5e5bc20ed8f4eed412ab5515561b89ff16`.
+- Accepted ZIP SHA-256: `27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c`.
+- PR CI #28 and post-merge CI #29 passed all 7 jobs.
+- No GitHub Release, public Git tag or WordPress.org listing is claimed yet.
 
 ## Historical predecessor
 
