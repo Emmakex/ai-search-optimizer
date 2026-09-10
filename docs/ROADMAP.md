@@ -1,6 +1,6 @@
 # AI Search Optimizer — Roadmap
 
-Status: **Building — Phase 2B safe local publication in progress**  
+Status: **Building — Phase 2C Free release hardening next**  
 Last reviewed: **10 September 2026**
 
 ```text
@@ -8,8 +8,8 @@ Phase 0  product/repository foundation          COMPLETE
 Phase 1  standalone connector extraction       COMPLETE
 Phase 2  useful local Free workflow             IN PROGRESS
   2A     local analysis + deterministic preview COMPLETE
-  2B     selection + safe local publication     IN PROGRESS
-  2C     Free release hardening                 BLOCKED by 2B
+  2B     selection + safe local publication     COMPLETE
+  2C     Free release hardening                 NEXT
 Phase 3  Kairoseth-connected customer UX        BLOCKED by Phase 2
 Phase 4  Custom Request + share + catalog       BLOCKED by shared/platform dependencies
 Phase 5  public distribution / WordPress.org    BLOCKED by prior acceptance
@@ -82,38 +82,55 @@ blocking Phase 2A defects                0
 
 Canonical closure: [`PHASE2A_CLOSURE.md`](PHASE2A_CLOSURE.md).
 
-### Phase 2B — selection + safe local publication — in progress
+### Phase 2B — selection + safe local publication — complete
 
-Implementation contract:
+Accepted implementation:
 
-- explicit per-resource content selection, including a preserved explicit empty selection;
-- server rebuilds the selected artifact only from the current eligible inventory;
-- validation before any mutation;
-- nonce + existing least-privilege capability on the human admin workflow;
-- explicit Publish action; preview remains non-mutating;
-- compare-before-write token over the current stored deployment to prevent stale-page replacement;
-- idempotent same-content publication without unnecessary rewrites;
-- one bounded site-local deployment mutation point reusing the accepted `llms.txt` state;
-- local publication records `source=local-free` without changing the inherited REST contract;
-- independent HTTP read-back of the public `/llms.txt` with redirects disabled;
-- exact public SHA-256 comparison against the stored/generated content;
-- manual verification retry without changing stored content;
-- recoverable state-changed, validation, storage and public-verification diagnostics in EN/ES;
+- explicit per-resource content selection with preserved explicit empty selection;
+- submitted selections are filtered against the current eligible WordPress inventory;
+- selected artifact rebuilt server-side from current public WordPress data;
+- preview remains non-mutating;
+- nonce-protected explicit Publish and Verify actions behind the inherited least-privilege capability;
+- validation before any write;
+- compare-before-write deployment-state token prevents stale-page replacement;
+- same-content publication is idempotent and avoids unnecessary writes;
+- one bounded site-local deployment mutation point reuses the accepted `llms.txt` state;
+- local origin recorded as `source=local-free` without changing the inherited REST protocol;
+- stored integrity rechecked immediately after mutation;
+- independent HTTP read-back of public `/llms.txt` with redirects disabled;
+- exact public SHA-256 comparison against generated/stored content;
+- verification can be retried without changing stored content;
+- recoverable EN/ES diagnostics for state drift, validation, storage and public verification failures;
 - package and CI regression coverage for the publication module.
 
-Phase 2B is not accepted until PR CI, merge and post-merge CI are green. A real representative WordPress install/runtime matrix remains part of Phase 2C release hardening.
+Evidence:
 
-### Phase 2C — Free release hardening
+```text
+PR #5                                    merged
+final PR head                            895ba6a22c9f46674d43c4d860a9f14d99f6063c
+CI #9                                    FAIL — test fixture interpolation only
+CI #9 signature                          d48cb3aba4e635dfa5f275bf554bd46ca36a586923f5cc4a654d357cf2475126
+CI #10                                   PASS
+merge SHA                                35251c3842acaf2c71c72aa106bc855cd09fe2a9
+post-merge CI #11                        PASS
+blocking Phase 2B defects                0
+```
 
-Blocked by Phase 2B acceptance. Complete:
+Canonical closure: [`PHASE2B_CLOSURE.md`](PHASE2B_CLOSURE.md).
 
+### Phase 2C — Free release hardening — next
+
+Complete:
+
+- representative WordPress/PHP install and runtime compatibility matrix;
 - Multisite UX and site-local isolation acceptance;
 - WooCommerce behavior acceptance where claimed;
-- uninstall/data-retention controls;
 - responsive/accessibility acceptance;
-- install/update/deactivate/uninstall policy and tests;
+- install/activate/update/deactivate/uninstall behavior;
+- explicit uninstall/data-retention controls;
 - security/privacy disclosure synchronization;
-- representative WordPress/PHP compatibility evidence.
+- release-oriented README/readme/changelog alignment;
+- release package/checksum acceptance without yet claiming WordPress.org availability.
 
 No Kairoseth account is required for these core Free functions.
 
