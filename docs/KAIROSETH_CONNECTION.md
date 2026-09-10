@@ -1,27 +1,76 @@
-# AI Search Optimizer — Optional Kairoseth connection
+# AI Search Optimizer — Kairoseth Boundary
 
-Status: **Phase 3A implementation in progress**  
+Status: **WordPress.org-first local Free product; Kairoseth support/custom path is optional**  
 Last reviewed: **10 September 2026**
 
-## Purpose
+## Canonical customer model
 
-The standalone WordPress plugin is useful without Kairoseth. Phase 3 adds an optional path into Kairoseth AI Search Optimizer for customers who want advanced whole-site analysis, evidence, curation, revision history, optional AI assistance or managed publication verification.
+The standalone WordPress plugin is useful on its own. Kairoseth is **not** required to analyze, generate, validate, publish or publicly verify `llms.txt`.
 
-Phase 3 must not turn the WordPress plugin into a second cloud authorization system.
+The WordPress.org-facing product model is:
 
-## Existing accepted platform contract
+```text
+Free local plugin
+→ complete AI Search + llms.txt workflow
 
-The current Kairoseth Platform already owns the managed WordPress connection. The platform:
+Optional administrator CTA
+→ Kairoseth support
+→ custom improvement / development
+```
 
-1. resolves the authenticated Kairoseth user, organization and `ai-web-readiness` product access server-side;
-2. accepts a dedicated WordPress username + Application Password from an authorized Kairoseth operator;
-3. calls the plugin's authenticated connection endpoint;
-4. validates the exact WordPress site identity;
-5. encrypts the WordPress credential server-side using organization/product/site/adapter/credential context;
-6. uses the stored site pin and credential for later inspect/deploy operations;
-7. uses compare-and-set pre-state and independent public SHA-256 verification for managed publication.
+The accepted customer-facing Kairoseth destination is:
 
-Current WordPress protocol:
+```text
+https://kairoseth.com/custom-requests
+```
+
+Loading the WordPress support page performs no external request. The browser navigates to Kairoseth only after an explicit administrator action.
+
+## Bounded support context
+
+Only this context may be placed in an explicit external-navigation URL:
+
+```text
+source
+extensionSlug
+extensionName
+extensionVersion
+hostPlatform
+hostPlatformVersion
+locale
+requestType
+```
+
+WordPress UI request types are limited to:
+
+```text
+implementation_support
+business_customization
+```
+
+The plugin does not automatically transmit:
+
+```text
+site/home URL
+administrator/customer identity
+llms.txt content or hash
+selected resources/content
+AI Search findings
+WordPress users
+plugin/theme inventory
+WooCommerce customer/order data
+credentials/API keys/Application Passwords/tokens
+cookies/nonces/session identifiers
+prompts/conversations/logs
+server paths/IP/database contents
+arbitrary WordPress options
+```
+
+If support or custom development requires additional information, the user decides whether to provide it after reaching Kairoseth.
+
+## Historical managed-connector compatibility
+
+The standalone source was extracted from the accepted Kairoseth AI Web Readiness Connector. The following internal protocol remains for backward compatibility with existing Kairoseth Platform deployments:
 
 ```text
 namespace                 kairoseth-ai-web-readiness/v1
@@ -35,101 +84,31 @@ safe mutation pre-state   expectedCurrentDeployed + expectedCurrentContentHash
 public target             exact site-local /llms.txt
 ```
 
-The public product name is AI Search Optimizer, but these inherited technical identifiers remain intentionally stable for Kairoseth Platform compatibility.
+These are **compatibility identifiers**, not the WordPress.org commercial path and not an entitlement mechanism.
 
-## Phase 3A — connection readiness + guided handoff
+The inherited managed contract may continue to serve existing authorized Kairoseth Platform installations. Removing or renaming it requires a separate versioned backward-compatibility decision and migration evidence.
 
-The WordPress side adds an EN/ES page under **Tools → AI Search Optimizer · Kairoseth**.
+## Superseded Phase 3A experiment
 
-It may read only local WordPress state needed to explain readiness:
+The `0.5.0-dev` line previously implemented an optional **Tools → AI Search Optimizer · Kairoseth** readiness screen. It was technically accepted as a development experiment and proved that a connection surface could remain non-authoritative and silent on page load.
 
-- exact WordPress `homeUrl`;
-- Multisite Blog ID / Network ID;
-- inherited REST connection endpoint;
-- site-local `llms.txt` target;
-- whether the home URL is HTTPS;
-- whether WordPress reports native Application Passwords as available;
-- whether the dedicated deployer role retains the inherited deployment capability.
+That customer-facing direction is now **superseded before public release**. The evidence remains historical; the screen is not part of the intended WordPress.org product experience.
 
-### Non-authority boundary
+Likewise, `kairoseth-platform` PR #223 for coordinated cloud onboarding was intentionally closed without merge. No production dependency on that proposed route was introduced.
 
-The plugin must not infer or store Kairoseth connection authority.
+## Authority boundary
 
-`Ready to connect` means only that the local WordPress prerequisites are satisfied. It does **not** mean:
+Even where the inherited managed connector remains usable:
 
-- a Kairoseth account exists;
-- the current WordPress user has Kairoseth access;
-- an organization/product entitlement exists;
-- Kairoseth has validated the site;
-- a WordPress credential is already stored in Kairoseth.
+- WordPress cannot grant Kairoseth organization/product roles or entitlements;
+- browser/client/model state cannot grant cloud authority;
+- provider/Kairoseth credentials are never embedded in the plugin;
+- managed deployment must preserve exact site pin and compare-and-set semantics;
+- Kairoseth unavailability must not disable accepted local Free functionality.
 
-Those facts remain server-authoritative in Kairoseth.
+## WordPress.org boundary
 
-### Handoff boundary
+The plugin must not become trialware, a remote-license shell or a cloud-account gate. Optional Kairoseth interaction must remain explicit, contextual, documented and separate from the complete local Free workflow.
 
-The Phase 3A handoff is deliberately simple:
-
-```text
-https://kairoseth.com/app
-```
-
-The URL contains no query string or fragment carrying site identity, username, Application Password, token, organization or product authority. Kairoseth resolves the authenticated account and permitted contexts after navigation.
-
-The plugin makes **no automatic network request to Kairoseth**. Navigation occurs only after the user activates the external link.
-
-### Credential boundary
-
-Phase 3A does not collect, generate, transmit or persist a WordPress Application Password. The accepted platform workflow remains:
-
-```text
-WordPress administrator
-→ dedicated Kairoseth AI Web Deployer user
-→ WordPress Application Password
-→ authorized Kairoseth workspace form
-→ Kairoseth backend validation
-→ encrypted server-side credential storage
-```
-
-If a managed connection is later deleted in Kairoseth, the operator should also revoke its WordPress Application Password.
-
-## Phase 3A acceptance gates
-
-```text
-[ ] current source line is 0.5.0-dev and accepted 0.4.0 identity is preserved
-[ ] inherited schema/REST/capability/deployment state remains unchanged
-[ ] EN/ES connection-readiness screen exists
-[ ] HTTPS prerequisite is evaluated locally
-[ ] native Application Password availability is evaluated locally
-[ ] least-privilege role/capability prerequisite is evaluated locally
-[ ] exact WordPress identity and inherited connection endpoint are shown
-[ ] Ready wording is explicitly non-authoritative
-[ ] no automatic Kairoseth request occurs
-[ ] no Kairoseth token/session/role/entitlement is stored locally
-[ ] no Application Password is collected/stored by the readiness page
-[ ] handoff URL contains no site/credential/organization data
-[ ] external handoff uses noopener+noreferrer
-[ ] accepted local Free workflow remains independent and green
-[ ] real browser EN/ES desktop/mobile acceptance covers the new screen
-[ ] WordPress/PHP + Multisite/WooCommerce regression remains green
-[ ] reproducible development package evidence PASS
-[ ] blocking Phase 3A defects = 0
-```
-
-## Phase 3B — coordinated connection UX — blocked by 3A
-
-After Phase 3A is accepted, improve the Kairoseth-side onboarding so the user can move from the WordPress readiness screen to the correct authorized site workflow with fewer manual steps **without** introducing browser-authoritative access or a second authentication protocol.
-
-Any proposed one-time pairing or prefill mechanism must be separately specified and threat-modeled before implementation. It must not weaken the accepted Application Password/site-pin/server-authorization model.
-
-## Failure behavior
-
-Kairoseth unavailability must never disable:
-
-- local readiness analysis;
-- local content inventory/selection;
-- deterministic `llms.txt` generation/validation;
-- explicit local publication;
-- local public verification;
-- uninstall/data-retention behavior.
-
-The optional cloud path fails independently and safely.
+Canonical policy: [`WORDPRESS_ORG_POLICY.md`](WORDPRESS_ORG_POLICY.md).  
+Current Phase 3 acceptance: [`PHASE3B_ACCEPTANCE.md`](PHASE3B_ACCEPTANCE.md).
