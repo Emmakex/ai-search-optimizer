@@ -39,4 +39,9 @@ Security regressions should assert the dangerous mechanism or data flow, not an 
 
 ## Validation
 
-Pending on the corrected PR CI run. Closure evidence should record the first subsequent green run.
+```text
+PR CI #38          PASS — 7/7 jobs
+post-merge CI #39 PASS — 7/7 jobs
+```
+
+The affected **Kairoseth connection readiness regression** passed in both runs. The failure is closed and retained as regression memory.
