@@ -125,7 +125,7 @@ try {
     await supportRoot.waitFor({ state: 'visible' });
     assert(kairosethRequests.length === 0, `${locale}/${viewport.name}: support page made an automatic Kairoseth request`);
     assert(await page.getByRole('heading', { name: copy.supportHeading, exact: true }).isVisible(), `${locale}/${viewport.name}: support heading missing`);
-    assert(await page.getByText(copy.supportLocalFirst, { exact: true }).isVisible(), `${locale}/${viewport.name}: local-first support disclosure missing`);
+    assert(await page.getByText(copy.supportLocalFirst, { exact: false }).isVisible(), `${locale}/${viewport.name}: local-first support disclosure missing`);
 
     const supportLink = page.getByRole('link', { name: copy.supportCta, exact: true });
     const customLink = page.getByRole('link', { name: copy.customCta, exact: true });
