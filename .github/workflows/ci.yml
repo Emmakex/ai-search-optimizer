@@ -25,27 +25,21 @@ jobs:
           unzip -v | head -n 2
 
       - name: PHP syntax
-        run: php -l ai-search-optimizer.php
+        run: bash scripts/ci-run.sh "PHP syntax" php -l ai-search-optimizer.php
 
       - name: Contract and security regression
-        run: php tests/contract-check.php
+        run: bash scripts/ci-run.sh "Contract and security regression" php tests/contract-check.php
 
       - name: Build plugin package
-        run: bash scripts/build-plugin.sh
+        run: bash scripts/ci-run.sh "Build plugin package" bash scripts/build-plugin.sh
 
       - name: Verify package contents
-        run: |
-          ZIP="$(find dist -maxdepth 1 -name 'ai-search-optimizer-*.zip' -type f -print -quit)"
-          test -n "$ZIP"
-          unzip -Z1 "$ZIP" | sort > /tmp/package-files.txt
-          cat /tmp/package-files.txt
-          cat > /tmp/expected-files.txt <<'EOF'
-          ai-search-optimizer/
-          ai-search-optimizer/LICENSE
-          ai-search-optimizer/ai-search-optimizer.php
-          ai-search-optimizer/readme.txt
-          EOF
-          diff -u /tmp/expected-files.txt /tmp/package-files.txt
+        run: bash scripts/ci-run.sh "Verify package contents" bash scripts/check-package.sh
 
-      - name: Verify repository does not package generated artifacts
-        run: git status --short --untracked-files=all | grep -v '^?? dist/' | grep -q . && { git status --short; exit 1; } || true
+      - name: Verify repository cleanliness
+        run: |
+          if [[ -n "$(git status --short --untracked-files=all)" ]]; then
+            git status --short --untracked-files=all
+            echo "Repository changed during validation." >&2
+            exit 1
+          fi
