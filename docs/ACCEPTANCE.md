@@ -1,6 +1,6 @@
 # AI Search Optimizer — Acceptance
 
-Status: **Canonical acceptance definition — Phase 2A accepted; product not released**  
+Status: **Canonical acceptance definition — Phase 2A accepted; Phase 2B in progress; product not released**  
 Last reviewed: **10 September 2026**
 
 ## Engineering inheritance
@@ -64,7 +64,43 @@ PR head                                  828d1f1188aaf282f5b1fcce055fd912021df75
 merge SHA                                61b33412484a20a505726c808ec64bc9dc8953a3
 ```
 
-Phase 2B is now the next permitted implementation boundary. Canonical Phase 2A record: [`PHASE2A_CLOSURE.md`](PHASE2A_CLOSURE.md).
+Canonical Phase 2A record: [`PHASE2A_CLOSURE.md`](PHASE2A_CLOSURE.md).
+
+## Phase 2B — selection + safe local publication
+
+Phase 2B can close only when all applicable items are true:
+
+```text
+[ ] explicit per-resource selection controls
+[ ] explicit empty selection remains empty
+[ ] submitted resource IDs cannot introduce arbitrary URLs/content
+[ ] selected artifact is rebuilt from current eligible WordPress inventory
+[ ] preview action performs no mutation
+[ ] publish action is explicit and nonce protected
+[ ] inherited least-privilege capability still gates the admin workspace
+[ ] validator runs before any write
+[ ] stale-page/current-state mismatch stops publication
+[ ] same-content publish is idempotent and avoids unnecessary rewrites
+[ ] local publication uses one bounded deployment mutation point
+[ ] inherited deployment option / public llms.txt route remain compatible
+[ ] local publication origin is recorded without breaking REST schema
+[ ] stored content integrity is rechecked immediately after mutation
+[ ] public verification performs an independent HTTP read-back
+[ ] public verification does not follow redirects
+[ ] public body SHA-256 must exactly equal stored/generated SHA-256
+[ ] verification can be retried without changing stored content
+[ ] failed public verification leaves stored content recoverable
+[ ] state-change / validation / storage / verification failures are actionable in EN/ES
+[ ] no provider credentials or arbitrary filesystem writes introduced
+[ ] compatibility/security + Phase 2A regressions remain green
+[ ] plugin package contains the publication module
+[ ] dedicated Phase 2B regression PASS
+[ ] PR CI PASS
+[ ] post-merge CI PASS
+[ ] blocking Phase 2B defects = 0
+```
+
+A representative WordPress install/runtime matrix, Multisite/WooCommerce runtime acceptance, responsive/accessibility review and uninstall/update behavior remain Phase 2C release-hardening gates.
 
 ## Public Free release acceptance
 
@@ -94,7 +130,7 @@ Before the first public product release:
 [ ] blocking defects = 0
 ```
 
-The partially checked release list records capabilities already established by Phase 2A; it does not mean the Free release as a whole is accepted.
+The partially checked release list records capabilities already established by accepted phases; it does not mean the Free release as a whole is accepted.
 
 ## Kairoseth-connected acceptance
 
