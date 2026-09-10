@@ -473,3 +473,6 @@ function kairoseth_aiwr_register_rest_routes() {
     );
 }
 add_action('rest_api_init', 'kairoseth_aiwr_register_rest_routes');
+
+require_once __DIR__ . '/includes/local-core.php';
+require_once __DIR__ . '/includes/local-admin.php';
