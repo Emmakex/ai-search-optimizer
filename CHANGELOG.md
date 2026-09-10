@@ -2,7 +2,7 @@
 
 All notable standalone AI Search Optimizer changes are recorded here.
 
-## 0.4.0 — Accepted release candidate
+## 0.4.0 — Release candidate
 
 ### Added
 - Dedicated public `Emmakex/ai-search-optimizer` repository.
