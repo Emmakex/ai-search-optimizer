@@ -80,6 +80,8 @@ foreach ($requiredPublishContracts as $needle) {
 $requiredAdminContracts = [
     "require_once __DIR__ . '/local-publish.php';",
     "wp_verify_nonce($nonce, 'aiso_local_workflow')",
+    "isset(\$_POST['aiso_selection_present'])",
+    'name="aiso_selection_present" value="1"',
     'name="aiso_selected[]"',
     'name="aiso_expected_state"',
     'value="preview"',
