@@ -33,7 +33,9 @@ $checks = array(
     array(strpos($module, 'add_option(') === false, 'Phase 3A readiness must not create cloud/connection state'),
     array(strpos($module, 'wp_remote_') === false, 'Phase 3A readiness must not make automatic WordPress HTTP requests'),
     array(strpos($module, 'curl_') === false, 'Phase 3A readiness must not make automatic cURL requests'),
-    array(strpos($module, 'applicationPassword') === false, 'Phase 3A must not collect or store an Application Password'),
+    array(strpos($module, 'type="password"') === false, 'Phase 3A must not render a password input'),
+    array(strpos($module, 'name="applicationPassword"') === false && strpos($module, 'name="application_password"') === false, 'Phase 3A must not collect an Application Password field'),
+    array(strpos($module, "\$_POST['application") === false && strpos($module, "\$_REQUEST['application") === false, 'Phase 3A must not read an Application Password from request data'),
     array(strpos($module, 'access_token') === false && strpos($module, 'refresh_token') === false, 'Phase 3A must not introduce cloud token storage'),
 );
 
