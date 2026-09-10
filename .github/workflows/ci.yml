@@ -46,8 +46,8 @@ jobs:
       - name: Responsive and accessibility regression
         run: bash scripts/ci-run.sh "Responsive and accessibility regression" php tests/ux-hardening-check.php
 
-      - name: Kairoseth connection readiness regression
-        run: bash scripts/ci-run.sh "Kairoseth connection readiness regression" php tests/kairoseth-connection-readiness-check.php
+      - name: Kairoseth contextual support regression
+        run: bash scripts/ci-run.sh "Kairoseth contextual support regression" php tests/kairoseth-support-check.php
 
       - name: Development and release metadata alignment
         run: bash scripts/ci-run.sh "Development and release metadata alignment" php tests/release-metadata-check.php
@@ -65,6 +65,30 @@ jobs:
             echo "Repository changed during validation." >&2
             exit 1
           fi
+
+  wordpress_plugin_check:
+    name: WordPress Plugin Check
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build production-shaped plugin package
+        run: bash scripts/ci-run.sh "WordPress Plugin Check package" bash scripts/build-plugin.sh
+
+      - name: Run official WordPress Plugin Check
+        uses: wordpress/plugin-check-action@v1
+        with:
+          build-dir: ./dist/ai-search-optimizer
+          wp-version: latest
+          categories: |
+            plugin_repo
+            security
+            accessibility
+            performance
 
   runtime:
     name: Runtime WP ${{ matrix.wordpress }} / PHP ${{ matrix.php }}
@@ -136,7 +160,7 @@ jobs:
 
   package_evidence:
     name: Reproducible development package evidence
-    needs: [validate, runtime, multisite_woocommerce, admin_ux]
+    needs: [validate, wordpress_plugin_check, runtime, multisite_woocommerce, admin_ux]
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
