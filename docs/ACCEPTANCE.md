@@ -12,23 +12,53 @@ This repository inherits the Kairoseth rules for minimum-sufficient validation, 
 The repository foundation/extraction can close when all applicable items are true:
 
 ```text
-[ ] public dedicated repository exists
-[ ] MIT root license + plugin header agree
-[ ] product identity / naming / architecture / roadmap documented
-[ ] accepted 0.3.2 provenance recorded
-[ ] standalone 0.4.0 source present
-[ ] legacy connector schema/REST/capability/state identifiers retained
-[ ] no platform/provider credentials embedded
-[ ] PHP syntax PASS
-[ ] static/contract regression checks PASS
-[ ] single-site get_site() guard protected
-[ ] package build PASS
-[ ] ZIP structure/integrity PASS
-[ ] PR CI PASS
-[ ] blocking extraction defects = 0
+[x] public dedicated repository exists
+[x] MIT root license + plugin header agree
+[x] product identity / naming / architecture / roadmap documented
+[x] accepted 0.3.2 provenance recorded
+[x] standalone 0.4.0 source present
+[x] legacy connector schema/REST/capability/state identifiers retained
+[x] no platform/provider credentials embedded
+[x] PHP syntax PASS
+[x] static/contract regression checks PASS
+[x] single-site get_site() guard protected
+[x] package build PASS
+[x] ZIP structure/integrity PASS
+[x] PR CI PASS
+[x] blocking extraction defects = 0
 ```
 
 This closes extraction only. It does **not** mark AI Search Optimizer Available.
+
+## Phase 2A — local analysis + deterministic preview
+
+Phase 2A can close only when all applicable items are true:
+
+```text
+[ ] EN/ES WordPress admin workspace present
+[ ] local robots/search-visibility readiness shown
+[ ] local sitemap readiness shown
+[ ] stored llms.txt deployment readiness shown
+[ ] published non-password public WordPress inventory generated
+[ ] WooCommerce public products included when available
+[ ] current-site Multisite boundary communicated
+[ ] deterministic source-grounded llms.txt preview generated
+[ ] unchanged logical inventory order produces byte-identical output
+[ ] generated preview contains no timestamps
+[ ] validator covers heading, size and resource presence
+[ ] validator rejects duplicate resource URLs
+[ ] validator rejects URLs outside the current site
+[ ] exact preview SHA-256 exposed
+[ ] local Phase 2A path performs no publication/state mutation
+[ ] no content sent to Kairoseth / AI providers / third-party analytics
+[ ] compatibility/security regression remains green
+[ ] plugin package includes the local Free modules
+[ ] PR CI PASS
+[ ] post-merge CI PASS
+[ ] blocking Phase 2A defects = 0
+```
+
+Phase 2B remains blocked until this boundary is accepted.
 
 ## Public Free release acceptance
 
