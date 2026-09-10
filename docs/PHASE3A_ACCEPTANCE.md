@@ -32,6 +32,7 @@ Phase 3A is accepted only when all of the following are true:
 [x] development package remains deterministic/reproducible
 [x] static Phase 3A regression exists
 [x] real-browser EN/ES desktop/mobile acceptance covers the new page
+[x] generated plugin package contract includes the Phase 3A readiness module
 [ ] PR CI PASS
 [ ] merge to main
 [ ] post-merge CI PASS
@@ -65,6 +66,7 @@ The Phase 3A PR must pass the repository CI gates selected by the changed contra
 - connector/security regression;
 - local Free analysis/publication/lifecycle regressions;
 - Phase 3A connection-readiness regression;
+- generated ZIP content contract;
 - representative WordPress/PHP packaged runtimes;
 - Multisite + WooCommerce packaged runtime;
 - real Chromium EN/ES desktop/mobile admin UX;
