@@ -55,6 +55,11 @@ if (!function_exists('add_action')) {
         return true;
     }
 }
+if (!function_exists('wp_parse_url')) {
+    function wp_parse_url($url) {
+        return parse_url($url);
+    }
+}
 
 require_once $root . '/includes/contextual-support.php';
 
