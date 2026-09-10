@@ -1,6 +1,6 @@
 # AI Search Optimizer — Acceptance
 
-Status: **Canonical acceptance definition — Phase 2A/2B accepted; Phase 2C next; product not released**  
+Status: **Canonical acceptance definition — Phase 2A/2B/2C1 accepted; Phase 2C2 next; product not released**  
 Last reviewed: **10 September 2026**
 
 ## Engineering inheritance
@@ -114,7 +114,69 @@ The CI #9 failure was caused by double-quoted assertion needles interpolating PH
 
 Canonical Phase 2B record: [`PHASE2B_CLOSURE.md`](PHASE2B_CLOSURE.md).
 
-A representative WordPress install/runtime matrix, Multisite/WooCommerce runtime acceptance, responsive/accessibility review and install/update/uninstall behavior remain Phase 2C release-hardening gates.
+## Phase 2C1 — lifecycle + data retention — accepted
+
+```text
+[x] EN/ES data/uninstall settings surface exists
+[x] retention values are bounded to preserve/delete
+[x] default and invalid values fail safe to preserve
+[x] retention setting change is capability-gated and nonce-protected
+[x] deactivation preserves stored deployment content
+[x] deactivation preserves uninstall preference
+[x] uninstall always removes setup marker
+[x] uninstall always removes retention preference
+[x] uninstall removes administrator deployment capability
+[x] uninstall removes deployer role assignments and role
+[x] stored deployment deletion occurs only for explicit delete mode
+[x] preserve mode leaves stored deployment recoverable after reinstall
+[x] Multisite cleanup executes in each site context
+[x] no network-global deployment deletion is used
+[x] uninstall performs no outbound request
+[x] uninstall performs no arbitrary filesystem write
+[x] uninstall.php and lifecycle module are included in package
+[x] README/readme/SECURITY/CHANGELOG reflect implemented lifecycle behavior
+[x] dedicated lifecycle regression PASS
+[x] PR CI #14 PASS
+[x] post-merge CI #15 PASS
+[x] blocking Phase 2C1 defects = 0
+```
+
+Evidence:
+
+```text
+PR #7                                    merged
+final PR head                            e52bacde07bf6569dfb4486d3fda77acc4752502
+merge SHA                                ac102413f55e15ce8ae93a0a9e78cb545d7d26e5
+```
+
+This acceptance validates the code/package contract. Real install/deactivate/reactivate/uninstall execution remains a Phase 2C2 runtime gate.
+
+Canonical policy: [`DATA_RETENTION.md`](DATA_RETENTION.md). Canonical closure: [`PHASE2C1_CLOSURE.md`](PHASE2C1_CLOSURE.md).
+
+## Phase 2C2 — WordPress/PHP runtime compatibility — next
+
+Phase 2C2 must establish representative real-runtime evidence for the packaged plugin. Required gates include:
+
+```text
+[ ] packaged ZIP installs on representative supported WordPress/PHP combinations
+[ ] activation succeeds without fatal/warning-level product failures
+[ ] administrator receives the expected least-privilege capability
+[ ] local public content can generate a valid deterministic artifact
+[ ] explicit local publication stores the expected SHA-256
+[ ] dynamic public /llms.txt returns the stored content
+[ ] independent verification passes in real WordPress runtime
+[ ] deactivation removes route/setup while preserving deployment data
+[ ] reactivation restores route/setup and preserved deployment becomes available again
+[ ] uninstall preserve mode keeps deployment data but removes plugin-owned security/setup state
+[ ] uninstall delete mode removes deployment data and plugin-owned security/setup state
+[ ] compatibility evidence records exact WordPress/PHP combinations
+[ ] prior contract/2A/2B/2C1 gates remain green
+[ ] PR CI PASS
+[ ] post-merge CI PASS
+[ ] blocking Phase 2C2 defects = 0
+```
+
+Multisite/WooCommerce runtime acceptance and responsive/accessibility remain Phase 2C3 gates.
 
 ## Public Free release acceptance
 
@@ -132,12 +194,12 @@ Before the first public product release:
 [ ] WooCommerce behavior runtime acceptance where claimed
 [x] EN/ES customer UI baseline
 [ ] accessibility/responsive acceptance where UI is affected
-[ ] install/activate/update/deactivate/uninstall policy tested
-[ ] retained/deleted data documented
+[ ] install/activate/update/deactivate/uninstall policy tested in real runtime
+[x] retained/deleted data documented
 [x] no silent telemetry/content transmission in local Free workflow
-[ ] security/privacy disclosure matches final Free implementation
+[x] security/privacy disclosure covers current Free lifecycle behavior
 [x] diagnostics are structured and secret-free at contract level
-[ ] changelog/version/tag aligned
+[ ] changelog/version/tag aligned for release
 [ ] immutable package built for release
 [ ] release package checksum published
 [ ] representative WordPress/PHP compatibility evidence
