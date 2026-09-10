@@ -1,13 +1,11 @@
 # AI Search Optimizer — Phase 3A Acceptance
 
-Status: **Implementation complete; acceptance pending PR CI + post-merge CI**  
+Status: **Accepted / closed — blocking Phase 3A defects: 0**  
 Date: **10 September 2026**
 
 Phase 3A adds an explicit, optional WordPress-side readiness and handoff surface for connecting AI Search Optimizer to Kairoseth. It does not create a second authentication protocol and does not make the Free local workflow dependent on Kairoseth.
 
 ## Acceptance contract
-
-Phase 3A is accepted only when all of the following are true:
 
 ```text
 [x] accepted `kairoseth-ai-web-readiness/v1` REST namespace preserved
@@ -33,15 +31,15 @@ Phase 3A is accepted only when all of the following are true:
 [x] static Phase 3A regression exists
 [x] real-browser EN/ES desktop/mobile acceptance covers the new page
 [x] generated plugin package contract includes the Phase 3A readiness module
-[ ] PR CI PASS
-[ ] merge to main
-[ ] post-merge CI PASS
-[ ] blocking Phase 3A defects = 0
+[x] PR CI PASS
+[x] merge to main
+[x] post-merge CI PASS
+[x] blocking Phase 3A defects = 0
 ```
 
 ## Existing cloud authority retained
 
-Kairoseth Platform remains authoritative for organization/product access and the existing WordPress connection lifecycle. The current platform flow validates the dedicated WordPress username + Application Password server-side, pins the exact WordPress identity, encrypts the credential server-side, and uses the inherited connection/deployment endpoints for safe managed publication.
+Kairoseth Platform remains authoritative for organization/product access and the existing WordPress connection lifecycle. The platform validates the dedicated WordPress username + Application Password server-side, pins the exact WordPress identity, encrypts the credential server-side, and uses the inherited connection/deployment endpoints for safe managed publication.
 
 The standalone plugin does not infer or grant Kairoseth roles, entitlements, organizations, products or provider access from local WordPress state.
 
@@ -58,18 +56,55 @@ package SHA-256    27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd5
 
 Phase 3 development uses `0.5.0-dev`; a development package must never be described as the accepted 0.4.0 release candidate.
 
-## Validation required for closure
+## Validation evidence
 
-The Phase 3A PR must pass the repository CI gates selected by the changed contracts, including:
+```text
+PR                                      #15
+PR head                                 dfab5839d549b2a1da48612f8bc23e125b725eca
+PR CI                                   #38 PASS — 7/7 jobs
+merge SHA                               6b771f3b54915a57d246d556638c3eefc9755208
+post-merge CI                           #39 PASS — 7/7 jobs
+post-merge source tree                  caab5d91799a622540fff3b7403838a2c63799e4
+development package                     ai-search-optimizer-0.5.0-dev.zip
+package bytes                           26652
+package entries                         12
+package SHA-256                         e62860eea41b364a869ef2762e6be1583a9eaac4212b3ffd30eaec30b005c7f2
+post-merge CI artifact id               10160373958
+reproducible build                      PASS
+```
 
-- PHP syntax;
-- connector/security regression;
-- local Free analysis/publication/lifecycle regressions;
-- Phase 3A connection-readiness regression;
+CI #38 and #39 passed:
+
+- PHP and shell syntax;
+- connector/security compatibility regression;
+- local Free analysis, publication and lifecycle regressions;
+- responsive/accessibility source regression;
+- Phase 3A Kairoseth connection-readiness regression;
+- development/release metadata alignment;
 - generated ZIP content contract;
-- representative WordPress/PHP packaged runtimes;
-- Multisite + WooCommerce packaged runtime;
-- real Chromium EN/ES desktop/mobile admin UX;
+- WordPress 5.6 / PHP 7.4 runtime;
+- WordPress 6.8 / PHP 8.2 runtime;
+- WordPress 7.1 / PHP 8.3 runtime;
+- Multisite + WooCommerce runtime;
+- real Chromium EN/ES desktop/mobile acceptance;
 - deterministic development-package evidence.
 
-Phase 3B cannot begin until this acceptance record is closed with the real PR CI, merge SHA and post-merge CI evidence.
+## Failures found and learned during acceptance
+
+Two CI failures were fixture defects rather than product defects and were fixed without bypassing the affected gates:
+
+```text
+CI #32  contract/security fixture pinned Version 0.4.0
+signature 5056f757cdbd7ba2b2beb7631fa9e155b8205caf594c4488d0be59cf4650eaff
+fix: separate invariant compatibility contracts from release-version metadata
+
+CI #35  Application Password readiness substring false positive
+signature b72759786f26644eb79ab26c49f40150ee5e62769b0bd19bfb461608e31a66a6
+fix: test concrete secret-handling mechanisms instead of ambiguous vocabulary substring
+```
+
+The detailed records live under [`engineering-failures/`](engineering-failures/README.md).
+
+## Closure decision
+
+**Phase 3A is accepted and closed.** Phase 3B — coordinated Kairoseth onboarding UX — is now the next permitted dependent milestone. Its implementation must preserve the Phase 3A guarantees and must not introduce browser-authoritative access or a second authentication protocol.
