@@ -11,7 +11,7 @@ if ($admin === false || $lifecycle === false || $assets === false) {
 }
 
 $assertions = array(
-    array($admin, 'aria-label="<?php echo esc_attr(kairoseth_aiwr_local_text(\'include\') . \'...', 'resource checkboxes expose accessible labels'),
+    array($admin, "aria-label=\"<?php echo esc_attr(kairoseth_aiwr_local_text('include')", 'resource checkboxes expose accessible labels'),
     array($admin, 'textarea readonly aria-label=', 'llms.txt preview has an accessible name'),
     array($admin, 'name="aiso_action" value="publish"', 'publish action remains a native named button'),
     array($admin, 'name="aiso_action" value="verify"', 'verify action remains a native named button'),
