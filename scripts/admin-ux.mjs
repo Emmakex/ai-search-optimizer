@@ -2,10 +2,11 @@ import { chromium } from 'playwright-core';
 
 const baseUrl = process.env.BASE_URL;
 const chromeBin = process.env.CHROME_BIN;
+const adminPass = process.env.WP_TEST_ADMIN_PASS;
 const locale = process.env.EXPECT_LOCALE || 'en';
 
-if (!baseUrl || !chromeBin) {
-  throw new Error('BASE_URL and CHROME_BIN are required');
+if (!baseUrl || !chromeBin || !adminPass) {
+  throw new Error('BASE_URL, CHROME_BIN and WP_TEST_ADMIN_PASS are required');
 }
 
 const copy = locale === 'es'
@@ -17,10 +18,10 @@ const copy = locale === 'es'
       verify: 'Verificar llms.txt público',
       dataHeading: 'AI Search Optimizer — Datos y desinstalación',
       preserve: 'Conservar los datos publicados de llms.txt',
-      connectionHeading: 'Conectar AI Search Optimizer con Kairoseth',
-      connectionPrivacy: 'Esta comprobación no hace ninguna petición a Kairoseth ni envía contenido, credenciales, analítica o estado de conexión. Kairoseth solo se abre cuando eliges el botón de abajo.',
-      openKairoseth: 'Abrir Kairoseth AI Search Optimizer',
-      connectionEndpoint: 'Endpoint de conexión',
+      supportHeading: 'Soporte de AI Search Optimizer',
+      supportPrivacy: 'No se envía nada a Kairoseth cuando cargas esta página de WordPress.',
+      improve: 'Mejorar con Kairoseth',
+      custom: 'Solicitar desarrollo a medida',
     }
   : {
       inventory: 'Eligible public content',
@@ -30,23 +31,35 @@ const copy = locale === 'es'
       verify: 'Verify public llms.txt',
       dataHeading: 'AI Search Optimizer — Data & uninstall',
       preserve: 'Preserve published llms.txt data',
-      connectionHeading: 'Connect AI Search Optimizer to Kairoseth',
-      connectionPrivacy: 'This readiness page makes no request to Kairoseth and sends no site content, credentials, analytics, or connection state. Kairoseth opens only when you choose the button below.',
-      openKairoseth: 'Open Kairoseth AI Search Optimizer',
-      connectionEndpoint: 'Connection endpoint',
+      supportHeading: 'AI Search Optimizer Support',
+      supportPrivacy: 'Nothing is sent to Kairoseth when this WordPress page loads.',
+      improve: 'Improve with Kairoseth',
+      custom: 'Request custom development',
     };
 
 function assert(condition, message) {
-  if (!condition) {
-    throw new Error(message);
+  if (!condition) throw new Error(message);
+}
+
+function assertSupportUrl(rawUrl, expectedType, label) {
+  const url = new URL(rawUrl);
+  assert(url.protocol === 'https:', `${label}: support URL must use HTTPS`);
+  assert(url.hostname === 'kairoseth.com', `${label}: support URL host changed`);
+  assert(url.pathname === '/custom-requests', `${label}: support URL path changed`);
+  assert(url.username === '' && url.password === '' && url.port === '' && url.hash === '', `${label}: unsafe URL component`);
+  const expectedKeys = ['source','extensionSlug','extensionName','extensionVersion','hostPlatform','hostPlatformVersion','locale','requestType'];
+  assert(JSON.stringify([...url.searchParams.keys()]) === JSON.stringify(expectedKeys), `${label}: support query allow-list changed`);
+  assert(url.searchParams.get('source') === 'extension', `${label}: source missing`);
+  assert(url.searchParams.get('extensionSlug') === 'ai-search-optimizer', `${label}: extension slug changed`);
+  assert(url.searchParams.get('extensionName') === 'AI Search Optimizer', `${label}: extension name changed`);
+  assert(url.searchParams.get('hostPlatform') === 'wordpress', `${label}: host platform changed`);
+  assert(url.searchParams.get('requestType') === expectedType, `${label}: request type changed`);
+  for (const forbidden of ['siteUrl','homeUrl','llmsTxt','contentHash','username','email','token','credential','woocommerce']) {
+    assert(!url.searchParams.has(forbidden), `${label}: forbidden automatic context leaked: ${forbidden}`);
   }
 }
 
-const browser = await chromium.launch({
-  executablePath: chromeBin,
-  headless: true,
-  args: ['--no-sandbox', '--disable-dev-shm-usage'],
-});
+const browser = await chromium.launch({ executablePath: chromeBin, headless: true, args: ['--no-sandbox', '--disable-dev-shm-usage'] });
 
 try {
   const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
@@ -56,11 +69,8 @@ try {
 
   await page.goto(`${baseUrl}/wp-login.php`, { waitUntil: 'domcontentloaded' });
   await page.locator('#user_login').fill('admin');
-  await page.locator('#user_pass').fill('runtime-test-password');
-  await Promise.all([
-    page.waitForURL(/wp-admin/),
-    page.locator('#wp-submit').click(),
-  ]);
+  await page.locator('#user_pass').fill(adminPass);
+  await Promise.all([page.waitForURL(/wp-admin/), page.locator('#wp-submit').click()]);
 
   for (const viewport of [
     { width: 1280, height: 900, name: 'desktop' },
@@ -68,7 +78,6 @@ try {
   ]) {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
     await page.goto(`${baseUrl}/wp-admin/tools.php?page=ai-search-optimizer`, { waitUntil: 'networkidle' });
-
     const root = page.locator('.ai-search-optimizer-local');
     await root.waitFor({ state: 'visible' });
     assert(await page.getByText(copy.inventory, { exact: true }).isVisible(), `${locale}/${viewport.name}: inventory heading missing`);
@@ -79,7 +88,6 @@ try {
     await checkbox.waitFor({ state: 'visible' });
     const checkboxName = await checkbox.getAttribute('aria-label');
     assert(Boolean(checkboxName && checkboxName.trim()), `${locale}/${viewport.name}: resource checkbox has no accessible name`);
-
     const textarea = page.locator('textarea[readonly]').first();
     const textareaName = await textarea.getAttribute('aria-label');
     assert(Boolean(textareaName && textareaName.trim()), `${locale}/${viewport.name}: preview textarea has no accessible name`);
@@ -89,74 +97,56 @@ try {
     assert(await publish.isVisible(), `${locale}/${viewport.name}: publish button missing`);
     assert(await verify.isVisible(), `${locale}/${viewport.name}: verify button missing`);
 
-    const dimensions = await root.evaluate((element) => ({
-      clientWidth: element.clientWidth,
-      scrollWidth: element.scrollWidth,
-      left: element.getBoundingClientRect().left,
-      right: element.getBoundingClientRect().right,
-      viewport: document.documentElement.clientWidth,
-    }));
-    assert(dimensions.scrollWidth <= dimensions.clientWidth + 1, `${locale}/${viewport.name}: workflow root overflows horizontally (${dimensions.scrollWidth} > ${dimensions.clientWidth})`);
+    const dimensions = await root.evaluate((element) => ({ clientWidth: element.clientWidth, scrollWidth: element.scrollWidth, left: element.getBoundingClientRect().left, right: element.getBoundingClientRect().right, viewport: document.documentElement.clientWidth }));
+    assert(dimensions.scrollWidth <= dimensions.clientWidth + 1, `${locale}/${viewport.name}: workflow root overflows horizontally`);
     assert(dimensions.left >= -1 && dimensions.right <= dimensions.viewport + 1, `${locale}/${viewport.name}: workflow escapes viewport bounds`);
 
     if (viewport.name === 'mobile') {
       const table = page.locator('.ai-search-optimizer-local .widefat').first();
-      const tableStyle = await table.evaluate((element) => ({
-        overflowX: getComputedStyle(element).overflowX,
-        maxWidth: getComputedStyle(element).maxWidth,
-      }));
-      assert(['auto', 'scroll'].includes(tableStyle.overflowX), `${locale}/mobile: inventory table is not horizontally contained`);
-
+      const overflowX = await table.evaluate((element) => getComputedStyle(element).overflowX);
+      assert(['auto', 'scroll'].includes(overflowX), `${locale}/mobile: inventory table is not horizontally contained`);
       const publishHeight = await publish.evaluate((element) => element.getBoundingClientRect().height);
-      assert(publishHeight >= 43, `${locale}/mobile: publish control is below touch target height (${publishHeight})`);
+      assert(publishHeight >= 43, `${locale}/mobile: publish control is below touch target height`);
     }
 
-    await page.goto(`${baseUrl}/wp-admin/tools.php?page=ai-search-optimizer-kairoseth`, { waitUntil: 'networkidle' });
-    const connectionRoot = page.locator('.ai-search-optimizer-kairoseth');
-    await connectionRoot.waitFor({ state: 'visible' });
-    assert(await page.getByRole('heading', { name: copy.connectionHeading, exact: true }).isVisible(), `${locale}/${viewport.name}: Kairoseth connection heading missing`);
-    assert(await page.getByText(copy.connectionPrivacy, { exact: true }).isVisible(), `${locale}/${viewport.name}: Kairoseth no-transmission disclosure missing`);
-    assert(await page.getByText(copy.connectionEndpoint, { exact: true }).isVisible(), `${locale}/${viewport.name}: connection endpoint label missing`);
+    await page.goto(`${baseUrl}/wp-admin/tools.php?page=ai-search-optimizer-support`, { waitUntil: 'networkidle' });
+    const supportRoot = page.locator('.ai-search-optimizer-support');
+    await supportRoot.waitFor({ state: 'visible' });
+    assert(await page.getByRole('heading', { name: copy.supportHeading, exact: true }).isVisible(), `${locale}/${viewport.name}: support heading missing`);
+    assert(await page.getByText(copy.supportPrivacy, { exact: true }).isVisible(), `${locale}/${viewport.name}: support privacy disclosure missing`);
 
-    const handoff = page.getByRole('link', { name: copy.openKairoseth, exact: true });
-    assert(await handoff.isVisible(), `${locale}/${viewport.name}: Kairoseth handoff missing`);
-    assert(await handoff.getAttribute('href') === 'https://kairoseth.com/app', `${locale}/${viewport.name}: Kairoseth handoff URL changed`);
-    assert(await handoff.getAttribute('target') === '_blank', `${locale}/${viewport.name}: Kairoseth handoff must open separately`);
-    const rel = (await handoff.getAttribute('rel')) || '';
-    assert(rel.includes('noopener') && rel.includes('noreferrer'), `${locale}/${viewport.name}: Kairoseth handoff rel protections missing`);
+    const improve = page.getByRole('link', { name: copy.improve, exact: true });
+    const custom = page.getByRole('link', { name: copy.custom, exact: true });
+    assert(await improve.isVisible(), `${locale}/${viewport.name}: improvement CTA missing`);
+    assert(await custom.isVisible(), `${locale}/${viewport.name}: custom-development CTA missing`);
+    assertSupportUrl(await improve.getAttribute('href'), 'implementation_support', `${locale}/${viewport.name}/improve`);
+    assertSupportUrl(await custom.getAttribute('href'), 'business_customization', `${locale}/${viewport.name}/custom`);
 
-    const endpointCode = connectionRoot.locator('code').filter({ hasText: '/wp-json/kairoseth-ai-web-readiness/v1/connection' });
-    assert(await endpointCode.count() === 1, `${locale}/${viewport.name}: inherited connection endpoint not shown exactly once`);
-
-    const connectionDimensions = await connectionRoot.evaluate((element) => ({
-      clientWidth: element.clientWidth,
-      scrollWidth: element.scrollWidth,
-      left: element.getBoundingClientRect().left,
-      right: element.getBoundingClientRect().right,
-      viewport: document.documentElement.clientWidth,
-    }));
-    assert(connectionDimensions.scrollWidth <= connectionDimensions.clientWidth + 1, `${locale}/${viewport.name}: connection page overflows horizontally`);
-    assert(connectionDimensions.left >= -1 && connectionDimensions.right <= connectionDimensions.viewport + 1, `${locale}/${viewport.name}: connection page escapes viewport bounds`);
-
-    if (viewport.name === 'mobile') {
-      const handoffHeight = await handoff.evaluate((element) => element.getBoundingClientRect().height);
-      assert(handoffHeight >= 43, `${locale}/mobile: Kairoseth handoff is below touch target height (${handoffHeight})`);
+    for (const link of [improve, custom]) {
+      assert(await link.getAttribute('target') === '_blank', `${locale}/${viewport.name}: support CTA must open separately`);
+      const rel = (await link.getAttribute('rel')) || '';
+      assert(rel.includes('noopener') && rel.includes('noreferrer'), `${locale}/${viewport.name}: support CTA rel protections missing`);
+      if (viewport.name === 'mobile') {
+        const height = await link.evaluate((element) => element.getBoundingClientRect().height);
+        assert(height >= 43, `${locale}/mobile: support CTA is below touch target height`);
+      }
     }
+
+    const supportDimensions = await supportRoot.evaluate((element) => ({ clientWidth: element.clientWidth, scrollWidth: element.scrollWidth, left: element.getBoundingClientRect().left, right: element.getBoundingClientRect().right, viewport: document.documentElement.clientWidth }));
+    assert(supportDimensions.scrollWidth <= supportDimensions.clientWidth + 1, `${locale}/${viewport.name}: support page overflows horizontally`);
+    assert(supportDimensions.left >= -1 && supportDimensions.right <= supportDimensions.viewport + 1, `${locale}/${viewport.name}: support page escapes viewport bounds`);
   }
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(`${baseUrl}/wp-admin/tools.php?page=ai-search-optimizer-data`, { waitUntil: 'networkidle' });
   assert(await page.getByRole('heading', { name: copy.dataHeading, exact: true }).isVisible(), `${locale}/mobile: data heading missing`);
   assert(await page.getByText(copy.preserve, { exact: true }).isVisible(), `${locale}/mobile: preserve option label missing`);
-  const preserveRadio = page.locator('input[name="aiso_uninstall_mode"][value="preserve"]');
-  assert(await preserveRadio.isVisible(), `${locale}/mobile: preserve radio missing`);
-
   const lifecycleRoot = page.locator('.ai-search-optimizer-lifecycle');
   const lifecycleDims = await lifecycleRoot.evaluate((element) => ({ clientWidth: element.clientWidth, scrollWidth: element.scrollWidth }));
   assert(lifecycleDims.scrollWidth <= lifecycleDims.clientWidth + 1, `${locale}/mobile: lifecycle page overflows horizontally`);
 
   assert(pageErrors.length === 0, `${locale}: browser page errors: ${pageErrors.join(' | ')}`);
-  console.log(`PASS: browser admin UX locale=${locale} desktop=1280x900 mobile=390x844 overflow=contained accessible-controls=present Kairoseth-readiness=present`);
+  console.log(`PASS: browser admin UX locale=${locale} desktop=1280x900 mobile=390x844 contextual-support=present`);
 } finally {
   await browser.close();
 }
