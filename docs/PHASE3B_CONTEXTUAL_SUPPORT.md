@@ -1,6 +1,6 @@
 # Phase 3B — Contextual Support / Custom Development
 
-Status: **accepted for merge; post-merge verification pending**  
+Status: **Accepted**  
 Last reviewed: **10 September 2026**
 
 ## Goal
@@ -99,13 +99,16 @@ Official WordPress Plugin Check is a blocking CI dependency for Phase 3B. A gree
 ## Engineering evidence
 
 ```text
-PR #18                               open; accepted for merge
+PR #18                               merged
 initial Plugin Check run             CI run 34514886969
 initial Plugin Check job             102997803449
 initial result                       FAIL — 29 findings (8 errors, 21 warnings)
 recovery commit                      1d14c57da85f3db970a4d99a6bfe86e34ae09faa
 recovery CI                          run #47 / 34516808280 — PASS
-Plugin Check job                     103004221498 — PASS
+final PR CI                          run #48 / 34517248713 — PASS
+merge SHA                            c05d9e162310700ed6ac1b1037ae9f96fbe43db6
+post-merge CI                        run #49 / 34517530717 — PASS — 8/8 jobs
+post-merge Plugin Check job          103006670109 — PASS
 Plugin Check                         PCP 2.1.0 — No errors found
 runtime WP 5.6 / PHP 7.4             PASS
 runtime WP 6.8 / PHP 8.2             PASS
@@ -116,6 +119,7 @@ reproducible package                 PASS
 package                              ai-search-optimizer-0.5.0-dev.zip
 package bytes / entries              27455 / 13
 package SHA-256                      2f2896031c72ce4ad8d561bd0d5c2a5820ec0ecd7e18c106250c9066683d80d7
+post-merge artifact ID               10168342187
 blocking Phase 3B defects            0
 ```
 
@@ -131,7 +135,7 @@ findings       29 total: 8 errors + 21 warnings
 signature      wordpress-plugin-check/phase3b/29-findings
 root cause     production package had not yet been normalized to the official WordPress.org Plugin Check contract
 fix            strict ABSPATH guards; wp_strip_all_tags/wp_parse_url; nonce-before-data request flow; bounded sanitization; prefixed uninstall globals; Stable Tag aligned to plugin version; one documented exact-byte text/plain escape exception
-validation     CI run #47 PASS; PCP 2.1.0 reports “No errors found”; all runtime/browser/package gates PASS
+validation     CI #47 + #48 + post-merge CI #49 PASS; PCP 2.1.0 reports “No errors found”; all runtime/browser/package gates PASS
 ```
 
 The `llms.txt` public response intentionally keeps one local `phpcs:ignore` on the final `echo $content`. The value has already passed stored SHA-256 integrity validation and is emitted as `text/plain`; HTML escaping would mutate the exact bytes and invalidate the published SHA-256 contract. No global Plugin Check warning/error suppression was introduced.
@@ -151,8 +155,8 @@ The `llms.txt` public response intentionally keeps one local `phpcs:ignore` on t
 [x] official WordPress Plugin Check PASS
 [x] reproducible development package PASS
 [x] PR CI PASS
-[ ] post-merge CI PASS
+[x] post-merge CI PASS
 [x] blockers = 0
 ```
 
-Phase 3B is accepted for merge. It closes only after the merge reaches `main` and the post-merge CI passes without reopening a blocker.
+Phase 3B is closed. Phase 3C is now the next permitted dependent milestone.
