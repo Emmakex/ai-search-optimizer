@@ -36,6 +36,13 @@ function kairoseth_aiwr_local_markdown_text($value, $max_length = 180) {
     );
 }
 
+function kairoseth_aiwr_local_url_key($url) {
+    if (!is_string($url)) {
+        return '';
+    }
+    return rtrim(strtolower(trim($url)), '/');
+}
+
 function kairoseth_aiwr_local_type_priority($type) {
     $priorities = array(
         'page' => 10,
@@ -102,15 +109,23 @@ function kairoseth_aiwr_local_build_llms($site, $inventory) {
         $lines[] = '';
     }
 
+    $seen_urls = array();
     if ($home_url !== '') {
         $lines[] = '## Main';
         $lines[] = '';
         $lines[] = '- [' . $name . '](' . $home_url . ')';
         $lines[] = '';
+        $seen_urls[kairoseth_aiwr_local_url_key($home_url)] = true;
     }
 
     $groups = array();
     foreach ($items as $item) {
+        $url_key = kairoseth_aiwr_local_url_key($item['url']);
+        if ($url_key === '' || isset($seen_urls[$url_key])) {
+            continue;
+        }
+        $seen_urls[$url_key] = true;
+
         $label = $item['typeLabel'] !== '' ? $item['typeLabel'] : 'Content';
         if (!isset($groups[$label])) {
             $groups[$label] = array();
@@ -162,7 +177,7 @@ function kairoseth_aiwr_local_validate_llms($content, $home_url, $max_bytes = 52
 
     $seen = array();
     foreach ($urls as $url) {
-        $key = strtolower($url);
+        $key = kairoseth_aiwr_local_url_key($url);
         if (isset($seen[$key])) {
             $findings[] = array('code' => 'duplicate_url', 'severity' => 'error', 'value' => $url);
             continue;
