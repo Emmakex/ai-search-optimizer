@@ -2,6 +2,25 @@
 
 All notable standalone AI Search Optimizer changes are recorded here.
 
+## 0.5.0-dev — Unreleased
+
+### Added
+- Optional EN/ES **Kairoseth connection readiness** page under WordPress Tools.
+- Local HTTPS prerequisite check for the exact WordPress home URL.
+- Local WordPress Application Password availability check.
+- Local verification that the dedicated Kairoseth AI Web Deployer role retains the inherited deployment capability.
+- Exact WordPress Blog ID / Network ID / home URL / REST connection endpoint / `llms.txt` target display before handoff.
+- Guided least-privilege setup instructions and explicit user-initiated handoff to `https://kairoseth.com/app`.
+- Browser and static regression coverage for the Phase 3A connection-readiness boundary.
+- Reproducible **development-package** evidence so later development is not mislabeled as the accepted 0.4.0 release candidate.
+
+### Security / privacy
+- The readiness page performs no automatic request to Kairoseth.
+- No site identifier, username, Application Password, token or organization data is placed in the handoff URL.
+- No Kairoseth token, credential or cloud connection state is persisted by Phase 3A.
+- Kairoseth organization/product authorization remains server-authoritative.
+- The inherited WordPress REST namespace, schema, site pin and compare-and-set deployment protocol remain unchanged.
+
 ## 0.4.0 — Release candidate
 
 ### Added
