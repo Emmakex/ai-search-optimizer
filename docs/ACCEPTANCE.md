@@ -1,6 +1,6 @@
 # AI Search Optimizer — Acceptance
 
-Status: **Canonical acceptance definition — Phase 2A/2B/2C1/2C2 accepted; Phase 2C3 next; product not released**  
+Status: **Canonical acceptance definition — Phase 2A/2B/2C1/2C2/2C3 accepted; Phase 2C4 next; product not released**  
 Last reviewed: **10 September 2026**
 
 ## Engineering inheritance
@@ -56,14 +56,6 @@ This closes extraction only. It does **not** mark AI Search Optimizer Available.
 [x] blocking Phase 2A defects = 0
 ```
 
-Accepted implementation evidence:
-
-```text
-PR #3                                    merged
-PR head                                  828d1f1188aaf282f5b1fcce055fd912021df75b
-merge SHA                                61b33412484a20a505726c808ec64bc9dc8953a3
-```
-
 Canonical Phase 2A record: [`PHASE2A_CLOSURE.md`](PHASE2A_CLOSURE.md).
 
 ## Phase 2B — selection + safe local publication — accepted
@@ -98,19 +90,7 @@ Canonical Phase 2A record: [`PHASE2A_CLOSURE.md`](PHASE2A_CLOSURE.md).
 [x] blocking Phase 2B defects = 0
 ```
 
-Accepted implementation evidence:
-
-```text
-PR #5                                    merged
-final PR head                            895ba6a22c9f46674d43c4d860a9f14d99f6063c
-CI #9                                    FAIL — test fixture interpolation only
-CI #9 signature                          d48cb3aba4e635dfa5f275bf554bd46ca36a586923f5cc4a654d357cf2475126
-CI #10                                   PASS
-merge SHA                                35251c3842acaf2c71c72aa106bc855cd09fe2a9
-post-merge CI #11                        PASS
-```
-
-The CI #9 failure was caused by double-quoted assertion needles interpolating PHP variables inside the regression test. Product code, syntax, inherited security/compatibility and Phase 2A all remained green. The regression fixture now preserves literal variables.
+The CI #9 failure was caused by double-quoted assertion needles interpolating PHP variables inside the regression test. Product code, syntax, inherited security/compatibility and Phase 2A all remained green. Signature: `d48cb3aba4e635dfa5f275bf554bd46ca36a586923f5cc4a654d357cf2475126`.
 
 Canonical Phase 2B record: [`PHASE2B_CLOSURE.md`](PHASE2B_CLOSURE.md).
 
@@ -141,14 +121,6 @@ Canonical Phase 2B record: [`PHASE2B_CLOSURE.md`](PHASE2B_CLOSURE.md).
 [x] blocking Phase 2C1 defects = 0
 ```
 
-Evidence:
-
-```text
-PR #7                                    merged
-final PR head                            e52bacde07bf6569dfb4486d3fda77acc4752502
-merge SHA                                ac102413f55e15ce8ae93a0a9e78cb545d7d26e5
-```
-
 Canonical policy: [`DATA_RETENTION.md`](DATA_RETENTION.md). Canonical closure: [`PHASE2C1_CLOSURE.md`](PHASE2C1_CLOSURE.md).
 
 ## Phase 2C2 — WordPress/PHP runtime compatibility — accepted
@@ -175,45 +147,76 @@ Representative runtime evidence uses the generated ZIP, not the repository sourc
 [x] blocking Phase 2C2 defects = 0
 ```
 
-Evidence:
-
-```text
-PR #9                                    merged
-CI #18                                   FAIL — historical WordPress fixture self-update race before plugin installation
-CI #18 signature                         b4edb0c72807e8a6dd35cc3285aac513735bf810c442dbfd5f7b1f420b99e640
-final PR head                            7df89ac99642a1a0675d46e5028d734c0aae20e5
-CI #19                                   PASS
-merge SHA                                675f1f3bc9ed2572a94c497f21047c6a8c38a4e0
-post-merge CI #20                        PASS
-```
-
-CI #18 did not expose a plugin defect. The WordPress 5.6 fixture self-updated core files during bootstrap and produced a mixed core tree (`general-template.php` required a missing `wp-includes/php-compat/readonly.php`) before the plugin was installed. The runtime harness now disables core updates before first request; the minimum row and both newer rows pass the same full lifecycle contract.
+CI #18 was a historical WordPress 5.6 fixture self-update race before plugin installation, not a plugin defect. Signature: `b4edb0c72807e8a6dd35cc3285aac513735bf810c442dbfd5f7b1f420b99e640`. The harness freezes core updates; all rows pass.
 
 Canonical matrix: [`RUNTIME_COMPATIBILITY.md`](RUNTIME_COMPATIBILITY.md). Canonical closure: [`PHASE2C2_CLOSURE.md`](PHASE2C2_CLOSURE.md).
 
-## Phase 2C3 — Multisite/WooCommerce + UX hardening — next
+## Phase 2C3 — Multisite/WooCommerce + UX hardening — accepted
+
+```text
+[x] packaged plugin network-activates on real WordPress 7.1 / PHP 8.3 Multisite
+[x] main site receives independent setup/deployment state
+[x] subsite created after network activation receives site-local setup
+[x] exact Multisite blog identity is preserved for main and non-main sites
+[x] main-site and subsite public llms.txt artifacts are independently generated and verified
+[x] each site has a distinct stored/public SHA-256
+[x] publishing on the subsite cannot mutate the main-site deployment
+[x] network deactivation preserves each site's deployment state
+[x] network reactivation restores public verification for each site
+[x] network uninstall applies preserve/delete policy independently per site
+[x] WooCommerce 11.1.0 installs and activates on the supported current runtime
+[x] WooCommerce is activated only in the target subsite during the isolation test
+[x] public published products appear in local inventory
+[x] draft/private/password-protected products are excluded
+[x] WooCommerce detection requires no consumer/API keys
+[x] EN/ES admin copy remains complete for customer actions
+[x] real Chromium acceptance runs in English and Spanish
+[x] admin workflow passes 1280x900 desktop viewport
+[x] admin workflow passes 390x844 narrow/mobile viewport
+[x] controls have accessible names and native focusable semantics
+[x] keyboard focus remains visibly styled
+[x] mobile primary controls remain touch-friendly
+[x] primary workflow has no page-level horizontal overflow
+[x] wide inventory is contained on narrow screens
+[x] prior runtime/security/2A/2B/2C1/2C2 gates remain green
+[x] CI #24 PASS — 6/6 jobs
+[x] post-merge CI #25 PASS — 6/6 jobs
+[x] blocking Phase 2C3 defects = 0
+```
+
+Evidence:
+
+```text
+PR #11                                   merged
+initial PR head                          dc92ee9c81e2b7d5c8bf0b465c040dd8c8cba6cb
+CI #23                                   FAIL — Multisite harness command assumption only
+CI #23 signature                         6f27a415ed0943186949a4096cb8d9e02665b1f629d2ade98ca11426cc4e6bab
+fix commit                               ae3c0afb56e549de00607c0617b4d8698d21ce18
+CI #24                                   PASS
+merge SHA                                1f8e5a419357d873bf3dda4403a45ee9e9a3eabe
+post-merge CI #25                        PASS
+```
+
+CI #23 failed because the harness assumed `wp site get` existed in pinned WP-CLI 2.12.0. The product had not failed. The test now resolves the validated numeric blog ID with WordPress core `get_site_url()` and retains all original coverage.
+
+Canonical Phase 2C3 record: [`PHASE2C3_CLOSURE.md`](PHASE2C3_CLOSURE.md).
+
+## Phase 2C4 — release package + final acceptance — next
 
 Required gates:
 
 ```text
-[ ] packaged plugin network-activates on a real Multisite runtime
-[ ] main site and non-main site receive independent setup/deployment state
-[ ] each site's public /llms.txt resolves only its own deployment
-[ ] publishing on one site cannot mutate another site's deployment
-[ ] network deactivation preserves each site's deployment state
-[ ] network uninstall applies each site's preserve/delete preference independently
-[ ] WooCommerce installs/activates on a supported current runtime
-[ ] public published products appear in local inventory
-[ ] draft/private/password-protected products are excluded
-[ ] WooCommerce detection requires no consumer/API keys
-[ ] EN/ES admin copy remains complete for customer actions
-[ ] admin layout remains usable at narrow/mobile-width viewport
-[ ] controls have accessible names/focusable native semantics
-[ ] no horizontal overflow in the primary workflow
-[ ] prior runtime/security/2A/2B/2C1/2C2 gates remain green
-[ ] PR CI PASS
-[ ] post-merge CI PASS
-[ ] blocking Phase 2C3 defects = 0
+[ ] final plugin header/version/stable tag agree
+[ ] README/readme/CHANGELOG describe implemented Free workflow, not planned behavior
+[ ] security/privacy/data-retention docs match release candidate
+[ ] dependency and external-service claims are accurate
+[ ] MIT licensing remains internally consistent and GPL-compatible for future WordPress.org review
+[ ] exact release-candidate commit recorded
+[ ] package manifest recorded
+[ ] release-candidate ZIP SHA-256 recorded
+[ ] complete validate + WP/PHP matrix + Multisite/WooCommerce + browser EN/ES gates PASS on release-candidate source
+[ ] blocking Phase 2 defects = 0
+[ ] formal Free release decision recorded
 ```
 
 ## Public Free release acceptance
@@ -221,30 +224,29 @@ Required gates:
 Before the first public product release:
 
 ```text
-[ ] useful account-free local Free workflow
+[x] useful account-free local Free workflow
 [x] robots.txt / sitemap / llms.txt readiness state
 [x] public WordPress content inventory/selection
 [x] deterministic source-grounded llms.txt generation
 [x] validator + actionable findings
 [x] explicit local publication
 [x] local public verification contract
-[ ] Multisite site isolation runtime acceptance
-[ ] WooCommerce behavior runtime acceptance where claimed
+[x] Multisite site isolation runtime acceptance
+[x] WooCommerce behavior runtime acceptance where claimed
 [x] EN/ES customer UI baseline
-[ ] accessibility/responsive acceptance where UI is affected
+[x] accessibility/responsive acceptance where UI is affected
 [x] install/activate/update/deactivate/uninstall policy tested in real runtime
 [x] retained/deleted data documented
 [x] no silent telemetry/content transmission in local Free workflow
 [x] security/privacy disclosure covers current Free lifecycle behavior
 [x] diagnostics are structured and secret-free at contract level
-[ ] changelog/version/tag aligned for release
-[ ] immutable package built for release
-[ ] release package checksum published
+[ ] changelog/version/tag aligned for release candidate
+[ ] immutable package/checksum evidence recorded
 [x] representative WordPress/PHP compatibility evidence
 [ ] blocking defects = 0
 ```
 
-The partially checked release list records capabilities already established by accepted phases; it does not mean the Free release as a whole is accepted.
+The remaining unchecked items are exclusively Phase 2C4 release-candidate/final-decision work. No public release or WordPress.org availability is implied yet.
 
 ## Kairoseth-connected acceptance
 
