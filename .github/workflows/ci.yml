@@ -25,10 +25,13 @@ jobs:
           unzip -v | head -n 2
 
       - name: PHP syntax
-        run: bash scripts/ci-run.sh "PHP syntax" php -l ai-search-optimizer.php
+        run: bash scripts/ci-run.sh "PHP syntax" bash -c 'find ai-search-optimizer.php includes tests -name "*.php" -type f -print0 | xargs -0 -n1 php -l'
 
       - name: Contract and security regression
         run: bash scripts/ci-run.sh "Contract and security regression" php tests/contract-check.php
+
+      - name: Local Free analysis regression
+        run: bash scripts/ci-run.sh "Local Free analysis regression" php tests/local-free-check.php
 
       - name: Build plugin package
         run: bash scripts/ci-run.sh "Build plugin package" bash scripts/build-plugin.sh
