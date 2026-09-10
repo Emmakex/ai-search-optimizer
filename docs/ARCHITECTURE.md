@@ -1,35 +1,82 @@
 # AI Search Optimizer — Architecture
 
-Status: **Standalone architecture baseline**  
+Status: **Standalone local-first WordPress architecture**  
 Last reviewed: **10 September 2026**
 
-## Boundaries
+## Product boundary
 
 ```text
 WordPress / WooCommerce
 └── AI Search Optimizer plugin
     ├── local public-content inspection
-    ├── local llms.txt generation/validation (planned Free v1)
-    ├── site-local llms.txt publication
-    ├── WordPress identity / Multisite
-    ├── least-privilege deployment capability
-    └── optional authenticated Kairoseth connector
+    ├── local deterministic llms.txt generation/validation
+    ├── explicit site-local llms.txt publication
+    ├── independent public SHA-256 verification
+    ├── WordPress single-site / Multisite isolation
+    ├── WooCommerce public-product awareness
+    ├── lifecycle / data-retention controls
+    ├── optional contextual support/custom-development links
+    └── inherited managed REST compatibility contract
 
-Kairoseth Platform
-├── organization/product authorization
-├── advanced whole-site analysis
-├── Importance / AI Readiness
-├── source-grounded curation/revisions
-├── optional provider-neutral AI assistance
-├── managed deployment orchestration
-└── independent public verification
+Kairoseth
+└── optional external support/custom requests
+    ├── user-initiated browser navigation only
+    ├── bounded non-sensitive product/platform context
+    └── user-controlled request/contact information
 ```
 
-The plugin is independently releasable. `kairoseth-platform` must not be its build/runtime container.
+The plugin is independently releasable and useful without Kairoseth. `kairoseth-platform` is not its build/runtime container, license authority or feature-unlock service.
+
+## Local Free architecture
+
+The accepted Free workflow reads WordPress-owned public content and local WordPress state:
+
+```text
+readiness inspection
+→ eligible public-content inventory
+→ explicit resource selection
+→ deterministic source-grounded llms.txt build
+→ validation
+→ explicit publish
+→ local storage integrity check
+→ independent public read-back
+→ exact SHA-256 verification
+```
+
+No AI provider is required. No site content is silently transmitted to Kairoseth or analytics services.
+
+## Optional contextual support architecture
+
+The WordPress.org-facing external path is deliberately small:
+
+```text
+administrator
+→ Tools → AI Search Optimizer Support
+→ page load remains local
+→ explicit support/custom CTA
+→ browser opens https://kairoseth.com/custom-requests
+→ only bounded allow-listed technical/product context is present
+→ user chooses what additional information to submit
+```
+
+Allowed automatic context:
+
+```text
+source
+extensionSlug
+extensionName
+extensionVersion
+hostPlatform
+hostPlatformVersion
+locale
+requestType
+```
+
+No site URL, administrator identity, `llms.txt` body/resources/findings, WooCommerce customer/order data, credentials, logs or database content is attached automatically.
 
 ## Imported compatibility contract
 
-Standalone `0.4.0` starts from the accepted Kairoseth AI Web Readiness Connector `0.3.2`. To avoid breaking existing installations and the currently accepted Kairoseth Platform adapter, these internal identifiers remain unchanged during extraction:
+The standalone line originated from accepted Kairoseth AI Web Readiness Connector `0.3.2`. To preserve existing installations and the accepted Kairoseth Platform adapter, these internal identifiers remain stable until a separately accepted versioned migration exists:
 
 ```text
 REST namespace: kairoseth-ai-web-readiness/v1
@@ -42,33 +89,43 @@ connector schema: 2
 connection response plugin id: kairoseth-ai-web-readiness
 ```
 
-They are compatibility identifiers, not the public product name. Any future protocol/name migration requires an explicit backward-compatible versioned contract.
+They are compatibility identifiers, not the public product identity and not part of the WordPress.org CTA model.
 
-## Security model
+The compatibility API exposes authenticated `GET /connection`, `GET /deployment` and `PUT /deployment`. Managed mutation requires the dedicated capability, exact blog/network/home pin, content SHA-256 and compare-and-set preconditions.
 
-The imported connector exposes only authenticated `GET /connection`, `GET /deployment` and `PUT /deployment` operations and a public site-local `/llms.txt` representation.
+## WordPress authority and security
 
-Publication requires the dedicated WordPress capability. The payload is pinned to expected blog/network/home identity, content must match its SHA-256, and compare-and-set preconditions reject remote drift before mutation.
-
-The plugin does not require FTP/SFTP, hosting-panel credentials, database credentials or WooCommerce consumer keys and does not perform arbitrary filesystem writes.
-
-Kairoseth/provider secrets are never embedded in the plugin. Kairoseth tenant/product authority remains server-side.
+- WordPress capability checks gate local publication/admin operations.
+- Explicit state-changing admin actions are nonce protected.
+- Public `llms.txt` content is served only when stored content matches its SHA-256.
+- Local public verification performs a separate HTTP read-back with redirects disabled.
+- No FTP/SFTP, hosting-panel, database or WooCommerce consumer credentials are required.
+- Provider/Kairoseth production secrets are never embedded in the plugin.
+- Browser/plugin/model output cannot grant Kairoseth roles or entitlements.
+- Optional support navigation is not a remote license or cloud-account dependency.
 
 ## Multisite
 
-The accepted `0.3.2` rule is preserved: `get_site()` is called only when Multisite is active. Identity includes `blogId`, `networkId`, `isMainSite`, `homeUrl`, `siteUrl`, REST URL and exact site-local `llms.txt` target.
+`get_site()` is used only when Multisite is active. Site identity remains site-local and includes Blog ID, Network ID, main-site state, WordPress home/site URLs, REST root and the local `llms.txt` target.
 
-Network activation initializes each site independently and future sites are initialized when the plugin is network-active.
+Network activation initializes existing sites and initializes future sites when the plugin is network-active. Deployment and uninstall retention state remain isolated per blog/site.
 
-## State and upgrade compatibility
+## Lifecycle and data retention
 
-The standalone plugin intentionally reuses the existing option/capability identifiers so an explicit replacement of the legacy connector can preserve compatible state. Automatic migration/update behavior is not yet declared release-ready and must be tested before 0.4.0 distribution.
+Deactivation preserves deployment data and the uninstall preference while removing active rewrite/setup behavior.
 
-Current deactivation behavior retains deployment data and the role/capability while removing setup/rewrite state. Final uninstall cleanup/retention semantics are a release blocker and must be made explicit before public availability.
+On uninstall the administrator-selected site-local policy controls deployment retention:
 
-## Free local architecture
+```text
+preserve  default — retain stored llms.txt deployment for recovery
+ delete             remove stored llms.txt deployment
+```
 
-The future local Free generator must use WordPress-owned public content and deterministic rules. It must not silently transmit content to Kairoseth or an AI provider. Cloud enhancement is opt-in and separately authorized.
+Uninstall always removes plugin setup/security state, administrator deployment capability, custom deployer role and retention preference. Multisite cleanup runs site by site.
+
+## Internationalization and UX
+
+Customer-facing WordPress functionality ships EN/ES together. Release hardening includes real browser acceptance for desktop/mobile layouts and accessible controls. WordPress.org compliance parity additionally requires the official Plugin Check and the release-engineering gates defined in [`WORDPRESS_ORG_POLICY.md`](WORDPRESS_ORG_POLICY.md).
 
 ## Diagnostics
 
@@ -76,4 +133,4 @@ Material failures must yield structured evidence: product/version, WordPress/PHP
 
 ## Packaging
 
-Authoritative source lives in this repository. A release artifact must be produced by repository CI from a tagged source commit, contain only intended plugin files, and have a published checksum when releases begin.
+Authoritative source lives in this repository. CI builds the packaged plugin from source, verifies intended package contents and requires reproducible package/checksum evidence. A public stable release must be tied to an exact accepted source commit/tree and must not be claimed as WordPress.org available until the external directory listing is live.
