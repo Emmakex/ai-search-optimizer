@@ -35,15 +35,12 @@ $checks = array(
     array(strpos($module, 'curl_') === false, 'Phase 3A readiness must not make automatic cURL requests'),
     array(strpos($module, 'applicationPassword') === false, 'Phase 3A must not collect or store an Application Password'),
     array(strpos($module, 'access_token') === false && strpos($module, 'refresh_token') === false, 'Phase 3A must not introduce cloud token storage'),
-    array(strpos(KAIROSETH_AISO_PLATFORM_APP_URL ?? '', '?') === false, 'placeholder'),
 );
 
-// The source-level URL assertion above is authoritative; this runtime helper avoids
-// accidentally treating a future query-bearing handoff as acceptable.
 if (preg_match("/KAIROSETH_AISO_PLATFORM_APP_URL\\s*=\\s*'([^']+)'/", $module, $matches)) {
-    $checks[count($checks) - 1] = array(strpos($matches[1], '?') === false && strpos($matches[1], '#') === false, 'handoff URL must not carry query or fragment data');
+    $checks[] = array(strpos($matches[1], '?') === false && strpos($matches[1], '#') === false, 'handoff URL must not carry query or fragment data');
 } else {
-    $checks[count($checks) - 1] = array(false, 'handoff URL constant could not be parsed');
+    $checks[] = array(false, 'handoff URL constant could not be parsed');
 }
 
 foreach ($checks as $check) {
