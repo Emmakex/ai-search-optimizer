@@ -4,7 +4,7 @@
 
 [English](#english) · [Español](#español)
 
-Status: **Incubating — standalone product foundation; not released yet**
+Status: **Building — Free release hardening; not released yet**
 
 ```text
 Product: AI Search Optimizer
@@ -16,103 +16,125 @@ Standalone baseline: 0.4.0 (unreleased)
 Accepted predecessor: Kairoseth AI Web Readiness Connector 0.3.2
 ```
 
-This repository owns the independently releasable WordPress plugin. Kairoseth Platform continues to own cloud analysis, tenant authorization, advanced AI Search workflows and managed publication orchestration.
+This repository owns the independently releasable WordPress plugin. The inherited connector identifiers remain compatible with Kairoseth Platform while the standalone Free workflow is hardened for release.
 
 ## English
 
-### Why this repository exists
+### What the Free plugin does
 
-AI Search Optimizer is being extracted from the real WordPress connector already accepted in Kairoseth AI Search Optimizer / AI Web Readiness Phase 5B. The dedicated repository gives the WordPress extension its own source, compatibility contract, CI, packaging and release cadence.
+The current `0.4.0` development baseline works locally without requiring a Kairoseth account:
 
-The imported baseline preserves the accepted connector security contract:
+```text
+inspect WordPress AI-search readiness
+→ detect robots.txt / sitemap / llms.txt state
+→ inventory eligible public WordPress content
+→ include public WooCommerce products when available
+→ select resources
+→ build deterministic llms.txt
+→ validate it
+→ publish explicitly
+→ read back public /llms.txt
+→ verify exact SHA-256
+```
+
+Current safeguards include:
 
 - dedicated least-privilege WordPress capability and deployer role;
 - exact single-site / Multisite identity;
 - site-local `llms.txt` serving;
-- SHA-256 integrity verification before serving;
-- authenticated namespaced REST endpoints;
-- compare-and-set protection against remote state drift;
-- idempotent same-hash deployments;
+- deterministic source-grounded generation with no generated timestamps;
+- validation of structure, size, duplicate URLs and same-site URL scope;
+- compare-before-write protection against stale-page replacement;
+- idempotent same-content publication;
+- independent public read-back with redirects disabled;
+- exact generated/stored/public SHA-256 verification;
 - no FTP/SFTP, hosting-panel, database or WooCommerce API credentials;
-- no arbitrary filesystem writes.
+- no arbitrary filesystem writes;
+- no silent transmission of local site content to Kairoseth, AI providers or third-party analytics.
 
-### Product direction
+### Data and uninstall behavior
 
-The public Free plugin must become useful on its own before release. The planned local Free workflow is:
+Deactivation preserves the stored `llms.txt` deployment and the uninstall preference.
 
-```text
-inspect WordPress public AI-search readiness
-→ detect sitemap / robots.txt / llms.txt state
-→ select public WordPress content
-→ build deterministic llms.txt preview
-→ validate it
-→ publish site-local llms.txt
-→ show understandable status and diagnostics
-```
+Before uninstalling, an authorized administrator can choose under **Tools → AI Search Optimizer Data** whether uninstall should:
 
-Optional Kairoseth-connected capabilities may then add deeper site analysis, Importance / AI Readiness evidence, source-grounded curation, revision history, optional AI assistance and managed publication verification.
+- **preserve published `llms.txt` data** — the safe default, allowing recovery after reinstall; or
+- **delete published `llms.txt` data** — permanently remove the stored deployment for the current WordPress site.
 
-Custom work remains available through Kairoseth Custom Requests once that shared platform dependency is implemented.
+Uninstall always removes the plugin setup marker, custom deployer role, administrator capability and retention preference. Multisite cleanup is performed site by site. While the plugin is absent, its dynamic public `/llms.txt` route is not available even when stored deployment data was preserved.
+
+See [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md).
 
 ### Compatibility boundary
 
-The public product name changes, but the imported `0.3.2` connector protocol identifiers intentionally remain compatible in the `0.4.0` foundation. Existing Kairoseth Platform integrations must not break merely because the code moved repositories.
+The public product name changed, but the accepted connector protocol identifiers from `0.3.2` remain intentionally compatible in the `0.4.0` line. Existing Kairoseth Platform integrations must not break merely because the WordPress code moved repositories.
 
 See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) and [`docs/PROVENANCE.md`](docs/PROVENANCE.md).
 
 ### Release truth
 
-There is **no public 0.4.0 release yet** and no WordPress.org listing is claimed. The WordPress.org slug `ai-search-optimizer` is a target only until actually approved/reserved.
+There is **no public 0.4.0 release yet** and no WordPress.org listing is claimed. The target WordPress.org slug is `ai-search-optimizer` until actually approved/reserved.
 
-Release requires independent CI, useful Free functionality, EN/ES customer UI, installation/update/uninstall policy, security/privacy disclosure, Custom Request/share requirements where applicable, a real package and real distribution verification.
+Phase 2A local analysis and Phase 2B safe publication are accepted. Phase 2C is hardening install/update/deactivate/uninstall behavior, real WordPress/PHP compatibility, Multisite/WooCommerce behavior, responsive/accessibility, privacy/security and release packaging before distribution.
 
 ## Español
 
-### Por qué existe este repositorio
+### Qué hace el plugin Free
 
-AI Search Optimizer se separa del conector WordPress ya aceptado en la Fase 5B de Kairoseth AI Search Optimizer / AI Web Readiness. El repositorio independiente pasa a ser propietario del código WordPress, compatibilidad, CI, empaquetado y ciclo de releases.
+La baseline de desarrollo `0.4.0` funciona localmente sin exigir una cuenta Kairoseth:
 
-La baseline importada conserva el contrato de seguridad probado:
+```text
+analizar preparación AI Search de WordPress
+→ detectar robots.txt / sitemap / llms.txt
+→ inventariar contenido público elegible
+→ incluir productos públicos WooCommerce cuando existan
+→ seleccionar recursos
+→ generar llms.txt determinista
+→ validar
+→ publicar de forma explícita
+→ leer /llms.txt públicamente
+→ verificar SHA-256 exacto
+```
+
+Protecciones actuales:
 
 - capability y rol WordPress dedicados de mínimo privilegio;
 - identidad exacta single-site / Multisite;
 - `llms.txt` site-local;
-- comprobación SHA-256 antes de servir contenido;
-- endpoints REST autenticados y namespaced;
-- compare-and-set frente a cambios remotos;
-- deployments idempotentes para el mismo hash;
+- generación determinista basada en contenido público y sin timestamps generados;
+- validación de estructura, tamaño, URLs duplicadas y URLs externas al sitio;
+- compare-before-write frente a páginas desactualizadas;
+- publicación idempotente cuando el contenido no cambia;
+- lectura pública independiente sin seguir redirecciones;
+- verificación SHA-256 exacta entre contenido generado, guardado y público;
 - sin FTP/SFTP, panel de hosting, base de datos ni API keys de WooCommerce;
-- sin escrituras arbitrarias de filesystem.
+- sin escrituras arbitrarias de filesystem;
+- sin transmisión silenciosa del contenido local a Kairoseth, proveedores IA o analítica de terceros.
 
-### Dirección de producto
+### Datos y desinstalación
 
-La edición Free pública debe aportar valor por sí sola antes del lanzamiento. El flujo local previsto es:
+Desactivar el plugin conserva el despliegue `llms.txt` guardado y la preferencia de desinstalación.
 
-```text
-analizar preparación AI Search pública de WordPress
-→ detectar sitemap / robots.txt / llms.txt
-→ seleccionar contenido público WordPress
-→ generar preview llms.txt determinista
-→ validar
-→ publicar llms.txt site-local
-→ mostrar estado y diagnósticos comprensibles
-```
+Antes de desinstalar, un administrador autorizado puede elegir en **Herramientas → Datos de AI Search Optimizer** si la desinstalación debe:
 
-La conexión opcional con Kairoseth podrá añadir análisis avanzado, evidencia Importance / AI Readiness, curación basada en fuentes, historial de revisiones, asistencia IA opcional y publicación gestionada con verificación.
+- **conservar los datos publicados de `llms.txt`** — opción segura por defecto para poder recuperarlos al reinstalar; o
+- **eliminar los datos publicados de `llms.txt`** — borrar permanentemente el despliegue guardado del sitio WordPress actual.
 
-Custom se integrará mediante Kairoseth Custom Requests cuando esa dependencia compartida de plataforma esté implementada.
+La desinstalación siempre elimina el marcador interno de configuración, el rol de despliegue, la capability del administrador y la preferencia de conservación. En Multisite la limpieza se realiza sitio por sitio. Mientras el plugin no esté instalado, su ruta dinámica pública `/llms.txt` no estará disponible aunque se hayan conservado los datos.
+
+Consulta [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md).
 
 ### Compatibilidad
 
-Cambia el nombre público del producto, pero los identificadores técnicos heredados del conector `0.3.2` se mantienen durante la fundación `0.4.0` para no romper Kairoseth Platform.
+Cambia el nombre público del producto, pero los identificadores técnicos heredados del conector aceptado `0.3.2` se mantienen en la línea `0.4.0` para no romper Kairoseth Platform.
 
 Consulta [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) y [`docs/PROVENANCE.md`](docs/PROVENANCE.md).
 
 ### Estado de release
 
-**0.4.0 todavía no está publicado** y no afirmamos disponer aún de ficha en WordPress.org. `ai-search-optimizer` es el slug objetivo hasta que WordPress.org lo apruebe/reserve.
+**0.4.0 todavía no está publicado** y no afirmamos disponer de ficha en WordPress.org. `ai-search-optimizer` sigue siendo el slug objetivo hasta su aprobación/reserva real.
 
-El release requiere CI independiente, Free útil, UI ES/EN, políticas de instalación/update/uninstall, seguridad/privacidad, requisitos Custom Request/share aplicables, paquete real y distribución verificada.
+Phase 2A de análisis local y Phase 2B de publicación segura están aceptadas. Phase 2C endurece instalación/update/desactivación/desinstalación, compatibilidad WordPress/PHP real, Multisite/WooCommerce, responsive/accesibilidad, privacidad/seguridad y empaquetado antes de distribución.
 
 ## Documentation / Documentación
 
@@ -120,6 +142,7 @@ El release requiere CI independiente, Free útil, UI ES/EN, políticas de instal
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 - [`docs/ROADMAP.md`](docs/ROADMAP.md)
 - [`docs/ACCEPTANCE.md`](docs/ACCEPTANCE.md)
+- [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md)
 - [`docs/NAMING_SEO.md`](docs/NAMING_SEO.md)
 - [`docs/PROVENANCE.md`](docs/PROVENANCE.md)
 - [`docs/ENGINEERING_RULES.md`](docs/ENGINEERING_RULES.md)
