@@ -147,7 +147,7 @@ if (!$admin || !$admin->has_cap(KAIROSETH_AIWR_CAPABILITY)) { fwrite(STDERR, "Ma
 
 BLOG2_ID="$(wp site create --slug=shop --title='Shop Site' --email='shop@example.com' --porcelain)"
 [[ "$BLOG2_ID" =~ ^[0-9]+$ ]] || { echo "Could not create Multisite subsite: $BLOG2_ID" >&2; exit 1; }
-SITE2_URL="$(wp site get "$BLOG2_ID" --field=url)"
+SITE2_URL="$(wp eval "echo get_site_url($BLOG2_ID, '/');")"
 [[ -n "$SITE2_URL" ]] || { echo "Could not resolve subsite URL." >&2; exit 1; }
 
 assert_site_eval "$SITE2_URL" '
