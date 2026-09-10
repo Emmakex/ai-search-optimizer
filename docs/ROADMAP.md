@@ -1,6 +1,6 @@
 # AI Search Optimizer — Roadmap
 
-Status: **Building — Phase 2C Free release hardening next**  
+Status: **Building — Phase 2C2 WordPress/PHP runtime compatibility next**  
 Last reviewed: **10 September 2026**
 
 ```text
@@ -9,7 +9,11 @@ Phase 1  standalone connector extraction       COMPLETE
 Phase 2  useful local Free workflow             IN PROGRESS
   2A     local analysis + deterministic preview COMPLETE
   2B     selection + safe local publication     COMPLETE
-  2C     Free release hardening                 NEXT
+  2C     Free release hardening                 IN PROGRESS
+    2C1  lifecycle + data retention             COMPLETE
+    2C2  WordPress/PHP runtime compatibility    NEXT
+    2C3  Multisite/WooCommerce + UX hardening   BLOCKED by 2C2
+    2C4  release package + final acceptance     BLOCKED by 2C3
 Phase 3  Kairoseth-connected customer UX        BLOCKED by Phase 2
 Phase 4  Custom Request + share + catalog       BLOCKED by shared/platform dependencies
 Phase 5  public distribution / WordPress.org    BLOCKED by prior acceptance
@@ -118,19 +122,48 @@ blocking Phase 2B defects                0
 
 Canonical closure: [`PHASE2B_CLOSURE.md`](PHASE2B_CLOSURE.md).
 
-### Phase 2C — Free release hardening — next
+### Phase 2C — Free release hardening — in progress
 
-Complete:
+#### Phase 2C1 — lifecycle + data retention — complete
 
-- representative WordPress/PHP install and runtime compatibility matrix;
-- Multisite UX and site-local isolation acceptance;
-- WooCommerce behavior acceptance where claimed;
-- responsive/accessibility acceptance;
-- install/activate/update/deactivate/uninstall behavior;
-- explicit uninstall/data-retention controls;
-- security/privacy disclosure synchronization;
-- release-oriented README/readme/changelog alignment;
-- release package/checksum acceptance without yet claiming WordPress.org availability.
+Accepted implementation:
+
+- dedicated EN/ES Data & uninstall admin surface;
+- explicit `preserve` / `delete` choice for stored deployment content;
+- invalid/unknown policy fails safe to `preserve`;
+- deactivation preserves deployment and uninstall preference;
+- uninstall always removes setup marker, retention preference, custom deployer role and administrator capability;
+- deployer-role assignments are removed before deleting the role;
+- optional stored deployment deletion occurs only when the current site's policy is `delete`;
+- Multisite cleanup executes site by site without network-global deployment deletion;
+- uninstall performs no outbound request or arbitrary filesystem write;
+- `uninstall.php` and lifecycle module are included in the package;
+- README, WordPress readme, SECURITY and CHANGELOG are synchronized with implemented behavior.
+
+Evidence:
+
+```text
+PR #7                                    merged
+final PR head                            e52bacde07bf6569dfb4486d3fda77acc4752502
+PR CI #14                                PASS
+merge SHA                                ac102413f55e15ce8ae93a0a9e78cb545d7d26e5
+post-merge CI #15                        PASS
+blocking Phase 2C1 defects               0
+```
+
+Canonical policy: [`DATA_RETENTION.md`](DATA_RETENTION.md). Canonical closure: [`PHASE2C1_CLOSURE.md`](PHASE2C1_CLOSURE.md).
+
+#### Phase 2C2 — WordPress/PHP runtime compatibility — next
+
+Build representative real-runtime CI that installs and activates the packaged plugin on supported WordPress/PHP combinations, validates activation/deactivation/reactivation, confirms public `llms.txt` publication/verification, and records the compatibility matrix as evidence rather than relying only on static contract tests.
+
+#### Phase 2C3 — Multisite/WooCommerce + UX hardening
+
+Blocked by 2C2 acceptance. Complete real Multisite site-isolation, current WooCommerce behavior, responsive layout and accessibility acceptance.
+
+#### Phase 2C4 — release package + final acceptance
+
+Blocked by 2C3 acceptance. Finalize version/readme/changelog alignment, immutable package/checksum evidence and the Free release decision without claiming WordPress.org availability before real distribution.
 
 No Kairoseth account is required for these core Free functions.
 
