@@ -14,6 +14,7 @@ DB_IMAGE="mariadb:10.11"
 WP_CLI_PHAR="/tmp/aiso-wp-cli-${WP_CLI_VERSION}.phar"
 PUBLIC_FILE="/tmp/aiso-public-${SUFFIX}.txt"
 PACKAGE="$(find "$ROOT/dist" -maxdepth 1 -name 'ai-search-optimizer-*.zip' -type f -print -quit)"
+CORE_FREEZE="define( 'WP_AUTO_UPDATE_CORE', false ); define( 'AUTOMATIC_UPDATER_DISABLED', true );"
 
 if [[ -z "$PACKAGE" || ! -f "$PACKAGE" ]]; then
   echo "Runtime package not found. Run scripts/build-plugin.sh first." >&2
@@ -64,6 +65,7 @@ docker run -d \
   -e WORDPRESS_DB_USER=wordpress \
   -e WORDPRESS_DB_PASSWORD=wordpress \
   -e WORDPRESS_DB_NAME=wordpress \
+  -e WORDPRESS_CONFIG_EXTRA="$CORE_FREEZE" \
   "$WORDPRESS_IMAGE" >/dev/null
 
 curl -fsSL "https://github.com/wp-cli/wp-cli/releases/download/v${WP_CLI_VERSION}/wp-cli-${WP_CLI_VERSION}.phar" -o "$WP_CLI_PHAR"
