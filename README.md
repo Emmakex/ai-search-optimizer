@@ -4,7 +4,7 @@
 
 [English](#english) · [Español](#español)
 
-Status: **Building — Free release hardening; not released yet**
+Status: **Release candidate — Phase 2C4 final acceptance in progress; not publicly released**
 
 ```text
 Product: AI Search Optimizer
@@ -12,17 +12,17 @@ System: Kairoseth Extensions
 Host: WordPress / WooCommerce
 Repository: Emmakex/ai-search-optimizer
 License: MIT
-Standalone baseline: 0.4.0 (unreleased)
+Standalone release candidate: 0.4.0
 Accepted predecessor: Kairoseth AI Web Readiness Connector 0.3.2
 ```
 
-This repository owns the independently releasable WordPress plugin. The inherited connector identifiers remain compatible with Kairoseth Platform while the standalone Free workflow is hardened for release.
+This repository owns the independently releasable WordPress plugin. The inherited connector identifiers remain compatible with Kairoseth Platform while the standalone Free workflow is finalized for public distribution.
 
 ## English
 
 ### What the Free plugin does
 
-The current `0.4.0` development baseline works locally without requiring a Kairoseth account:
+The `0.4.0` release-candidate line works locally without requiring a Kairoseth account:
 
 ```text
 inspect WordPress AI-search readiness
@@ -52,6 +52,8 @@ Current safeguards include:
 - no arbitrary filesystem writes;
 - no silent transmission of local site content to Kairoseth, AI providers or third-party analytics.
 
+Release hardening already has accepted real-runtime evidence for WordPress 5.6/PHP 7.4, WordPress 6.8/PHP 8.2 and WordPress 7.1/PHP 8.3, plus Multisite isolation, WooCommerce 11.1.0 and EN/ES browser acceptance. Phase 2C4 adds deterministic package/checksum evidence and the final Free release-candidate decision.
+
 ### Data and uninstall behavior
 
 Deactivation preserves the stored `llms.txt` deployment and the uninstall preference.
@@ -73,15 +75,15 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) and [`docs/PROVENANCE.md`](do
 
 ### Release truth
 
-There is **no public 0.4.0 release yet** and no WordPress.org listing is claimed. The target WordPress.org slug is `ai-search-optimizer` until actually approved/reserved.
+`0.4.0` is a release candidate, not a claimed public release. There is no GitHub Release or WordPress.org listing yet. The target WordPress.org slug is `ai-search-optimizer` until actually approved/reserved.
 
-Phase 2A local analysis and Phase 2B safe publication are accepted. Phase 2C is hardening install/update/deactivate/uninstall behavior, real WordPress/PHP compatibility, Multisite/WooCommerce behavior, responsive/accessibility, privacy/security and release packaging before distribution.
+The accepted package must be tied to an exact source commit/tree and accompanied by a SHA-256 manifest. Public distribution remains a separate action after Phase 2C4 acceptance.
 
 ## Español
 
 ### Qué hace el plugin Free
 
-La baseline de desarrollo `0.4.0` funciona localmente sin exigir una cuenta Kairoseth:
+La línea release candidate `0.4.0` funciona localmente sin exigir una cuenta Kairoseth:
 
 ```text
 analizar preparación AI Search de WordPress
@@ -111,6 +113,8 @@ Protecciones actuales:
 - sin escrituras arbitrarias de filesystem;
 - sin transmisión silenciosa del contenido local a Kairoseth, proveedores IA o analítica de terceros.
 
+El hardening de release ya dispone de evidencia runtime aceptada en WordPress 5.6/PHP 7.4, WordPress 6.8/PHP 8.2 y WordPress 7.1/PHP 8.3, además de Multisite, WooCommerce 11.1.0 y navegador real EN/ES. Phase 2C4 añade paquete determinista, manifest/checksum y la decisión final del release candidate Free.
+
 ### Datos y desinstalación
 
 Desactivar el plugin conserva el despliegue `llms.txt` guardado y la preferencia de desinstalación.
@@ -132,9 +136,9 @@ Consulta [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) y [`docs/PROVENANCE.md`]
 
 ### Estado de release
 
-**0.4.0 todavía no está publicado** y no afirmamos disponer de ficha en WordPress.org. `ai-search-optimizer` sigue siendo el slug objetivo hasta su aprobación/reserva real.
+`0.4.0` es un release candidate, no una release pública afirmada. Todavía no existe GitHub Release ni ficha WordPress.org. `ai-search-optimizer` sigue siendo el slug objetivo hasta su aprobación/reserva real.
 
-Phase 2A de análisis local y Phase 2B de publicación segura están aceptadas. Phase 2C endurece instalación/update/desactivación/desinstalación, compatibilidad WordPress/PHP real, Multisite/WooCommerce, responsive/accesibilidad, privacidad/seguridad y empaquetado antes de distribución.
+El paquete aceptado debe quedar ligado a un commit/tree exacto y acompañado por manifest y SHA-256. La distribución pública será una acción separada después de aceptar Phase 2C4.
 
 ## Documentation / Documentación
 

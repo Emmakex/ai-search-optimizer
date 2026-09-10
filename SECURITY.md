@@ -4,7 +4,7 @@ AI Search Optimizer is a WordPress extension that can publish site-local AI Sear
 
 ## Supported versions
 
-No standalone version is publicly released yet. Security support begins with the first accepted release.
+`0.4.0` is the current standalone release candidate. It is not yet claimed as publicly distributed through GitHub Releases or WordPress.org. Security issues found during release-candidate acceptance are treated as blocking defects; public-user support begins when an official distribution channel is published.
 
 ## Reporting a vulnerability
 
@@ -40,6 +40,10 @@ The uninstall preference is site-local and accepts only two normalized values:
 Uninstall always removes the plugin setup marker, retention preference, custom deployer role and administrator deployment capability. In Multisite this cleanup is performed site by site. The dynamic public `/llms.txt` route is unavailable while the plugin is inactive or removed even when deployment data is preserved.
 
 See [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md).
+
+## Release integrity
+
+The accepted release-candidate package must be generated from an exact source commit/tree using the repository build script. CI requires two consecutive package builds to be byte-identical and records the package SHA-256, byte size and entry count in a release manifest. A package whose checksum does not match the published acceptance evidence must not be treated as accepted.
 
 ## Diagnostics
 

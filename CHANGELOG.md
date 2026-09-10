@@ -2,7 +2,7 @@
 
 All notable standalone AI Search Optimizer changes are recorded here.
 
-## 0.4.0 — Unreleased
+## 0.4.0 — Release candidate
 
 ### Added
 - Dedicated public `Emmakex/ai-search-optimizer` repository.
@@ -18,11 +18,15 @@ All notable standalone AI Search Optimizer changes are recorded here.
 - EN/ES recoverable publication diagnostics.
 - Explicit uninstall data-retention preference with preserve-by-default behavior.
 - Site-local single-site/Multisite uninstall cleanup for plugin roles, capabilities and options.
+- Real packaged runtime acceptance on WordPress 5.6/PHP 7.4, WordPress 6.8/PHP 8.2 and WordPress 7.1/PHP 8.3.
+- Real Multisite site-isolation and WooCommerce 11.1.0 runtime acceptance.
+- Real Chromium EN/ES responsive/accessibility acceptance at desktop and 390px mobile width.
+- Deterministic release-candidate packaging with byte-reproducibility, manifest and SHA-256 evidence.
 
 ### Changed
 - Public plugin name from `Kairoseth AI Web Readiness Connector` to `AI Search Optimizer`.
 - Main standalone plugin filename to `ai-search-optimizer.php`.
-- Root and WordPress readmes now describe the implemented Free workflow instead of the original planned-state copy.
+- Root and WordPress readmes describe the implemented Free workflow and release-candidate boundary.
 
 ### Compatibility
 - Based on accepted connector 0.3.2.
@@ -31,8 +35,8 @@ All notable standalone AI Search Optimizer changes are recorded here.
 - Deactivation preserves stored deployment data; uninstall behavior for that deployment is explicitly user-selectable.
 
 ### Release status
-- Not released. No GitHub Release or WordPress.org listing is claimed yet.
-- Phase 2C release hardening remains in progress.
+- 0.4.0 is the current standalone release candidate under final Phase 2C4 acceptance.
+- No GitHub Release or WordPress.org listing is claimed yet.
 
 ## Historical predecessor
 
