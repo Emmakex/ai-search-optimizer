@@ -17,6 +17,9 @@ PACKAGE="$(find "$ROOT/dist" -maxdepth 1 -name 'ai-search-optimizer-*.zip' -type
 CORE_FREEZE="define( 'WP_AUTO_UPDATE_CORE', false ); define( 'AUTOMATIC_UPDATER_DISABLED', true );"
 HOST_PORT="18080"
 BASE_URL="http://127.0.0.1:${HOST_PORT}"
+ADMIN_PASS="$(openssl rand -hex 18)"
+
+echo "::add-mask::${ADMIN_PASS}"
 
 if [[ -z "$PACKAGE" || ! -f "$PACKAGE" ]]; then
   echo "Runtime package not found. Run scripts/build-plugin.sh first." >&2
@@ -92,7 +95,7 @@ wp core install \
   --url="$BASE_URL" \
   --title='AI Search Optimizer UX' \
   --admin_user=admin \
-  --admin_password='runtime-test-password' \
+  --admin_password="$ADMIN_PASS" \
   --admin_email='runtime@example.com' \
   --skip-email >/dev/null
 
@@ -129,13 +132,13 @@ fi
 cd "$ROOT"
 npm install --no-save --package-lock=false "playwright-core@${PLAYWRIGHT_CORE_VERSION}" >/dev/null
 
-BASE_URL="$BASE_URL" CHROME_BIN="$CHROME_BIN" EXPECT_LOCALE=en node scripts/admin-ux.mjs
+BASE_URL="$BASE_URL" CHROME_BIN="$CHROME_BIN" WP_TEST_ADMIN_PASS="$ADMIN_PASS" EXPECT_LOCALE=en node scripts/admin-ux.mjs
 
 wp language core install es_ES >/dev/null
 wp site switch-language es_ES >/dev/null
 ADMIN_ID="$(wp user get admin --field=ID)"
 wp user meta update "$ADMIN_ID" locale es_ES >/dev/null
 
-BASE_URL="$BASE_URL" CHROME_BIN="$CHROME_BIN" EXPECT_LOCALE=es node scripts/admin-ux.mjs
+BASE_URL="$BASE_URL" CHROME_BIN="$CHROME_BIN" WP_TEST_ADMIN_PASS="$ADMIN_PASS" EXPECT_LOCALE=es node scripts/admin-ux.mjs
 
 echo "PASS: real browser admin UX EN/ES WordPress=$WP_VERSION PHP=$PHP_VERSION viewports=1280x900,390x844"
