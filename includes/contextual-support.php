@@ -88,9 +88,11 @@ function kairoseth_aiso_support_context() {
     );
 }
 
-function kairoseth_aiso_support_destination() {
-    $parts = wp_parse_url(KAIROSETH_AISO_CUSTOM_REQUESTS_URL);
-    if (!is_array($parts)) {
+function kairoseth_aiso_validate_support_destination($destination) {
+    $destination = trim((string) $destination);
+    // Pure destination validation intentionally remains independent of WordPress bootstrap.
+    $parts = parse_url($destination);
+    if ($parts === false || !is_array($parts)) {
         return '';
     }
 
@@ -108,6 +110,10 @@ function kairoseth_aiso_support_destination() {
     }
 
     return 'https://kairoseth.com/custom-requests';
+}
+
+function kairoseth_aiso_support_destination() {
+    return kairoseth_aiso_validate_support_destination(KAIROSETH_AISO_CUSTOM_REQUESTS_URL);
 }
 
 function kairoseth_aiso_support_url($request_type) {
