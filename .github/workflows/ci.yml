@@ -25,7 +25,7 @@ jobs:
           unzip -v | head -n 2
 
       - name: PHP syntax
-        run: bash scripts/ci-run.sh "PHP syntax" bash -c 'find ai-search-optimizer.php includes tests -name "*.php" -type f -print0 | xargs -0 -n1 php -l'
+        run: bash scripts/ci-run.sh "PHP syntax" bash -c 'find ai-search-optimizer.php uninstall.php includes tests -name "*.php" -type f -print0 | xargs -0 -n1 php -l'
 
       - name: Contract and security regression
         run: bash scripts/ci-run.sh "Contract and security regression" php tests/contract-check.php
@@ -35,6 +35,9 @@ jobs:
 
       - name: Safe local publication regression
         run: bash scripts/ci-run.sh "Safe local publication regression" php tests/local-publication-check.php
+
+      - name: Lifecycle and uninstall regression
+        run: bash scripts/ci-run.sh "Lifecycle and uninstall regression" php tests/lifecycle-check.php
 
       - name: Build plugin package
         run: bash scripts/ci-run.sh "Build plugin package" bash scripts/build-plugin.sh

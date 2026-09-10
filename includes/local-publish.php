@@ -212,3 +212,5 @@ function kairoseth_aiwr_local_publish_content($content, $expected_state_token, $
         'verification' => $verification,
     );
 }
+
+require_once __DIR__ . '/local-lifecycle.php';

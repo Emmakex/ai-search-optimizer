@@ -16,14 +16,30 @@ Include only the minimum evidence needed to reproduce the issue. Never post real
 
 - no provider/Kairoseth production secrets in distributed plugin code;
 - no FTP/SFTP, hosting-panel or database credentials required;
-- WooCommerce consumer keys are not required for the inherited deployment contract;
+- WooCommerce consumer keys are not required for local Free behavior or the inherited deployment contract;
 - WordPress publication uses a dedicated capability and least-privilege identity;
+- explicit local publication and retention-setting changes are nonce protected;
 - exact blog/network/home identity is checked before managed mutation;
 - content SHA-256 is verified before storage/serving;
 - compare-and-set expected remote state prevents silent overwrite after drift;
+- local public verification performs an independent read-back and does not follow redirects;
 - Kairoseth organization/product authority remains server-side;
 - browser/plugin/model-controlled state cannot grant cloud roles or entitlements;
-- customer-facing remote transmission must be explicit and documented.
+- customer-facing remote transmission must be explicit and documented;
+- uninstall performs no outbound network requests and no arbitrary filesystem writes.
+
+## Data retention and uninstall
+
+Deactivation preserves the stored `llms.txt` deployment and uninstall preference.
+
+The uninstall preference is site-local and accepts only two normalized values:
+
+- `preserve` — default; keep the stored deployment so it can be recovered after reinstall;
+- `delete` — permanently delete the stored deployment during uninstall.
+
+Uninstall always removes the plugin setup marker, retention preference, custom deployer role and administrator deployment capability. In Multisite this cleanup is performed site by site. The dynamic public `/llms.txt` route is unavailable while the plugin is inactive or removed even when deployment data is preserved.
+
+See [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md).
 
 ## Diagnostics
 

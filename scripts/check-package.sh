@@ -14,8 +14,10 @@ ai-search-optimizer/ai-search-optimizer.php
 ai-search-optimizer/includes/
 ai-search-optimizer/includes/local-admin.php
 ai-search-optimizer/includes/local-core.php
+ai-search-optimizer/includes/local-lifecycle.php
 ai-search-optimizer/includes/local-publish.php
 ai-search-optimizer/readme.txt
+ai-search-optimizer/uninstall.php
 EOF
 
 diff -u /tmp/ai-search-optimizer-expected-files.txt /tmp/ai-search-optimizer-package-files.txt
