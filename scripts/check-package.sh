@@ -12,6 +12,7 @@ ai-search-optimizer/
 ai-search-optimizer/LICENSE
 ai-search-optimizer/ai-search-optimizer.php
 ai-search-optimizer/includes/
+ai-search-optimizer/includes/contextual-support.php
 ai-search-optimizer/includes/kairoseth-connection-readiness.php
 ai-search-optimizer/includes/local-admin-assets.php
 ai-search-optimizer/includes/local-admin.php
