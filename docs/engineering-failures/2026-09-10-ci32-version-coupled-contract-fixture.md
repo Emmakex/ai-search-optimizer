@@ -41,4 +41,9 @@ Compatibility/security tests must not hard-code a release number unless that num
 
 ## Validation
 
-Pending on the fix commit and subsequent CI run. This record must be updated or superseded by closure evidence once the corrected PR CI passes.
+```text
+PR CI #38          PASS — 7/7 jobs
+post-merge CI #39 PASS — 7/7 jobs
+```
+
+The affected **Contract and security regression** passed in both runs. The failure is closed and retained as regression memory.

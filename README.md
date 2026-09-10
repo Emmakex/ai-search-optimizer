@@ -4,7 +4,7 @@
 
 [English](#english) · [Español](#español)
 
-Status: **Development 0.5.0-dev — Phase 3 optional Kairoseth connection; accepted Free 0.4.0 RC preserved**
+Status: **Development 0.5.0-dev — Phase 3A accepted/closed; Phase 3B next; accepted Free 0.4.0 RC preserved**
 
 ```text
 Product: AI Search Optimizer
@@ -13,11 +13,13 @@ Host: WordPress / WooCommerce
 Repository: Emmakex/ai-search-optimizer
 License: MIT
 Current development line: 0.5.0-dev
+Phase 3A: accepted / closed
+Next milestone: Phase 3B coordinated Kairoseth onboarding UX
 Accepted Free release candidate: 0.4.0
 Accepted predecessor: Kairoseth AI Web Readiness Connector 0.3.2
 ```
 
-This repository owns the independently releasable WordPress plugin. The local Free workflow remains useful without Kairoseth, while the current development line adds an optional guided connection to Kairoseth AI Search Optimizer without changing the inherited connector protocol.
+This repository owns the independently releasable WordPress plugin. The local Free workflow remains useful without Kairoseth. Phase 3A adds the accepted optional WordPress-side connection readiness and safe handoff; Phase 3B is the next permitted milestone for reducing onboarding friction without changing the inherited server-authoritative connector model.
 
 ## English
 
@@ -40,9 +42,9 @@ inspect WordPress AI-search readiness
 
 Safeguards include dedicated least-privilege WordPress capability/role, exact single-site/Multisite identity, deterministic source-grounded generation, compare-before-write, independent public verification, no arbitrary filesystem writes and no silent transmission of local site content to Kairoseth, AI providers or third-party analytics.
 
-### Phase 3A — optional Kairoseth connection readiness
+### Phase 3A — optional Kairoseth connection readiness — accepted
 
-`0.5.0-dev` adds a dedicated **Tools → AI Search Optimizer · Kairoseth** page. It checks only local prerequisites for the already accepted Kairoseth WordPress connection contract:
+`0.5.0-dev` includes a dedicated **Tools → AI Search Optimizer · Kairoseth** page. It checks only local prerequisites for the already accepted Kairoseth WordPress connection contract:
 
 - exact WordPress home/root identity, Blog ID and Network ID;
 - HTTPS on the WordPress home URL;
@@ -54,6 +56,23 @@ Safeguards include dedicated least-privilege WordPress capability/role, exact si
 The page does **not** call Kairoseth automatically, collect an Application Password, persist Kairoseth tokens or decide whether a cloud connection exists. “Ready to connect” means only that the WordPress-side prerequisites are satisfied.
 
 The explicit handoff opens `https://kairoseth.com/app` only after a user clicks it. No site identifier, username, Application Password, token or organization data is placed in the handoff URL. Kairoseth resolves the authenticated account/organization/product server-side and validates WordPress through the inherited least-privilege REST contract.
+
+Acceptance evidence:
+
+```text
+PR #15                  merged
+PR CI #38               PASS — 7/7 jobs
+merge SHA               6b771f3b54915a57d246d556638c3eefc9755208
+post-merge CI #39       PASS — 7/7 jobs
+0.5.0-dev package SHA   e62860eea41b364a869ef2762e6be1583a9eaac4212b3ffd30eaec30b005c7f2
+blocking Phase 3A bugs  0
+```
+
+See [`docs/PHASE3A_ACCEPTANCE.md`](docs/PHASE3A_ACCEPTANCE.md).
+
+### Phase 3B — next
+
+The next milestone is coordinated Kairoseth onboarding UX: reduce the manual navigation from WordPress into the correct authorized AI Search Optimizer workflow while preserving server-authoritative account/organization/product access, the existing WordPress authentication contract, no secrets in handoff URLs and the independence of the local Free workflow.
 
 ### Inherited managed-connection contract
 
@@ -118,9 +137,9 @@ analizar preparación AI Search de WordPress
 
 Las protecciones incluyen capability/rol WordPress de mínimo privilegio, identidad single-site/Multisite exacta, generación determinista basada en fuentes, compare-before-write, verificación pública independiente, ausencia de escrituras arbitrarias en filesystem y ninguna transmisión silenciosa del contenido local a Kairoseth, proveedores IA o analítica de terceros.
 
-### Phase 3A — preparación para conexión opcional con Kairoseth
+### Phase 3A — preparación para conexión opcional con Kairoseth — aceptada
 
-`0.5.0-dev` añade la página **Herramientas → AI Search Optimizer · Kairoseth**. Comprueba únicamente prerrequisitos locales del contrato WordPress ya aceptado:
+`0.5.0-dev` incluye la página **Herramientas → AI Search Optimizer · Kairoseth**. Comprueba únicamente prerrequisitos locales del contrato WordPress ya aceptado:
 
 - raíz WordPress exacta, Blog ID y Network ID;
 - HTTPS en la URL principal;
@@ -132,6 +151,23 @@ Las protecciones incluyen capability/rol WordPress de mínimo privilegio, identi
 La pantalla **no** llama automáticamente a Kairoseth, no recoge una Application Password, no guarda tokens Kairoseth y no decide si existe una conexión cloud. “Listo para conectar” solo significa que WordPress cumple los prerrequisitos locales.
 
 El acceso explícito abre `https://kairoseth.com/app` únicamente cuando el usuario pulsa el botón. La URL no transporta identificador del sitio, usuario, Application Password, token ni datos de organización. Kairoseth resuelve cuenta/organización/producto server-side y valida WordPress mediante el contrato REST de mínimo privilegio heredado.
+
+Evidencia de aceptación:
+
+```text
+PR #15                  merged
+PR CI #38               PASS — 7/7 jobs
+merge SHA               6b771f3b54915a57d246d556638c3eefc9755208
+post-merge CI #39       PASS — 7/7 jobs
+SHA paquete 0.5.0-dev   e62860eea41b364a869ef2762e6be1583a9eaac4212b3ffd30eaec30b005c7f2
+blockers Phase 3A       0
+```
+
+Consulta [`docs/PHASE3A_ACCEPTANCE.md`](docs/PHASE3A_ACCEPTANCE.md).
+
+### Phase 3B — siguiente
+
+El siguiente milestone es el onboarding coordinado con Kairoseth: reducir la navegación manual desde WordPress hasta el flujo autorizado correcto de AI Search Optimizer manteniendo la autoridad de cuenta/organización/producto server-side, el contrato actual de autenticación WordPress, ningún secreto en la URL de acceso y la independencia del flujo Free local.
 
 ### Contrato de conexión gestionada heredado
 
@@ -180,10 +216,12 @@ Consulta [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md).
 - [`docs/ROADMAP.md`](docs/ROADMAP.md)
 - [`docs/ACCEPTANCE.md`](docs/ACCEPTANCE.md)
 - [`docs/KAIROSETH_CONNECTION.md`](docs/KAIROSETH_CONNECTION.md)
+- [`docs/PHASE3A_ACCEPTANCE.md`](docs/PHASE3A_ACCEPTANCE.md)
 - [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md)
 - [`docs/NAMING_SEO.md`](docs/NAMING_SEO.md)
 - [`docs/PROVENANCE.md`](docs/PROVENANCE.md)
 - [`docs/PHASE2C4_CLOSURE.md`](docs/PHASE2C4_CLOSURE.md)
+- [`docs/engineering-failures/README.md`](docs/engineering-failures/README.md)
 - [`docs/ENGINEERING_RULES.md`](docs/ENGINEERING_RULES.md)
 
 ## License
