@@ -27,6 +27,9 @@ jobs:
       - name: PHP syntax
         run: bash scripts/ci-run.sh "PHP syntax" bash -c 'find ai-search-optimizer.php uninstall.php includes tests -name "*.php" -type f -print0 | xargs -0 -n1 php -l'
 
+      - name: Shell syntax
+        run: bash scripts/ci-run.sh "Shell syntax" bash -n scripts/runtime-wordpress.sh
+
       - name: Contract and security regression
         run: bash scripts/ci-run.sh "Contract and security regression" php tests/contract-check.php
 
@@ -52,3 +55,32 @@ jobs:
             echo "Repository changed during validation." >&2
             exit 1
           fi
+
+  runtime:
+    name: Runtime WP ${{ matrix.wordpress }} / PHP ${{ matrix.php }}
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - wordpress: '5.6'
+            php: '7.4'
+          - wordpress: '6.8'
+            php: '8.2'
+          - wordpress: '7.1'
+            php: '8.3'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build package for runtime
+        run: bash scripts/ci-run.sh "Build runtime package" bash scripts/build-plugin.sh
+
+      - name: Packaged WordPress runtime acceptance
+        env:
+          WP_VERSION: ${{ matrix.wordpress }}
+          PHP_VERSION: ${{ matrix.php }}
+        run: bash scripts/ci-run.sh "WordPress $WP_VERSION / PHP $PHP_VERSION runtime" bash scripts/runtime-wordpress.sh
