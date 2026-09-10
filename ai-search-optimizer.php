@@ -2,7 +2,7 @@
 /**
  * Plugin Name: AI Search Optimizer
  * Description: Secure least-privilege llms.txt publishing connector for Kairoseth AI Search Optimizer.
- * Version: 0.4.0
+ * Version: 0.5.0-dev
  * Requires at least: 5.6
  * Requires PHP: 7.4
  * Author: Kairoseth
@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
  * integrations, stored deployment state and Multisite identity pins continue
  * to work while the public product is renamed AI Search Optimizer.
  */
-const KAIROSETH_AIWR_CONNECTOR_VERSION = '0.4.0';
+const KAIROSETH_AIWR_CONNECTOR_VERSION = '0.5.0-dev';
 const KAIROSETH_AIWR_SCHEMA_VERSION = '2';
 const KAIROSETH_AIWR_CAPABILITY = 'kairoseth_ai_web_readiness_deploy';
 const KAIROSETH_AIWR_DEPLOYER_ROLE = 'kairoseth_ai_web_deployer';
@@ -476,3 +476,4 @@ add_action('rest_api_init', 'kairoseth_aiwr_register_rest_routes');
 
 require_once __DIR__ . '/includes/local-core.php';
 require_once __DIR__ . '/includes/local-admin.php';
+require_once __DIR__ . '/includes/kairoseth-connection-readiness.php';
