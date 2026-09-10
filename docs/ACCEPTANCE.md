@@ -1,6 +1,6 @@
 # AI Search Optimizer — Acceptance
 
-Status: **Canonical acceptance definition — product not released**  
+Status: **Canonical acceptance definition — Phase 2A accepted; product not released**  
 Last reviewed: **10 September 2026**
 
 ## Engineering inheritance
@@ -9,7 +9,7 @@ This repository inherits the Kairoseth rules for minimum-sufficient validation, 
 
 ## Phase 0 / 1 foundation acceptance
 
-The repository foundation/extraction can close when all applicable items are true:
+The repository foundation/extraction is accepted:
 
 ```text
 [x] public dedicated repository exists
@@ -30,35 +30,41 @@ The repository foundation/extraction can close when all applicable items are tru
 
 This closes extraction only. It does **not** mark AI Search Optimizer Available.
 
-## Phase 2A — local analysis + deterministic preview
-
-Phase 2A can close only when all applicable items are true:
+## Phase 2A — local analysis + deterministic preview — accepted
 
 ```text
-[ ] EN/ES WordPress admin workspace present
-[ ] local robots/search-visibility readiness shown
-[ ] local sitemap readiness shown
-[ ] stored llms.txt deployment readiness shown
-[ ] published non-password public WordPress inventory generated
-[ ] WooCommerce public products included when available
-[ ] current-site Multisite boundary communicated
-[ ] deterministic source-grounded llms.txt preview generated
-[ ] unchanged logical inventory order produces byte-identical output
-[ ] generated preview contains no timestamps
-[ ] validator covers heading, size and resource presence
-[ ] validator rejects duplicate resource URLs
-[ ] validator rejects URLs outside the current site
-[ ] exact preview SHA-256 exposed
-[ ] local Phase 2A path performs no publication/state mutation
-[ ] no content sent to Kairoseth / AI providers / third-party analytics
-[ ] compatibility/security regression remains green
-[ ] plugin package includes the local Free modules
-[ ] PR CI PASS
-[ ] post-merge CI PASS
-[ ] blocking Phase 2A defects = 0
+[x] EN/ES WordPress admin workspace present
+[x] local robots/search-visibility readiness shown
+[x] local sitemap readiness shown
+[x] stored llms.txt deployment readiness shown
+[x] published non-password public WordPress inventory generated
+[x] WooCommerce public products included when available
+[x] current-site Multisite boundary communicated
+[x] deterministic source-grounded llms.txt preview generated
+[x] unchanged logical inventory order produces byte-identical output
+[x] generated preview contains no timestamps
+[x] validator covers heading, size and resource presence
+[x] validator rejects duplicate resource URLs
+[x] validator rejects URLs outside the current site
+[x] exact preview SHA-256 exposed
+[x] local Phase 2A path performs no publication/state mutation
+[x] no content sent to Kairoseth / AI providers / third-party analytics
+[x] compatibility/security regression remains green
+[x] plugin package includes the local Free modules
+[x] PR CI #5 PASS
+[x] post-merge CI #6 PASS
+[x] blocking Phase 2A defects = 0
 ```
 
-Phase 2B remains blocked until this boundary is accepted.
+Accepted implementation evidence:
+
+```text
+PR #3                                    merged
+PR head                                  828d1f1188aaf282f5b1fcce055fd912021df75b
+merge SHA                                61b33412484a20a505726c808ec64bc9dc8953a3
+```
+
+Phase 2B is now the next permitted implementation boundary. Canonical Phase 2A record: [`PHASE2A_CLOSURE.md`](PHASE2A_CLOSURE.md).
 
 ## Public Free release acceptance
 
@@ -66,20 +72,20 @@ Before the first public product release:
 
 ```text
 [ ] useful account-free local Free workflow
-[ ] robots.txt / sitemap / llms.txt readiness state
+[x] robots.txt / sitemap / llms.txt readiness state
 [ ] public WordPress content inventory/selection
-[ ] deterministic source-grounded llms.txt generation
-[ ] validator + actionable findings
+[x] deterministic source-grounded llms.txt generation
+[x] validator + actionable findings
 [ ] explicit local publication
 [ ] local public verification
 [ ] Multisite site isolation
 [ ] WooCommerce behavior accurate where claimed
-[ ] EN/ES customer UI
+[x] EN/ES customer UI baseline
 [ ] accessibility/responsive acceptance where UI is affected
 [ ] install/activate/update/deactivate/uninstall policy tested
 [ ] retained/deleted data documented
-[ ] no silent telemetry/content transmission
-[ ] security/privacy disclosure matches implementation
+[x] no silent telemetry/content transmission in Phase 2A
+[ ] security/privacy disclosure matches final Free implementation
 [ ] diagnostics are structured and secret-free
 [ ] changelog/version/tag aligned
 [ ] immutable package built in CI
@@ -87,6 +93,8 @@ Before the first public product release:
 [ ] representative WordPress/PHP compatibility evidence
 [ ] blocking defects = 0
 ```
+
+The partially checked release list records capabilities already established by Phase 2A; it does not mean the Free release as a whole is accepted.
 
 ## Kairoseth-connected acceptance
 
