@@ -19,6 +19,7 @@ mkdir -p "$PACKAGE_DIR"
 cp "$PLUGIN_FILE" "$PACKAGE_DIR/ai-search-optimizer.php"
 cp "$ROOT/readme.txt" "$PACKAGE_DIR/readme.txt"
 cp "$ROOT/LICENSE" "$PACKAGE_DIR/LICENSE"
+cp -R "$ROOT/includes" "$PACKAGE_DIR/includes"
 
 (
   cd "$DIST"
