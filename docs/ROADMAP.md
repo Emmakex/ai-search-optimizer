@@ -1,6 +1,6 @@
 # AI Search Optimizer — Roadmap
 
-Status: **Building — Phase 2C3 Multisite/WooCommerce + UX hardening next**  
+Status: **Building — Phase 2C4 final Free release acceptance next**  
 Last reviewed: **10 September 2026**
 
 ```text
@@ -12,8 +12,8 @@ Phase 2  useful local Free workflow             IN PROGRESS
   2C     Free release hardening                 IN PROGRESS
     2C1  lifecycle + data retention             COMPLETE
     2C2  WordPress/PHP runtime compatibility    COMPLETE
-    2C3  Multisite/WooCommerce + UX hardening   NEXT
-    2C4  release package + final acceptance     BLOCKED by 2C3
+    2C3  Multisite/WooCommerce + UX hardening   COMPLETE
+    2C4  release package + final acceptance     NEXT
 Phase 3  Kairoseth-connected customer UX        BLOCKED by Phase 2
 Phase 4  Custom Request + share + catalog       BLOCKED by shared/platform dependencies
 Phase 5  public distribution / WordPress.org    BLOCKED by prior acceptance
@@ -174,13 +174,56 @@ CI #18 did not reach plugin installation on the failing minimum row: the WordPre
 
 Canonical matrix: [`RUNTIME_COMPATIBILITY.md`](RUNTIME_COMPATIBILITY.md). Canonical closure: [`PHASE2C2_CLOSURE.md`](PHASE2C2_CLOSURE.md).
 
-#### Phase 2C3 — Multisite/WooCommerce + UX hardening — next
+#### Phase 2C3 — Multisite/WooCommerce + UX hardening — complete
 
-Complete real Multisite site-isolation, current WooCommerce behavior, responsive layout and accessibility acceptance. The packaged plugin must prove that each Multisite blog owns independent deployment state and public `llms.txt`, WooCommerce public products are included only when eligible, and the EN/ES admin workflow remains usable at narrow desktop/mobile-width admin layouts.
+Accepted implementation/evidence:
 
-#### Phase 2C4 — release package + final acceptance
+- generated ZIP network-activates on WordPress 7.1 / PHP 8.3 Multisite;
+- a subsite created after network activation receives site-local setup automatically;
+- main-site and subsite identity/deployment state remain isolated;
+- each site publishes and publicly verifies its own distinct `llms.txt` SHA-256;
+- subsite publication cannot mutate the main-site deployment;
+- network deactivate/reactivate preserves and recovers each site's deployment;
+- network uninstall applies `preserve` / `delete` independently per site;
+- WooCommerce 11.1.0 is accepted on the current runtime without consumer/API keys;
+- only published public products enter the eligible inventory;
+- draft, private and password-protected products remain excluded;
+- real Chromium acceptance passes in English and Spanish;
+- desktop 1280×900 and narrow/mobile 390×844 layouts remain usable;
+- primary workflow has no page-level horizontal overflow;
+- long URLs/hashes wrap, wide inventory is contained, mobile actions remain touch-friendly and keyboard focus remains visible.
 
-Blocked by 2C3 acceptance. Finalize version/readme/changelog alignment, immutable package/checksum evidence and the Free release decision without claiming WordPress.org availability before real distribution.
+Evidence:
+
+```text
+PR #11                                   merged
+initial PR head                          dc92ee9c81e2b7d5c8bf0b465c040dd8c8cba6cb
+CI #23                                   FAIL — unsupported wp site get harness assumption
+CI #23 signature                         6f27a415ed0943186949a4096cb8d9e02665b1f629d2ade98ca11426cc4e6bab
+fix commit                               ae3c0afb56e549de00607c0617b4d8698d21ce18
+CI #24                                   PASS — 6/6 jobs
+merge SHA                                1f8e5a419357d873bf3dda4403a45ee9e9a3eabe
+post-merge CI #25                        PASS — 6/6 jobs
+blocking Phase 2C3 defects               0
+```
+
+CI #23 did not expose a product defect. WP-CLI 2.12.0 did not register `wp site get`; the harness now resolves the already validated numeric blog ID with WordPress core `get_site_url()`. No coverage was removed.
+
+Canonical closure: [`PHASE2C3_CLOSURE.md`](PHASE2C3_CLOSURE.md).
+
+#### Phase 2C4 — release package + final acceptance — next
+
+Finalize the Free release candidate without yet claiming public distribution:
+
+- synchronize plugin header, `readme.txt`, README and changelog with the implemented Free workflow;
+- validate final version/stable-tag/license/dependency claims;
+- build a release-candidate ZIP from an exact commit;
+- record SHA-256 and package manifest evidence;
+- run the complete CI/runtime/browser gates against the release-candidate source;
+- reach blocking Free release defects = 0;
+- produce a formal Phase 2 / Free release decision.
+
+Phase 2C4 does not by itself create a WordPress.org listing or mark the Kairoseth Extensions catalog item Available. Distribution remains Phase 5 and the separate catalog Available gate still applies.
 
 No Kairoseth account is required for these core Free functions.
 
