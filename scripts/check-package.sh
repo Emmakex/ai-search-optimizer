@@ -14,6 +14,7 @@ ai-search-optimizer/ai-search-optimizer.php
 ai-search-optimizer/includes/
 ai-search-optimizer/includes/local-admin.php
 ai-search-optimizer/includes/local-core.php
+ai-search-optimizer/includes/local-publish.php
 ai-search-optimizer/readme.txt
 EOF
 

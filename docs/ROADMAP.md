@@ -1,6 +1,6 @@
 # AI Search Optimizer — Roadmap
 
-Status: **Building — Phase 2B safe local publication next**  
+Status: **Building — Phase 2B safe local publication in progress**  
 Last reviewed: **10 September 2026**
 
 ```text
@@ -8,7 +8,7 @@ Phase 0  product/repository foundation          COMPLETE
 Phase 1  standalone connector extraction       COMPLETE
 Phase 2  useful local Free workflow             IN PROGRESS
   2A     local analysis + deterministic preview COMPLETE
-  2B     selection + safe local publication     NEXT
+  2B     selection + safe local publication     IN PROGRESS
   2C     Free release hardening                 BLOCKED by 2B
 Phase 3  Kairoseth-connected customer UX        BLOCKED by Phase 2
 Phase 4  Custom Request + share + catalog       BLOCKED by shared/platform dependencies
@@ -82,17 +82,26 @@ blocking Phase 2A defects                0
 
 Canonical closure: [`PHASE2A_CLOSURE.md`](PHASE2A_CLOSURE.md).
 
-### Phase 2B — selection + safe local publication — next
+### Phase 2B — selection + safe local publication — in progress
 
-Add:
+Implementation contract:
 
-- explicit content selection controls;
-- validation before mutation;
-- explicit human publication action;
-- safe replacement / compare-before-write behavior;
-- site-local `llms.txt` publication;
-- independent local public read-back and exact SHA-256 verification;
-- recoverable failure states and actionable diagnostics.
+- explicit per-resource content selection, including a preserved explicit empty selection;
+- server rebuilds the selected artifact only from the current eligible inventory;
+- validation before any mutation;
+- nonce + existing least-privilege capability on the human admin workflow;
+- explicit Publish action; preview remains non-mutating;
+- compare-before-write token over the current stored deployment to prevent stale-page replacement;
+- idempotent same-content publication without unnecessary rewrites;
+- one bounded site-local deployment mutation point reusing the accepted `llms.txt` state;
+- local publication records `source=local-free` without changing the inherited REST contract;
+- independent HTTP read-back of the public `/llms.txt` with redirects disabled;
+- exact public SHA-256 comparison against the stored/generated content;
+- manual verification retry without changing stored content;
+- recoverable state-changed, validation, storage and public-verification diagnostics in EN/ES;
+- package and CI regression coverage for the publication module.
+
+Phase 2B is not accepted until PR CI, merge and post-merge CI are green. A real representative WordPress install/runtime matrix remains part of Phase 2C release hardening.
 
 ### Phase 2C — Free release hardening
 
