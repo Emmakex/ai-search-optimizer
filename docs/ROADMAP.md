@@ -1,223 +1,162 @@
 # AI Search Optimizer — Roadmap
 
-Status: **Phase 3 in progress — 3A accepted/closed; 3B coordinated Kairoseth onboarding UX is next**  
+Status: **Phase 3 re-scoped — WordPress.org-first contextual support/custom development model in progress**  
 Last reviewed: **10 September 2026**
 
 ```text
-Phase 0  product/repository foundation          COMPLETE
-Phase 1  standalone connector extraction       COMPLETE
-Phase 2  useful local Free workflow             COMPLETE
-  2A     local analysis + deterministic preview COMPLETE
-  2B     selection + safe local publication     COMPLETE
-  2C     Free release hardening                 COMPLETE
-    2C1  lifecycle + data retention             COMPLETE
-    2C2  WordPress/PHP runtime compatibility    COMPLETE
-    2C3  Multisite/WooCommerce + UX hardening   COMPLETE
-    2C4  release package + final acceptance     COMPLETE
-Phase 3  Kairoseth-connected customer UX        IN PROGRESS
-  3A     connection readiness + guided handoff  COMPLETE
-  3B     coordinated Kairoseth onboarding UX    NEXT
-  3C     connected-flow hardening/acceptance    BLOCKED by 3B
-Phase 4  Custom Request + share + catalog       BLOCKED by shared/platform dependencies
-Phase 5  public distribution / WordPress.org    UNBLOCKED by Phase 2; distribution gates pending
+Phase 0  product/repository foundation              COMPLETE
+Phase 1  standalone connector extraction           COMPLETE
+Phase 2  useful local Free workflow                 COMPLETE
+  2A     local analysis + deterministic preview     COMPLETE
+  2B     selection + safe local publication         COMPLETE
+  2C     Free release hardening                     COMPLETE
+    2C1  lifecycle + data retention                 COMPLETE
+    2C2  WordPress/PHP runtime compatibility        COMPLETE
+    2C3  Multisite/WooCommerce + UX hardening       COMPLETE
+    2C4  release package + final acceptance         COMPLETE
+Phase 3  WordPress.org-first support/custom path    IN PROGRESS
+  3A     cloud connection-readiness experiment      SUPERSEDED before public release
+  3B     contextual support + custom improvement    IN PROGRESS
+  3C     WordPress.org compliance parity            NEXT after 3B
+Phase 4  Kairoseth Extensions catalog integration   BLOCKED by Phase 3/public release truth
+Phase 5  GitHub release + WordPress.org submission  BLOCKED by Phase 3 compliance gates
 ```
 
-## Phase 0 — product foundation — complete
+## Phase 0 / 1 — foundation and extraction — complete
 
-Accepted: dedicated public repository, MIT license, canonical name/slug, product/architecture/roadmap/acceptance/security/provenance docs, engineering rules, and no false release/Available claims.
+The standalone public repository, MIT license, canonical `ai-search-optimizer` identity and the accepted connector compatibility baseline are established. Internal legacy REST/state identifiers remain only where needed for compatibility.
 
-Canonical closure: [`FOUNDATION_CLOSURE.md`](FOUNDATION_CLOSURE.md).
+## Phase 2 — useful local Free workflow — complete
 
-## Phase 1 — standalone extraction — complete
-
-The accepted WordPress connector 0.3.2 became the standalone line while preserving protocol/state compatibility.
+The accepted Free workflow is useful without a Kairoseth account:
 
 ```text
-PR #1                                    merged
-merge SHA                                2b9d0df93df99ccc0cd4e99f708a3a5a72bd4212
-PR CI #1                                 PASS
-post-merge CI #2                         PASS
-blocking extraction defects              0
+analyze local readiness
+→ inventory/select public content
+→ generate deterministic llms.txt
+→ validate
+→ explicitly publish
+→ public read-back
+→ exact SHA-256 verification
 ```
 
-## Phase 2 — useful Free local workflow — complete
+Accepted supporting evidence includes:
 
-The core Free edition is accepted as useful without a Kairoseth account and does not silently transmit local site content to Kairoseth, AI providers or third-party analytics.
+- WordPress 5.6 / PHP 7.4 runtime;
+- WordPress 6.8 / PHP 8.2 runtime;
+- WordPress 7.1 / PHP 8.3 runtime;
+- real Multisite isolation/lifecycle;
+- WooCommerce 11.1.0 public-content behavior;
+- EN/ES Chromium desktop/mobile acceptance;
+- preserve/delete uninstall policy;
+- reproducible package/checksum evidence.
 
-### 2A — local analysis + deterministic preview — complete
-
-Accepted EN/ES admin readiness, public WordPress/WooCommerce inventory, deterministic source-grounded `llms.txt`, validation, exact SHA-256, and a read-only analysis path.
+Accepted Free 0.4.0 release-candidate identity:
 
 ```text
-PR #3                                    merged
-PR CI #5                                 PASS
-merge SHA                                61b33412484a20a505726c808ec64bc9dc8953a3
-post-merge CI #6                         PASS
-blocking Phase 2A defects                0
+source commit      4d68b111d1f796fdc9bfbc3e670eeecc69c09a76
+source tree        472e8c5e5bc20ed8f4eed412ab5515561b89ff16
+package            ai-search-optimizer-0.4.0.zip
+package SHA-256    27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c
 ```
 
-Canonical closure: [`PHASE2A_CLOSURE.md`](PHASE2A_CLOSURE.md).
+Canonical closures remain in the Phase 2 documentation files.
 
-### 2B — selection + safe local publication — complete
+## Phase 3 — WordPress.org-first support/custom path — in progress
 
-Accepted explicit selection, server-side rebuild, nonce/capability-gated publication, validation-before-write, compare-before-write, idempotence, independent public read-back and exact generated/stored/public SHA-256 verification.
+### Strategy decision
+
+AI Search Optimizer adopts the same distribution model already accepted for `Emmakex/AI-Transparency`:
 
 ```text
-PR #5                                    merged
-CI #9                                    FAIL — test fixture interpolation only
-CI #9 signature                          d48cb3aba4e635dfa5f275bf554bd46ca36a586923f5cc4a654d357cf2475126
-CI #10                                   PASS
-merge SHA                                35251c3842acaf2c71c72aa106bc855cd09fe2a9
-post-merge CI #11                        PASS
-blocking Phase 2B defects                0
+Free plugin
+  complete local functionality
+  no account/license/entitlement required
+
+Optional CTA
+  explicit administrator action
+  no external request on page load
+  bounded non-sensitive technical/product context only
+
+Custom
+  support / improvement / integration / automation requested on Kairoseth
+  user chooses what information to submit
 ```
 
-Canonical closure: [`PHASE2B_CLOSURE.md`](PHASE2B_CLOSURE.md).
+This model is canonical for the WordPress.org-facing plugin.
 
-### 2C — Free release hardening — complete
+### Phase 3A — cloud connection-readiness experiment — superseded
 
-#### 2C1 — lifecycle + data retention — complete
+Phase 3A was implemented and technically accepted on the `0.5.0-dev` development line, proving a safe connection-readiness screen without automatic transmission. It is retained as engineering history, but the customer-facing cloud-onboarding direction was superseded before public release by the simpler WordPress.org-first model.
 
-Preserve/delete uninstall policy, preserve-by-default behavior, site-local Multisite cleanup and no outbound uninstall activity are accepted.
+The accepted 3A evidence is not deleted or rewritten. Its public admin surface is being retired in 3B.
 
-```text
-PR #7                                    merged
-PR CI #14                                PASS
-merge SHA                                ac102413f55e15ce8ae93a0a9e78cb545d7d26e5
-post-merge CI #15                        PASS
-```
+A coordinated platform onboarding PR (`kairoseth-platform` #223) was intentionally **closed without merge** after the strategy change. No production Kairoseth route dependency was introduced.
 
-Canonical policy: [`DATA_RETENTION.md`](DATA_RETENTION.md). Canonical closure: [`PHASE2C1_CLOSURE.md`](PHASE2C1_CLOSURE.md).
+### Phase 3B — contextual support + custom improvement — in progress
 
-#### 2C2 — WordPress/PHP runtime compatibility — complete
+Required contract:
 
-```text
-WordPress 5.6 / PHP 7.4                  PASS
-WordPress 6.8 / PHP 8.2                  PASS
-WordPress 7.1 / PHP 8.3                  PASS
-CI #18                                   FAIL — historical WordPress fixture self-update race
-CI #18 signature                         b4edb0c72807e8a6dd35cc3285aac513735bf810c442dbfd5f7b1f420b99e640
-CI #19                                   PASS
-merge SHA                                675f1f3bc9ed2572a94c497f21047c6a8c38a4e0
-post-merge CI #20                        PASS
-```
+- dedicated **Tools → AI Search Optimizer Support** page;
+- Free workflow remains fully usable without Kairoseth;
+- zero Kairoseth requests when the support page loads;
+- no dashboard-wide ads or non-contextual nags;
+- explicit CTA for implementation/optimization support;
+- explicit CTA for custom improvement/development;
+- canonical destination `https://kairoseth.com/custom-requests`;
+- strict query allow-list:
+  - `source`
+  - `extensionSlug`
+  - `extensionName`
+  - `extensionVersion`
+  - `hostPlatform`
+  - `hostPlatformVersion`
+  - `locale`
+  - `requestType`
+- request types limited to `implementation_support` and `business_customization` in the WordPress UI;
+- no automatic site URL, administrator identity, llms.txt body, resource list, findings, credentials, WooCommerce customer/order data, logs or database content;
+- EN/ES desktop/mobile browser acceptance;
+- WordPress Plugin Check becomes blocking before merge;
+- inherited Free/runtime/Multisite/WooCommerce/lifecycle/package gates remain green.
 
-Canonical matrix: [`RUNTIME_COMPATIBILITY.md`](RUNTIME_COMPATIBILITY.md). Canonical closure: [`PHASE2C2_CLOSURE.md`](PHASE2C2_CLOSURE.md).
+Canonical policy: [`WORDPRESS_ORG_POLICY.md`](WORDPRESS_ORG_POLICY.md).
 
-#### 2C3 — Multisite/WooCommerce + UX hardening — complete
+### Phase 3C — WordPress.org compliance parity — next after 3B
 
-Real Multisite isolation, WooCommerce 11.1.0 behavior and Chromium EN/ES desktop/mobile acceptance are accepted.
+Reach the same release-engineering baseline used by AI Transparency before directory submission:
 
-```text
-PR #11                                   merged
-CI #23                                   FAIL — unsupported wp site get harness assumption
-CI #23 signature                         6f27a415ed0943186949a4096cb8d9e02665b1f629d2ade98ca11426cc4e6bab
-CI #24                                   PASS — 6/6 jobs
-merge SHA                                1f8e5a419357d873bf3dda4403a45ee9e9a3eabe
-post-merge CI #25                        PASS — 6/6 jobs
-closure PR #12 CI #26                    PASS — 6/6 jobs
-closure merge SHA                        53f804ecebc49db90cb1c9ed098199ae43aa288a
-closure post-merge CI #27                PASS — 6/6 jobs
-```
+- official WordPress Plugin Check: `plugin_repo`, security, accessibility, performance;
+- WordPress Coding Standards;
+- PHPCompatibility across declared supported range;
+- proper WordPress i18n/gettext coverage with EN/ES parity and compiled Spanish catalog where appropriate;
+- real packaged runtime/browser acceptance;
+- real upgrade path acceptance;
+- Multisite lifecycle/isolation;
+- reproducible stable ZIP/checksum/manifest;
+- `readme.txt`, headers, changelog and stable tag synchronized for the actual release;
+- third-party/external-service disclosure complete;
+- zero blocking WordPress.org submission defects.
 
-Canonical closure: [`PHASE2C3_CLOSURE.md`](PHASE2C3_CLOSURE.md).
+## Phase 4 — Kairoseth Extensions catalog integration
 
-#### 2C4 — release package + final acceptance — complete
+The extension may remain `Building` until real distribution exists. `Available` requires truthful public distribution, stable package/version, install evidence and platform registry/public-page acceptance.
 
-The Free 0.4.0 release candidate is accepted from an exact source tree with deterministic package evidence.
-
-```text
-PR #13                                   merged
-PR CI #28                                PASS — 7/7 jobs
-accepted source commit                   4d68b111d1f796fdc9bfbc3e670eeecc69c09a76
-source tree                              472e8c5e5bc20ed8f4eed412ab5515561b89ff16
-post-merge CI #29                        PASS — 7/7 jobs
-package                                  ai-search-optimizer-0.4.0.zip
-package bytes                            21745
-package entries                          11
-package SHA-256                          27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c
-post-merge CI artifact id                10155308031
-reproducible build                       PASS
-blocking Phase 2 defects                 0
-Free release-candidate decision          GO for later public distribution
-closure PR #14 CI #30                    PASS — 7/7 jobs
-closure merge SHA                        de8b46f10827667b937607d0bed864a144fbb654
-closure post-merge CI #31                PASS — 7/7 jobs
-```
-
-Canonical closure: [`PHASE2C4_CLOSURE.md`](PHASE2C4_CLOSURE.md).
-
-The accepted `0.4.0` package identity is immutable. New product development does not reuse that version number.
-
-## Phase 3 — optional Kairoseth connection — in progress
-
-Phase 3 adds task-oriented EN/ES UX for customers who choose to connect the standalone plugin to Kairoseth AI Search Optimizer. The local Free workflow remains independent and usable without a Kairoseth account.
-
-Canonical contract: [`KAIROSETH_CONNECTION.md`](KAIROSETH_CONNECTION.md).
-
-### Phase 3A — connection readiness + guided handoff — complete
-
-Accepted on the `0.5.0-dev` line:
-
-- dedicated **Tools → AI Search Optimizer · Kairoseth** screen;
-- local HTTPS readiness check for exact WordPress home URL;
-- native WordPress Application Password availability check;
-- dedicated deployer role/capability readiness check;
-- exact Blog ID / Network ID / home URL / REST connection endpoint / `llms.txt` target display;
-- explicit least-privilege setup guide in EN/ES;
-- fixed user-initiated handoff to `https://kairoseth.com/app` with no query/fragment site or credential data;
-- no automatic request to Kairoseth;
-- no local Kairoseth token/session/entitlement or Application Password storage;
-- existing schema `2`, `kairoseth-ai-web-readiness/v1`, exact site pin and compare-and-set deployment protocol unchanged;
-- real browser desktop/mobile EN/ES acceptance;
-- all Phase 2 runtime/security/package regressions remain green.
-
-```text
-PR #15                                   merged
-PR CI #38                                PASS — 7/7 jobs
-merge SHA                                6b771f3b54915a57d246d556638c3eefc9755208
-post-merge CI #39                        PASS — 7/7 jobs
-development package                     ai-search-optimizer-0.5.0-dev.zip
-package bytes                            26652
-package entries                          12
-package SHA-256                          e62860eea41b364a869ef2762e6be1583a9eaac4212b3ffd30eaec30b005c7f2
-post-merge CI artifact id                10160373958
-blocking Phase 3A defects                0
-```
-
-Acceptance also produced two recorded CI fixture lessons: CI #32 (version-coupled compatibility fixture) and CI #35 (Application Password readiness substring false positive). Both were fixed and the affected gates passed in CI #38 and #39.
-
-Canonical closure: [`PHASE3A_ACCEPTANCE.md`](PHASE3A_ACCEPTANCE.md).
-
-### Phase 3B — coordinated Kairoseth onboarding UX — next
-
-Reduce the manual handoff from WordPress into the correct authorized Kairoseth site workflow without creating browser-authoritative access or a second authentication protocol.
-
-The current Kairoseth Platform remains authoritative for:
-
-- authenticated user/session;
-- organization/product access;
-- WordPress connection validation;
-- encrypted WordPress credential storage;
-- exact site identity pin;
-- managed publication authority and audit.
-
-Any future one-time pairing/prefill mechanism must be specified and threat-modeled before implementation. Phase 3B must preserve the accepted Phase 3A no-silent-transmission and Free-independence guarantees.
-
-### Phase 3C — connected-flow hardening/acceptance — blocked by 3B
-
-Require failure isolation, EN/ES responsive acceptance, credential rotation/disconnect guidance, exact site pin preservation, audit/diagnostic coverage and full regression before declaring the connected workflow accepted.
-
-## Phase 4 — Extensions integration
-
-Before the extension is marked Available in Kairoseth Extensions, require canonical product registry/page, contextual Custom Request, user-initiated share, truthful packaging and platform CI/production verification. The product may remain registered as **Building** before these gates complete.
+The Custom path is contextual support, not a feature entitlement.
 
 ## Phase 5 — public distribution
 
-Phase 2 no longer blocks distribution, but Phase 5 has independent gates: deliberate immutable public version/tag/release, accepted package/checksum publication, WordPress Plugin Check before directory submission, WordPress.org policy/license/readme compliance, real install/download acceptance and zero blocking distribution defects.
+Only after Phase 3 compliance gates close:
 
-`ai-search-optimizer` remains only the target WordPress.org slug until actually accepted/reserved.
+1. accept exact stable source commit/tree;
+2. generate reproducible stable ZIP + SHA-256 + manifest;
+3. create deliberate Git tag/GitHub Release;
+4. verify published assets against accepted evidence;
+5. submit the complete plugin package to WordPress.org;
+6. respond to manual review findings without claiming approval early;
+7. claim WordPress.org availability only after the directory listing is actually public.
+
+`ai-search-optimizer` remains the target WordPress.org slug until WordPress.org independently accepts/reserves it.
 
 ## Post-v1 candidates
 
-Demand-led only: drift monitoring, scheduled checks, richer WooCommerce representations, agency/multi-site operations, additional AI Search diagnostics and reusable advanced capabilities.
+Demand-led only: additional local AI Search diagnostics, richer WooCommerce representations, monitoring, agency/multi-site workflows and reusable advanced capabilities. These must not turn the directory plugin into trialware or a cloud-account gate.
