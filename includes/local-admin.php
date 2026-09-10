@@ -237,9 +237,12 @@ function kairoseth_aiwr_local_finding_text($finding) {
 }
 
 function kairoseth_aiwr_local_selected_keys($inventory, $action) {
-    if ($action !== '' && isset($_POST['aiso_selected']) && is_array($_POST['aiso_selected'])) {
+    if ($action !== '' && isset($_POST['aiso_selection_present'])) {
+        $posted = isset($_POST['aiso_selected']) && is_array($_POST['aiso_selected'])
+            ? wp_unslash($_POST['aiso_selected'])
+            : array();
         $keys = array();
-        foreach (wp_unslash($_POST['aiso_selected']) as $key) {
+        foreach ($posted as $key) {
             $key = is_string($key) ? sanitize_text_field($key) : '';
             if ($key !== '') {
                 $keys[] = $key;
@@ -374,6 +377,7 @@ function kairoseth_aiwr_local_render_admin_page() {
         <form method="post">
             <?php wp_nonce_field('aiso_local_workflow', 'aiso_nonce'); ?>
             <input type="hidden" name="aiso_expected_state" value="<?php echo esc_attr($expected_state); ?>">
+            <input type="hidden" name="aiso_selection_present" value="1">
 
             <h2><?php echo esc_html(kairoseth_aiwr_local_text('inventory')); ?></h2>
             <p><?php echo esc_html(kairoseth_aiwr_local_text('inventory_limit')); ?></p>
