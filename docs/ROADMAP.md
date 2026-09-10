@@ -1,20 +1,20 @@
 # AI Search Optimizer — Roadmap
 
-Status: **Building**  
+Status: **Building — foundation/extraction accepted**  
 Last reviewed: **10 September 2026**
 
 ```text
-Phase 0  product/repository foundation          ACTIVE
-Phase 1  standalone connector extraction       ACTIVE
-Phase 2  useful local Free workflow             BLOCKED by Phase 1
+Phase 0  product/repository foundation          COMPLETE
+Phase 1  standalone connector extraction       COMPLETE
+Phase 2  useful local Free workflow             NEXT
 Phase 3  Kairoseth-connected customer UX        BLOCKED by Phase 2
 Phase 4  Custom Request + share + catalog       BLOCKED by shared/platform dependencies
 Phase 5  public distribution / WordPress.org    BLOCKED by prior acceptance
 ```
 
-## Phase 0 — product foundation
+## Phase 0 — product foundation — complete
 
-Required:
+Accepted:
 
 - dedicated public repository;
 - MIT license;
@@ -23,24 +23,31 @@ Required:
 - engineering rules adapted from Kairoseth;
 - no false Available/release claims.
 
-## Phase 1 — standalone extraction
+## Phase 1 — standalone extraction — complete
 
-Import the accepted WordPress connector 0.3.2 into this repository as the 0.4.0 development baseline while preserving protocol/state compatibility.
+The accepted WordPress connector 0.3.2 is now the standalone 0.4.0 development baseline with protocol/state compatibility preserved.
 
-Acceptance requires:
+Evidence:
 
-- PHP syntax green;
-- contract/static tests green;
-- deterministic plugin ZIP build green;
-- no embedded provider/platform secrets;
-- MIT header/root license aligned;
-- legacy REST/capability/state compatibility retained;
-- single-site `get_site()` regression protected;
-- provenance recorded.
+```text
+PR #1                                    merged
+merge SHA                                2b9d0df93df99ccc0cd4e99f708a3a5a72bd4212
+PR CI #1                                 PASS
+post-merge CI #2                         PASS
+PHP syntax                               PASS
+contract/security regression             PASS
+single-site get_site() guard             PASS
+plugin ZIP build                         PASS
+package-content verification             PASS
+repository cleanliness                   PASS
+blocking extraction defects              0
+```
 
-Phase 1 does not itself make the product public-release ready.
+Phase 1 closes extraction only. It does **not** make the product public-release ready.
 
-## Phase 2 — useful Free local workflow
+Canonical closure: [`FOUNDATION_CLOSURE.md`](FOUNDATION_CLOSURE.md).
+
+## Phase 2 — useful Free local workflow — next
 
 Build the standalone value proposition:
 
@@ -77,7 +84,7 @@ Before the extension is marked Available in Kairoseth Extensions:
 - accurate Free/Custom boundary;
 - platform CI for changed catalog/shared contracts.
 
-Pro remains deferred unless repeated reusable demand justifies it.
+The product may be registered earlier as **Building** without implying availability. Pro remains deferred unless repeated reusable demand justifies it.
 
 ## Phase 5 — distribution
 
