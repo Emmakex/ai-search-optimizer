@@ -27,6 +27,14 @@ $site = [
 ];
 $inventory = [
     [
+        'id' => 4,
+        'type' => 'page',
+        'typeLabel' => 'Pages',
+        'title' => 'Home',
+        'url' => 'https://example.com/',
+        'description' => 'Static WordPress front page.',
+    ],
+    [
         'id' => 3,
         'type' => 'post',
         'typeLabel' => 'Posts',
@@ -56,13 +64,14 @@ $first = kairoseth_aiwr_local_build_llms($site, $inventory);
 $second = kairoseth_aiwr_local_build_llms($site, array_reverse($inventory));
 assert_true($first === $second, 'same public input must produce byte-identical llms.txt regardless of inventory input order');
 assert_true(strpos($first, "# Example Site\n") === 0, 'generated llms.txt must start with one H1 site title');
+assert_true(substr_count($first, '](https://example.com/)') === 1, 'static front page must not duplicate the homepage resource');
 assert_true(strpos($first, 'https://example.com/about/') < strpos($first, 'https://example.com/product/alpha/'), 'pages must sort before products');
 assert_true(strpos($first, 'https://example.com/product/alpha/') < strpos($first, 'https://example.com/news/'), 'products must sort before posts');
 assert_true(strpos($first, 'Generated at') === false, 'deterministic output must not contain generated timestamps');
 
 $validation = kairoseth_aiwr_local_validate_llms($first, $site['homeUrl']);
 assert_true($validation['valid'] === true, 'generated same-site llms.txt must validate');
-assert_true($validation['resourceCount'] === 4, 'generated llms.txt must contain homepage plus three public resources');
+assert_true($validation['resourceCount'] === 4, 'generated llms.txt must contain deduplicated homepage plus three unique public resources');
 assert_true($validation['contentHash'] === hash('sha256', $first), 'validator must expose exact SHA-256');
 
 $duplicate = $first . '- [Duplicate](https://example.com/about/)\n';
@@ -107,6 +116,7 @@ foreach ($requiredAdminContracts as $needle) {
 $requiredCoreContracts = [
     'function kairoseth_aiwr_local_build_llms($site, $inventory)',
     'function kairoseth_aiwr_local_validate_llms($content, $home_url, $max_bytes = 524288)',
+    'function kairoseth_aiwr_local_url_key($url)',
     "hash('sha256', \$content)",
     "'duplicate_url'",
     "'external_url'",
