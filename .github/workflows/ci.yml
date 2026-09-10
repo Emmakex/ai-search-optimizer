@@ -21,6 +21,7 @@ jobs:
       - name: Environment
         run: |
           php --version
+          node --version
           zip -v | head -n 2
           unzip -v | head -n 2
 
@@ -28,7 +29,7 @@ jobs:
         run: bash scripts/ci-run.sh "PHP syntax" bash -c 'find ai-search-optimizer.php uninstall.php includes tests -name "*.php" -type f -print0 | xargs -0 -n1 php -l'
 
       - name: Shell syntax
-        run: bash scripts/ci-run.sh "Shell syntax" bash -n scripts/runtime-wordpress.sh
+        run: bash scripts/ci-run.sh "Shell syntax" bash -n scripts/runtime-wordpress.sh scripts/runtime-multisite-woocommerce.sh scripts/runtime-admin-ux.sh
 
       - name: Contract and security regression
         run: bash scripts/ci-run.sh "Contract and security regression" php tests/contract-check.php
@@ -41,6 +42,9 @@ jobs:
 
       - name: Lifecycle and uninstall regression
         run: bash scripts/ci-run.sh "Lifecycle and uninstall regression" php tests/lifecycle-check.php
+
+      - name: Responsive and accessibility regression
+        run: bash scripts/ci-run.sh "Responsive and accessibility regression" php tests/ux-hardening-check.php
 
       - name: Build plugin package
         run: bash scripts/ci-run.sh "Build plugin package" bash scripts/build-plugin.sh
@@ -84,3 +88,42 @@ jobs:
           WP_VERSION: ${{ matrix.wordpress }}
           PHP_VERSION: ${{ matrix.php }}
         run: bash scripts/ci-run.sh "WordPress $WP_VERSION / PHP $PHP_VERSION runtime" bash scripts/runtime-wordpress.sh
+
+  multisite_woocommerce:
+    name: Multisite + WooCommerce runtime
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build package for Multisite runtime
+        run: bash scripts/ci-run.sh "Build Multisite runtime package" bash scripts/build-plugin.sh
+
+      - name: Packaged Multisite and WooCommerce acceptance
+        env:
+          WP_VERSION: '7.1'
+          PHP_VERSION: '8.3'
+          WOO_VERSION: '11.1.0'
+        run: bash scripts/ci-run.sh "Multisite + WooCommerce runtime" bash scripts/runtime-multisite-woocommerce.sh
+
+  admin_ux:
+    name: Real browser admin UX EN/ES
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build package for browser acceptance
+        run: bash scripts/ci-run.sh "Build browser runtime package" bash scripts/build-plugin.sh
+
+      - name: Browser responsive and accessibility acceptance
+        env:
+          WP_VERSION: '7.1'
+          PHP_VERSION: '8.3'
+        run: bash scripts/ci-run.sh "Real browser admin UX EN/ES" bash scripts/runtime-admin-ux.sh

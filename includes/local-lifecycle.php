@@ -108,3 +108,5 @@ function kairoseth_aiwr_local_render_lifecycle_page() {
 if (PHP_SAPI !== 'cli') {
     add_action('admin_menu', 'kairoseth_aiwr_local_register_lifecycle_page');
 }
+
+require_once __DIR__ . '/local-admin-assets.php';
