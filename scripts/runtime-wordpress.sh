@@ -12,6 +12,7 @@ WP_CONTAINER="aiso-wp-$SUFFIX"
 WORDPRESS_IMAGE="wordpress:${WP_VERSION}-php${PHP_VERSION}-apache"
 DB_IMAGE="mariadb:10.11"
 WP_CLI_PHAR="/tmp/aiso-wp-cli-${WP_CLI_VERSION}.phar"
+PUBLIC_FILE="/tmp/aiso-public-${SUFFIX}.txt"
 PACKAGE="$(find "$ROOT/dist" -maxdepth 1 -name 'ai-search-optimizer-*.zip' -type f -print -quit)"
 
 if [[ -z "$PACKAGE" || ! -f "$PACKAGE" ]]; then
@@ -29,7 +30,7 @@ cleanup() {
   fi
   docker rm -f "$WP_CONTAINER" "$DB_CONTAINER" >/dev/null 2>&1 || true
   docker network rm "$NETWORK" >/dev/null 2>&1 || true
-  rm -f "$WP_CLI_PHAR"
+  rm -f "$WP_CLI_PHAR" "$PUBLIC_FILE"
   exit "$status"
 }
 trap cleanup EXIT
@@ -71,7 +72,15 @@ docker cp "$PACKAGE" "$WP_CONTAINER:/tmp/ai-search-optimizer.zip"
 
 for attempt in $(seq 1 60); do
   if docker exec "$WP_CONTAINER" test -f /var/www/html/wp-settings.php >/dev/null 2>&1 \
-    && wp db check --quiet >/dev/null 2>&1; then
+    && docker exec "$WP_CONTAINER" php -r '
+        $host = getenv("WORDPRESS_DB_HOST");
+        $parts = explode(":", (string) $host, 2);
+        $dbHost = $parts[0];
+        $dbPort = isset($parts[1]) ? (int) $parts[1] : 3306;
+        mysqli_report(MYSQLI_REPORT_OFF);
+        $db = @new mysqli($dbHost, getenv("WORDPRESS_DB_USER"), getenv("WORDPRESS_DB_PASSWORD"), getenv("WORDPRESS_DB_NAME"), $dbPort);
+        exit($db->connect_errno ? 1 : 0);
+      ' >/dev/null 2>&1; then
     break
   fi
   if [[ "$attempt" -eq 60 ]]; then
@@ -162,8 +171,8 @@ if [[ -z "$HOST_PORT" ]]; then
   exit 1
 fi
 
-PUBLIC_BODY="$(curl -fsS -H "Host: $WP_CONTAINER" "http://127.0.0.1:${HOST_PORT}/llms.txt")"
-PUBLIC_HASH="$(printf '%s' "$PUBLIC_BODY" | sha256sum | awk '{print $1}')"
+curl -fsS -H "Host: $WP_CONTAINER" "http://127.0.0.1:${HOST_PORT}/llms.txt" -o "$PUBLIC_FILE"
+PUBLIC_HASH="$(sha256sum "$PUBLIC_FILE" | awk '{print $1}')"
 if [[ "$PUBLIC_HASH" != "$PUBLISHED_HASH" ]]; then
   echo "Public llms.txt SHA-256 mismatch: expected=$PUBLISHED_HASH received=$PUBLIC_HASH" >&2
   exit 1
