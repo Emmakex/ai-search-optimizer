@@ -19,7 +19,7 @@ $checks = array(
     array(strpos($module, "'hostPlatform' => 'wordpress'") !== false, 'host platform must be server-owned'),
     array(strpos($module, "array('implementation_support', 'business_customization')") !== false, 'request type allow-list changed unexpectedly'),
     array(strpos($module, "'requestType'") !== false, 'bounded request type context is missing'),
-    array(strpos($module, "PHP_QUERY_RFC3986") !== false, 'support URL query must use RFC3986 encoding'),
+    array(strpos($module, 'PHP_QUERY_RFC3986') !== false, 'support URL query must use RFC3986 encoding'),
     array(strpos($module, "'ai-search-optimizer-support'") !== false, 'support Tools page slug is missing'),
     array(strpos($module, "'manage_options'") !== false, 'support page must require administrator authority'),
     array(strpos($module, 'Nothing is sent to Kairoseth when this WordPress page loads.') !== false, 'English local-first disclosure is missing'),
@@ -37,12 +37,48 @@ $checks = array(
     array(strpos($module, 'get_current_user_id') === false && strpos($module, 'wp_get_current_user') === false, 'administrator identity must not be added to support context'),
     array(strpos($module, 'applicationPassword') === false && strpos($module, 'application_password') === false, 'Application Password must not be collected or transmitted by support CTA'),
     array(strpos($module, 'llms.txt content') !== false, 'privacy copy must explicitly mention llms.txt content is not attached'),
-    array(strpos($module, '\$_POST') === false && strpos($module, '\$_REQUEST') === false, 'support page must not submit or process a lead inside WordPress'),
+    array(strpos($module, '$_POST') === false && strpos($module, '$_REQUEST') === false, 'support page must not submit or process a lead inside WordPress'),
 );
 
 foreach ($checks as $check) {
     if (!$check[0]) {
         fwrite(STDERR, 'FAIL: ' . $check[1] . "\n");
+        exit(1);
+    }
+}
+
+if (!defined('ABSPATH')) {
+    define('ABSPATH', $root . '/');
+}
+if (!function_exists('add_action')) {
+    function add_action($hook, $callback) {
+        return true;
+    }
+}
+
+require_once $root . '/includes/contextual-support.php';
+
+$accepted = 'https://kairoseth.com/custom-requests';
+if (kairoseth_aiso_validate_support_destination($accepted) !== $accepted) {
+    fwrite(STDERR, "FAIL: canonical support destination was rejected.\n");
+    exit(1);
+}
+
+$rejected = array(
+    'http://kairoseth.com/custom-requests',
+    'https://evil.example/custom-requests',
+    'https://kairoseth.com.evil.example/custom-requests',
+    'https://kairoseth.com/other',
+    'https://user@kairoseth.com/custom-requests',
+    'https://user:pass@kairoseth.com/custom-requests',
+    'https://kairoseth.com:444/custom-requests',
+    'https://kairoseth.com/custom-requests?source=attacker',
+    'https://kairoseth.com/custom-requests#fragment',
+);
+
+foreach ($rejected as $candidate) {
+    if (kairoseth_aiso_validate_support_destination($candidate) !== '') {
+        fwrite(STDERR, 'FAIL: unsafe support destination was accepted: ' . $candidate . "\n");
         exit(1);
     }
 }
