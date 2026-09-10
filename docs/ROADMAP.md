@@ -1,6 +1,6 @@
 # AI Search Optimizer — Roadmap
 
-Status: **Phase 3 in progress — 3A optional Kairoseth connection readiness under acceptance**  
+Status: **Phase 3 in progress — 3A accepted/closed; 3B coordinated Kairoseth onboarding UX is next**  
 Last reviewed: **10 September 2026**
 
 ```text
@@ -15,8 +15,8 @@ Phase 2  useful local Free workflow             COMPLETE
     2C3  Multisite/WooCommerce + UX hardening   COMPLETE
     2C4  release package + final acceptance     COMPLETE
 Phase 3  Kairoseth-connected customer UX        IN PROGRESS
-  3A     connection readiness + guided handoff  IN PROGRESS
-  3B     coordinated Kairoseth onboarding UX    BLOCKED by 3A
+  3A     connection readiness + guided handoff  COMPLETE
+  3B     coordinated Kairoseth onboarding UX    NEXT
   3C     connected-flow hardening/acceptance    BLOCKED by 3B
 Phase 4  Custom Request + share + catalog       BLOCKED by shared/platform dependencies
 Phase 5  public distribution / WordPress.org    UNBLOCKED by Phase 2; distribution gates pending
@@ -155,9 +155,9 @@ Phase 3 adds task-oriented EN/ES UX for customers who choose to connect the stan
 
 Canonical contract: [`KAIROSETH_CONNECTION.md`](KAIROSETH_CONNECTION.md).
 
-### Phase 3A — connection readiness + guided handoff — in progress
+### Phase 3A — connection readiness + guided handoff — complete
 
-Current implementation on the `0.5.0-dev` line:
+Accepted on the `0.5.0-dev` line:
 
 - dedicated **Tools → AI Search Optimizer · Kairoseth** screen;
 - local HTTPS readiness check for exact WordPress home URL;
@@ -169,14 +169,29 @@ Current implementation on the `0.5.0-dev` line:
 - no automatic request to Kairoseth;
 - no local Kairoseth token/session/entitlement or Application Password storage;
 - existing schema `2`, `kairoseth-ai-web-readiness/v1`, exact site pin and compare-and-set deployment protocol unchanged;
-- real browser desktop/mobile EN/ES acceptance required before closure;
-- all Phase 2 runtime/security/package regressions required to remain green.
+- real browser desktop/mobile EN/ES acceptance;
+- all Phase 2 runtime/security/package regressions remain green.
 
-Phase 3A remains **unaccepted until PR CI + merge + post-merge CI are green and its closure record is committed**.
+```text
+PR #15                                   merged
+PR CI #38                                PASS — 7/7 jobs
+merge SHA                                6b771f3b54915a57d246d556638c3eefc9755208
+post-merge CI #39                        PASS — 7/7 jobs
+development package                     ai-search-optimizer-0.5.0-dev.zip
+package bytes                            26652
+package entries                          12
+package SHA-256                          e62860eea41b364a869ef2762e6be1583a9eaac4212b3ffd30eaec30b005c7f2
+post-merge CI artifact id                10160373958
+blocking Phase 3A defects                0
+```
 
-### Phase 3B — coordinated Kairoseth onboarding UX — blocked by 3A
+Acceptance also produced two recorded CI fixture lessons: CI #32 (version-coupled compatibility fixture) and CI #35 (Application Password readiness substring false positive). Both were fixed and the affected gates passed in CI #38 and #39.
 
-After 3A closes, reduce the manual handoff from WordPress into the correct authorized Kairoseth site workflow without creating browser-authoritative access or a second authentication protocol.
+Canonical closure: [`PHASE3A_ACCEPTANCE.md`](PHASE3A_ACCEPTANCE.md).
+
+### Phase 3B — coordinated Kairoseth onboarding UX — next
+
+Reduce the manual handoff from WordPress into the correct authorized Kairoseth site workflow without creating browser-authoritative access or a second authentication protocol.
 
 The current Kairoseth Platform remains authoritative for:
 
@@ -187,7 +202,7 @@ The current Kairoseth Platform remains authoritative for:
 - exact site identity pin;
 - managed publication authority and audit.
 
-Any future one-time pairing/prefill mechanism must be specified and threat-modeled before implementation.
+Any future one-time pairing/prefill mechanism must be specified and threat-modeled before implementation. Phase 3B must preserve the accepted Phase 3A no-silent-transmission and Free-independence guarantees.
 
 ### Phase 3C — connected-flow hardening/acceptance — blocked by 3B
 
