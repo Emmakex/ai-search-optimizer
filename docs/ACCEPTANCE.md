@@ -1,6 +1,6 @@
 # AI Search Optimizer — Acceptance
 
-Status: **Canonical acceptance definition — Phase 2A/2B/2C1/2C2/2C3 accepted; Phase 2C4 next; product not released**  
+Status: **Canonical acceptance definition — Phase 2 / Free 0.4.0 release candidate accepted; public distribution not yet performed**  
 Last reviewed: **10 September 2026**
 
 ## Engineering inheritance
@@ -28,7 +28,7 @@ The repository foundation/extraction is accepted:
 [x] blocking extraction defects = 0
 ```
 
-This closes extraction only. It does **not** mark AI Search Optimizer Available.
+This closes extraction only. It does **not** by itself mark AI Search Optimizer Available.
 
 ## Phase 2A — local analysis + deterministic preview — accepted
 
@@ -90,7 +90,7 @@ Canonical Phase 2A record: [`PHASE2A_CLOSURE.md`](PHASE2A_CLOSURE.md).
 [x] blocking Phase 2B defects = 0
 ```
 
-The CI #9 failure was caused by double-quoted assertion needles interpolating PHP variables inside the regression test. Product code, syntax, inherited security/compatibility and Phase 2A all remained green. Signature: `d48cb3aba4e635dfa5f275bf554bd46ca36a586923f5cc4a654d357cf2475126`.
+CI #9 was a regression-fixture interpolation failure, not a product defect. Signature: `d48cb3aba4e635dfa5f275bf554bd46ca36a586923f5cc4a654d357cf2475126`.
 
 Canonical Phase 2B record: [`PHASE2B_CLOSURE.md`](PHASE2B_CLOSURE.md).
 
@@ -131,15 +131,15 @@ Representative runtime evidence uses the generated ZIP, not the repository sourc
 [x] packaged ZIP installs on WordPress 5.6 / PHP 7.4
 [x] packaged ZIP installs on WordPress 6.8 / PHP 8.2
 [x] packaged ZIP installs on WordPress 7.1 / PHP 8.3
-[x] activation succeeds and grants the expected administrator capability/deployer role/setup marker
-[x] real public WordPress content generates a valid deterministic llms.txt artifact
+[x] activation succeeds and grants expected setup/capability state
+[x] real public WordPress content generates valid deterministic llms.txt
 [x] local publication stores the exact expected SHA-256
 [x] public /llms.txt returns the stored content
 [x] independent public read-back/hash verification passes
-[x] deactivation removes active route/setup while preserving deployment and uninstall preference
-[x] reactivation restores setup and preserved deployment verifies publicly again
-[x] uninstall preserve removes plugin security/setup state while retaining deployment data
-[x] uninstall delete removes deployment data and plugin security/setup state
+[x] deactivation preserves deployment and uninstall preference
+[x] reactivation restores setup and public verification
+[x] uninstall preserve retains deployment data while cleaning plugin state
+[x] uninstall delete removes deployment data and plugin state
 [x] runtime harness freezes WordPress core to prevent fixture self-update races
 [x] prior contract/2A/2B/2C1 gates remain green
 [x] CI #19 PASS
@@ -147,7 +147,7 @@ Representative runtime evidence uses the generated ZIP, not the repository sourc
 [x] blocking Phase 2C2 defects = 0
 ```
 
-CI #18 was a historical WordPress 5.6 fixture self-update race before plugin installation, not a plugin defect. Signature: `b4edb0c72807e8a6dd35cc3285aac513735bf810c442dbfd5f7b1f420b99e640`. The harness freezes core updates; all rows pass.
+CI #18 was a historical WordPress 5.6 fixture self-update race before plugin installation, not a plugin defect. Signature: `b4edb0c72807e8a6dd35cc3285aac513735bf810c442dbfd5f7b1f420b99e640`.
 
 Canonical matrix: [`RUNTIME_COMPATIBILITY.md`](RUNTIME_COMPATIBILITY.md). Canonical closure: [`PHASE2C2_CLOSURE.md`](PHASE2C2_CLOSURE.md).
 
@@ -165,7 +165,7 @@ Canonical matrix: [`RUNTIME_COMPATIBILITY.md`](RUNTIME_COMPATIBILITY.md). Canoni
 [x] network reactivation restores public verification for each site
 [x] network uninstall applies preserve/delete policy independently per site
 [x] WooCommerce 11.1.0 installs and activates on the supported current runtime
-[x] WooCommerce is activated only in the target subsite during the isolation test
+[x] WooCommerce is activated only in the target subsite during isolation test
 [x] public published products appear in local inventory
 [x] draft/private/password-protected products are excluded
 [x] WooCommerce detection requires no consumer/API keys
@@ -184,44 +184,55 @@ Canonical matrix: [`RUNTIME_COMPATIBILITY.md`](RUNTIME_COMPATIBILITY.md). Canoni
 [x] blocking Phase 2C3 defects = 0
 ```
 
-Evidence:
-
-```text
-PR #11                                   merged
-initial PR head                          dc92ee9c81e2b7d5c8bf0b465c040dd8c8cba6cb
-CI #23                                   FAIL — Multisite harness command assumption only
-CI #23 signature                         6f27a415ed0943186949a4096cb8d9e02665b1f629d2ade98ca11426cc4e6bab
-fix commit                               ae3c0afb56e549de00607c0617b4d8698d21ce18
-CI #24                                   PASS
-merge SHA                                1f8e5a419357d873bf3dda4403a45ee9e9a3eabe
-post-merge CI #25                        PASS
-```
-
-CI #23 failed because the harness assumed `wp site get` existed in pinned WP-CLI 2.12.0. The product had not failed. The test now resolves the validated numeric blog ID with WordPress core `get_site_url()` and retains all original coverage.
+CI #23 failed because pinned WP-CLI 2.12.0 did not register `wp site get`; the product had not failed. Signature: `6f27a415ed0943186949a4096cb8d9e02665b1f629d2ade98ca11426cc4e6bab`. The harness now resolves the validated numeric blog ID through WordPress core `get_site_url()`.
 
 Canonical Phase 2C3 record: [`PHASE2C3_CLOSURE.md`](PHASE2C3_CLOSURE.md).
 
-## Phase 2C4 — release package + final acceptance — next
-
-Required gates:
+## Phase 2C4 — release package + final acceptance — accepted
 
 ```text
-[ ] final plugin header/version/stable tag agree
-[ ] README/readme/CHANGELOG describe implemented Free workflow, not planned behavior
-[ ] security/privacy/data-retention docs match release candidate
-[ ] dependency and external-service claims are accurate
-[ ] MIT licensing remains internally consistent and GPL-compatible for future WordPress.org review
-[ ] exact release-candidate commit recorded
-[ ] package manifest recorded
-[ ] release-candidate ZIP SHA-256 recorded
-[ ] complete validate + WP/PHP matrix + Multisite/WooCommerce + browser EN/ES gates PASS on release-candidate source
-[ ] blocking Phase 2 defects = 0
-[ ] formal Free release decision recorded
+[x] final plugin header/version/Stable tag agree at 0.4.0
+[x] connector version constant agrees at 0.4.0
+[x] WordPress minimum 5.6 and PHP minimum 7.4 agree across metadata
+[x] Tested up to 7.1 matches accepted current runtime evidence
+[x] README/readme/CHANGELOG describe implemented Free workflow, not planned behavior
+[x] SECURITY/privacy/data-retention docs match release candidate
+[x] dependency and external-service claims are accurate
+[x] MIT licensing remains internally consistent and GPL-compatible for future WordPress.org review
+[x] exact release-candidate source commit recorded
+[x] exact source tree recorded
+[x] deterministic package build normalizes permissions/timestamps/entry order
+[x] release builder requires two consecutive byte-identical ZIP builds
+[x] package manifest recorded in CI evidence
+[x] standalone .sha256 generated and verified
+[x] release-candidate ZIP SHA-256 recorded
+[x] CI artifact contains ZIP + checksum + manifest
+[x] complete validate + WP/PHP matrix + Multisite/WooCommerce + browser EN/ES gates PASS on PR source
+[x] complete suite PASS again on main merge commit
+[x] CI #28 PASS — 7/7 jobs
+[x] post-merge CI #29 PASS — 7/7 jobs
+[x] blocking Phase 2 defects = 0
+[x] formal Free release-candidate decision = GO for later public distribution
 ```
 
-## Public Free release acceptance
+Accepted release-candidate identity:
 
-Before the first public product release:
+```text
+version                                   0.4.0
+source commit                             4d68b111d1f796fdc9bfbc3e670eeecc69c09a76
+source tree                               472e8c5e5bc20ed8f4eed412ab5515561b89ff16
+package                                   ai-search-optimizer-0.4.0.zip
+package bytes                             21745
+package entries                           11
+package SHA-256                           27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c
+post-merge CI artifact id                 10155308031
+```
+
+The same source tree produced the same plugin ZIP SHA-256 in PR CI #28 and post-merge CI #29. The Actions artifact is time-limited supplemental evidence, not the permanent release channel.
+
+Canonical Phase 2C4 record: [`PHASE2C4_CLOSURE.md`](PHASE2C4_CLOSURE.md).
+
+## Public Free release-candidate acceptance — complete
 
 ```text
 [x] useful account-free local Free workflow
@@ -240,13 +251,13 @@ Before the first public product release:
 [x] no silent telemetry/content transmission in local Free workflow
 [x] security/privacy disclosure covers current Free lifecycle behavior
 [x] diagnostics are structured and secret-free at contract level
-[ ] changelog/version/tag aligned for release candidate
-[ ] immutable package/checksum evidence recorded
+[x] changelog/version/WordPress Stable tag aligned for release candidate
+[x] reproducible package/checksum/manifest evidence recorded
 [x] representative WordPress/PHP compatibility evidence
-[ ] blocking defects = 0
+[x] blocking Phase 2 defects = 0
 ```
 
-The remaining unchecked items are exclusively Phase 2C4 release-candidate/final-decision work. No public release or WordPress.org availability is implied yet.
+**Decision: GO for a later public-distribution action.** This acceptance does not itself create a GitHub Release, public Git tag, WordPress.org listing or Kairoseth Extensions `Available` state.
 
 ## Kairoseth-connected acceptance
 
@@ -263,7 +274,7 @@ Cloud features additionally require:
 - independent public verification for managed publication;
 - failure of Kairoseth services fails safely.
 
-The accepted Phase 5B WordPress evidence is regression evidence for the inherited connector contract, not automatic acceptance of future standalone features.
+The accepted Phase 5B WordPress evidence is regression evidence for the inherited connector contract, not automatic acceptance of future standalone cloud features.
 
 ## Kairoseth Extensions Available gate
 
@@ -276,7 +287,7 @@ Before the Kairoseth catalog says Available, also require:
 - truthful Free/Pro/Custom presentation;
 - required platform CI and production verification.
 
-A missing shared Custom Requests implementation blocks catalog Available even if the plugin package itself is technically releasable.
+A missing shared Custom Requests implementation blocks catalog Available even though the Free release candidate is technically accepted.
 
 ## WordPress.org gate
 
@@ -284,7 +295,7 @@ Before directory submission:
 
 - run WordPress Plugin Check;
 - use a GPL-compatible license declaration consistently;
-- `readme.txt` and plugin version/stable tag agree;
+- `readme.txt` and plugin version/Stable tag agree;
 - no prohibited tracking/trialware/deceptive claims;
 - SaaS dependency, if used, is described accurately;
 - code/assets/third-party dependencies have compatible licensing;
