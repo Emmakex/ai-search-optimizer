@@ -13,7 +13,7 @@ Prepare, validate and publish WordPress content for the AI-search web with secur
 
 AI Search Optimizer is a WordPress-first AI Search and llms.txt optimization extension.
 
-The current 0.4.0 development baseline provides an account-free local workflow for preparing a site-local llms.txt from public WordPress content.
+The 0.4.0 release-candidate line provides an account-free local workflow for preparing a site-local llms.txt from public WordPress content.
 
 Current Free capabilities include:
 
@@ -39,7 +39,7 @@ AI Search Optimizer improves preparation and provides evidence. It does not guar
 
 == Installation ==
 
-0.4.0 is still unreleased while release hardening is completed. The final install/update package will be published only after compatibility, lifecycle, security/privacy and package acceptance gates pass.
+0.4.0 is the standalone Free release candidate. Until an official GitHub Release or WordPress.org listing exists, install only an accepted package whose SHA-256 is published with the release evidence. This repository does not yet claim public distribution.
 
 == Frequently Asked Questions ==
 
@@ -66,6 +66,8 @@ Under Tools > AI Search Optimizer Data you can choose whether uninstall preserve
 == Changelog ==
 
 = 0.4.0 =
-* Unreleased standalone line based on accepted connector 0.3.2.
+* First standalone Free release-candidate line based on accepted connector 0.3.2.
 * Added account-free local readiness, content selection, deterministic llms.txt generation/validation and safe publication with public SHA-256 verification.
 * Added explicit uninstall data-retention controls and lifecycle cleanup.
+* Added real WordPress 5.6/PHP 7.4 through WordPress 7.1/PHP 8.3 runtime acceptance.
+* Added real Multisite isolation, WooCommerce 11.1.0 compatibility and EN/ES responsive browser acceptance.
