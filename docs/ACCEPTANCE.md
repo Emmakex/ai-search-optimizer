@@ -1,6 +1,6 @@
 # AI Search Optimizer — Acceptance
 
-Status: **Canonical acceptance definition — Phase 2 / Free 0.4.0 release candidate accepted; public distribution not yet performed**  
+Status: **Canonical acceptance definition — Phase 2 accepted; Phase 3A Kairoseth connection readiness accepted/closed; public distribution not yet performed**  
 Last reviewed: **10 September 2026**
 
 ## Engineering inheritance
@@ -258,6 +258,51 @@ Canonical Phase 2C4 record: [`PHASE2C4_CLOSURE.md`](PHASE2C4_CLOSURE.md).
 ```
 
 **Decision: GO for a later public-distribution action.** This acceptance does not itself create a GitHub Release, public Git tag, WordPress.org listing or Kairoseth Extensions `Available` state.
+
+## Phase 3A — Kairoseth connection readiness — accepted
+
+```text
+[x] optional local readiness/handoff screen ships EN/ES
+[x] local Free workflow remains usable without Kairoseth
+[x] exact inherited REST namespace/schema/capability retained
+[x] HTTPS readiness is checked locally
+[x] WordPress Application Password availability is checked locally
+[x] dedicated least-privilege deployer role/capability is checked locally
+[x] exact Blog ID / Network ID / home URL identity is reused
+[x] exact inherited connection endpoint and llms.txt target are shown
+[x] Ready to connect is not represented as Connected
+[x] handoff is user initiated
+[x] handoff URL contains no site/user/password/token/organization query data
+[x] readiness page makes no automatic request to Kairoseth
+[x] readiness page stores no Kairoseth token/credential/connection state
+[x] new development source uses 0.5.0-dev instead of reusing accepted RC 0.4.0
+[x] package contract includes the Phase 3A module
+[x] real Chromium EN/ES desktop/mobile acceptance PASS
+[x] WordPress/PHP runtime matrix PASS
+[x] Multisite + WooCommerce runtime PASS
+[x] reproducible development package PASS
+[x] PR CI #38 PASS — 7/7 jobs
+[x] merge SHA 6b771f3b54915a57d246d556638c3eefc9755208
+[x] post-merge CI #39 PASS — 7/7 jobs
+[x] blocking Phase 3A defects = 0
+```
+
+Development package evidence from post-merge CI #39:
+
+```text
+version                                   0.5.0-dev
+source commit                             6b771f3b54915a57d246d556638c3eefc9755208
+source tree                               caab5d91799a622540fff3b7403838a2c63799e4
+package                                   ai-search-optimizer-0.5.0-dev.zip
+package bytes                             26652
+package entries                           12
+package SHA-256                           e62860eea41b364a869ef2762e6be1583a9eaac4212b3ffd30eaec30b005c7f2
+post-merge CI artifact id                 10160373958
+```
+
+Canonical Phase 3A record: [`PHASE3A_ACCEPTANCE.md`](PHASE3A_ACCEPTANCE.md).
+
+Phase 3B — coordinated Kairoseth onboarding UX — is the next permitted dependent milestone.
 
 ## Kairoseth-connected acceptance
 
