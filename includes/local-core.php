@@ -5,7 +5,6 @@
  * @package AI_Search_Optimizer
  */
 
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

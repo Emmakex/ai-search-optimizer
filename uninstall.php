@@ -5,7 +5,6 @@
  * @package AI_Search_Optimizer
  */
 
-
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }

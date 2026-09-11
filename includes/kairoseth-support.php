@@ -5,7 +5,6 @@
  * @package AI_Search_Optimizer
  */
 
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -143,7 +142,7 @@ function kairoseth_aiso_support_canonical_destination( $destination ) {
 	}
 
 	foreach ( array( 'user', 'pass', 'port', 'query', 'fragment' ) as $forbidden ) {
-		if ( isset( $parts[ $forbidden ] ) && (string) $parts[ $forbidden ] !== '' ) {
+		if ( isset( $parts[ $forbidden ] ) && '' !== (string) $parts[ $forbidden ] ) {
 			return '';
 		}
 	}
