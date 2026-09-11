@@ -24,6 +24,10 @@ function lifecycle_assert($condition, string $message): void {
     }
 }
 
+$normalizePhpLayout = static function (string $value): string {
+    return preg_replace('/\s+/', '', $value) ?? '';
+};
+
 lifecycle_assert(kairoseth_aiwr_local_normalize_uninstall_mode('delete') === 'delete', 'delete mode must be accepted');
 lifecycle_assert(kairoseth_aiwr_local_normalize_uninstall_mode('preserve') === 'preserve', 'preserve mode must be accepted');
 lifecycle_assert(kairoseth_aiwr_local_normalize_uninstall_mode('anything-else') === 'preserve', 'unknown mode must fail safe to preserve');
@@ -35,6 +39,10 @@ $plugin = file_get_contents($pluginPath);
 if ($lifecycle === false || $uninstall === false || $plugin === false) {
     lifecycle_fail('cannot read lifecycle source files');
 }
+
+$normalizedLifecycle = $normalizePhpLayout($lifecycle);
+$normalizedUninstall = $normalizePhpLayout($uninstall);
+$normalizedPlugin = $normalizePhpLayout($plugin);
 
 $requiredLifecycle = array(
     "get_option(kairoseth_aiwr_local_uninstall_option_name(), 'preserve')",
@@ -48,7 +56,7 @@ $requiredLifecycle = array(
     'La desactivación no elimina el despliegue llms.txt guardado',
 );
 foreach ($requiredLifecycle as $needle) {
-    lifecycle_assert(strpos($lifecycle, $needle) !== false, "missing lifecycle contract: {$needle}");
+    lifecycle_assert(strpos($normalizedLifecycle, $normalizePhpLayout($needle)) !== false, "missing lifecycle contract: {$needle}");
 }
 
 $requiredUninstall = array(
@@ -64,7 +72,6 @@ $requiredUninstall = array(
     'remove_role(KAIROSETH_AISO_UNINSTALL_ROLE)',
     'delete_option(KAIROSETH_AISO_UNINSTALL_SETUP_OPTION)',
     'delete_option(KAIROSETH_AISO_UNINSTALL_MODE_OPTION)',
-    "if (\$mode === 'delete')",
     'delete_option(KAIROSETH_AISO_UNINSTALL_DEPLOYMENT_OPTION)',
     'is_multisite()',
     "'fields' => 'ids'",
@@ -72,18 +79,22 @@ $requiredUninstall = array(
     'restore_current_blog()',
 );
 foreach ($requiredUninstall as $needle) {
-    lifecycle_assert(strpos($uninstall, $needle) !== false, "missing uninstall contract: {$needle}");
+    lifecycle_assert(strpos($normalizedUninstall, $normalizePhpLayout($needle)) !== false, "missing uninstall contract: {$needle}");
 }
 
-lifecycle_assert(substr_count($uninstall, 'delete_option(KAIROSETH_AISO_UNINSTALL_DEPLOYMENT_OPTION)') === 1, 'deployment deletion must have one bounded uninstall point');
+$deleteConditionPresent = strpos($normalizedUninstall, "if('delete'===\$mode)") !== false
+    || strpos($normalizedUninstall, "if(\$mode==='delete')") !== false;
+lifecycle_assert($deleteConditionPresent, 'deployment deletion must remain gated by explicit delete retention mode');
+
+lifecycle_assert(substr_count($normalizedUninstall, $normalizePhpLayout('delete_option(KAIROSETH_AISO_UNINSTALL_DEPLOYMENT_OPTION)')) === 1, 'deployment deletion must have one bounded uninstall point');
 lifecycle_assert(strpos($uninstall, 'delete_site_option(') === false, 'site-local data must not be deleted through a network-global option API');
 lifecycle_assert(strpos($uninstall, 'wp_remote_') === false, 'uninstall must not make remote requests');
 lifecycle_assert(strpos($uninstall, 'file_put_contents(') === false, 'uninstall must not mutate arbitrary filesystem paths');
 
-$deactivateStart = strpos($plugin, 'function kairoseth_aiwr_deactivate(');
-$deactivateEnd = strpos($plugin, "register_deactivation_hook(__FILE__, 'kairoseth_aiwr_deactivate');");
+$deactivateStart = strpos($normalizedPlugin, $normalizePhpLayout('function kairoseth_aiwr_deactivate('));
+$deactivateEnd = strpos($normalizedPlugin, $normalizePhpLayout("register_deactivation_hook(__FILE__, 'kairoseth_aiwr_deactivate');"));
 lifecycle_assert($deactivateStart !== false && $deactivateEnd !== false && $deactivateEnd > $deactivateStart, 'deactivation block must exist');
-$deactivateBlock = substr($plugin, $deactivateStart, $deactivateEnd - $deactivateStart);
+$deactivateBlock = substr($normalizedPlugin, $deactivateStart, $deactivateEnd - $deactivateStart);
 lifecycle_assert(strpos($deactivateBlock, 'KAIROSETH_AIWR_DEPLOYMENT_OPTION') === false, 'deactivation must preserve stored llms.txt deployment data');
 lifecycle_assert(strpos($deactivateBlock, 'kairoseth_ai_web_readiness_uninstall_mode') === false, 'deactivation must preserve uninstall retention preference');
 

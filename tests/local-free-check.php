@@ -34,6 +34,10 @@ function assert_true($condition, string $message): void {
     }
 }
 
+$normalizePhpLayout = static function (string $value): string {
+    return preg_replace('/\s+/', '', $value) ?? '';
+};
+
 $site = [
     'name' => 'Example Site',
     'description' => 'Public source-grounded content for AI Search.',
@@ -109,12 +113,16 @@ if ($core === false || $admin === false || $plugin === false) {
     fail_check('cannot read source files for local Free contract checks');
 }
 
+$normalizedCore = $normalizePhpLayout($core);
+$normalizedAdmin = $normalizePhpLayout($admin);
+$normalizedPlugin = $normalizePhpLayout($plugin);
+
 $requiredAdminContracts = [
     'function kairoseth_aiwr_local_public_post_types()',
     'function kairoseth_aiwr_local_inventory($limit = 100)',
     'function kairoseth_aiwr_local_readiness()',
-    "add_management_page(",
-    "KAIROSETH_AIWR_CAPABILITY",
+    'add_management_page(',
+    'KAIROSETH_AIWR_CAPABILITY',
     "'post_status' => 'publish'",
     "'has_password' => false",
     "'suppress_filters' => false",
@@ -124,7 +132,7 @@ $requiredAdminContracts = [
     'Este análisis está aislado al sitio actual dentro de la red WordPress.',
 ];
 foreach ($requiredAdminContracts as $needle) {
-    assert_true(strpos($admin, $needle) !== false, "missing local Free admin contract: {$needle}");
+    assert_true(strpos($normalizedAdmin, $normalizePhpLayout($needle)) !== false, "missing local Free admin contract: {$needle}");
 }
 
 $requiredCoreContracts = [
@@ -136,7 +144,7 @@ $requiredCoreContracts = [
     "'external_url'",
 ];
 foreach ($requiredCoreContracts as $needle) {
-    assert_true(strpos($core, $needle) !== false, "missing local Free core contract: {$needle}");
+    assert_true(strpos($normalizedCore, $normalizePhpLayout($needle)) !== false, "missing local Free core contract: {$needle}");
 }
 
 $forbiddenLocalPatterns = [
@@ -155,7 +163,7 @@ foreach ($forbiddenLocalPatterns as $needle) {
     assert_true(strpos($core . "\n" . $admin, $needle) === false, "Phase 2A local analysis must remain deterministic/read-only: {$needle}");
 }
 
-assert_true(strpos($plugin, "require_once __DIR__ . '/includes/local-core.php';") !== false, 'plugin bootstrap must load local core');
-assert_true(strpos($plugin, "require_once __DIR__ . '/includes/local-admin.php';") !== false, 'plugin bootstrap must load local admin workspace');
+assert_true(strpos($normalizedPlugin, $normalizePhpLayout("require_once __DIR__ . '/includes/local-core.php';")) !== false, 'plugin bootstrap must load local core');
+assert_true(strpos($normalizedPlugin, $normalizePhpLayout("require_once __DIR__ . '/includes/local-admin.php';")) !== false, 'plugin bootstrap must load local admin workspace');
 
 echo "PASS: deterministic account-free local analysis, inventory, preview and validation contracts\n";

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<ruleset name="Kairoseth AI Search Optimizer">
+	<description>WordPress coding standards and PHP 7.4+ compatibility for production plugin code.</description>
+
+	<file>ai-search-optimizer.php</file>
+	<file>uninstall.php</file>
+	<file>includes</file>
+
+	<exclude-pattern>vendor/*</exclude-pattern>
+	<exclude-pattern>dist/*</exclude-pattern>
+
+	<arg name="basepath" value="."/>
+	<arg name="colors"/>
+	<arg value="ps"/>
+
+	<rule ref="WordPress-Extra"/>
+	<rule ref="WordPress-Docs"/>
+	<rule ref="PHPCompatibilityWP">
+		<config name="testVersion" value="7.4-"/>
+	</rule>
+
+	<config name="minimum_supported_wp_version" value="5.6"/>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="ai-search-optimizer"/>
+			</property>
+		</properties>
+	</rule>
+</ruleset>
