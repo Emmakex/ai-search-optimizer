@@ -29,7 +29,7 @@ jobs:
       - name: Install quality dependencies
         run: |
           composer install --no-interaction --prefer-dist --no-progress
-          composer create-project --no-interaction --prefer-dist --no-progress friendsofphp/php-cs-fixer /tmp/php-cs-fixer
+          composer create-project --no-interaction --prefer-dist --no-progress --no-scripts friendsofphp/php-cs-fixer /tmp/php-cs-fixer
 
       - name: Apply documentation and Yoda remediation
         shell: bash
