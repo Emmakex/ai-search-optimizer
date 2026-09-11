@@ -90,7 +90,7 @@ jobs:
         run: composer install --no-interaction --prefer-dist --no-progress
 
       - name: Run WPCS and PHPCompatibility
-        run: bash scripts/ci-run.sh "WPCS + PHPCompatibility" bash -c 'vendor/bin/phpcs --standard=phpcs.xml.dist --report=json > phpcs-report.json'
+        run: bash scripts/ci-run.sh "WPCS + PHPCompatibility" bash -c 'vendor/bin/phpcs -q --standard=phpcs.xml.dist --report=json > phpcs-report.json'
 
       - name: Summarize WPCS and PHPCompatibility findings
         if: ${{ always() && hashFiles('phpcs-report.json') != '' }}
@@ -108,12 +108,34 @@ jobs:
             ' phpcs-report.json
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Upload WPCS structured report
+      - name: Build PHPCBF remediation candidate
+        if: ${{ failure() && hashFiles('phpcs-report.json') != '' }}
+        shell: bash
+        run: |
+          set +e
+          vendor/bin/phpcbf -q --standard=phpcs.xml.dist
+          phpcbf_status=$?
+          vendor/bin/phpcs -q --standard=phpcs.xml.dist --report=json > phpcs-after-phpcbf.json
+          post_status=$?
+          set -e
+
+          git diff -- ai-search-optimizer.php uninstall.php includes > phpcbf.patch
+          echo "PHPCBF exit: $phpcbf_status"
+          echo "Post-fix PHPCS exit: $post_status"
+          git diff --stat -- ai-search-optimizer.php uninstall.php includes
+
+      - name: Upload PHP quality diagnostics
         if: ${{ always() && hashFiles('phpcs-report.json') != '' }}
         uses: actions/upload-artifact@v4
         with:
-          name: phpcs-report-${{ github.sha }}
-          path: phpcs-report.json
+          name: php-quality-diagnostics-${{ github.run_id }}
+          path: |
+            phpcs-report.json
+            phpcs-after-phpcbf.json
+            phpcbf.patch
+            ai-search-optimizer.php
+            uninstall.php
+            includes/
           if-no-files-found: error
           retention-days: 30
 
