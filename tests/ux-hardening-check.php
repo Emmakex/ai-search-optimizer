@@ -10,6 +10,10 @@ if ($admin === false || $lifecycle === false || $assets === false) {
     exit(1);
 }
 
+$normalizeLayout = static function (string $value): string {
+    return preg_replace('/\s+/', '', $value) ?? '';
+};
+
 $assertions = array(
     array($admin, "aria-label=\"<?php echo esc_attr(kairoseth_aiwr_local_text('include')", 'resource checkboxes expose accessible labels'),
     array($admin, 'textarea readonly aria-label=', 'llms.txt preview has an accessible name'),
@@ -18,18 +22,18 @@ $assertions = array(
     array($lifecycle, '<label><input type="radio" name="aiso_uninstall_mode" value="preserve"', 'preserve retention radio is associated with visible label text'),
     array($lifecycle, '<label><input type="radio" name="aiso_uninstall_mode" value="delete"', 'delete retention radio is associated with visible label text'),
     array($lifecycle, "require_once __DIR__ . '/local-admin-assets.php';", 'lifecycle loads shared admin hardening assets'),
-    array($assets, "max-width: 782px", 'WordPress mobile admin breakpoint is hardened'),
+    array($assets, 'max-width: 782px', 'WordPress mobile admin breakpoint is hardened'),
     array($assets, 'overflow-x: auto', 'wide inventory table is contained instead of overflowing the page'),
     array($assets, 'min-height: 44px', 'primary mobile controls meet a touch-friendly minimum height'),
     array($assets, ':focus-visible', 'keyboard focus receives a visible treatment'),
     array($assets, 'overflow-wrap: anywhere', 'long URLs and hashes can wrap'),
-    array($assets, "admin_head-tools_page_ai-search-optimizer", 'main workflow receives targeted hardening styles'),
-    array($assets, "admin_head-tools_page_ai-search-optimizer-data", 'data lifecycle page receives targeted hardening styles'),
+    array($assets, 'admin_head-tools_page_ai-search-optimizer', 'main workflow receives targeted hardening styles'),
+    array($assets, 'admin_head-tools_page_ai-search-optimizer-data', 'data lifecycle page receives targeted hardening styles'),
 );
 
 foreach ($assertions as $assertion) {
     list($haystack, $needle, $description) = $assertion;
-    if (strpos($haystack, $needle) === false) {
+    if (strpos($normalizeLayout($haystack), $normalizeLayout($needle)) === false) {
         fwrite(STDERR, "FAIL: {$description}\nExpected source marker: {$needle}\n");
         exit(1);
     }
