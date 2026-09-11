@@ -20,6 +20,11 @@ if (!function_exists('wp_parse_url')) {
         return parse_url($url, $component);
     }
 }
+if (!function_exists('wp_json_encode')) {
+    function wp_json_encode($value, $flags = 0, $depth = 512) {
+        return json_encode($value, $flags, $depth);
+    }
+}
 
 require_once $corePath;
 require_once $publishPath;
