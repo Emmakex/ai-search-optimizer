@@ -4,7 +4,7 @@
 
 [English](#english) · [Español](#español)
 
-Status: **Development `0.5.0-dev` — local Free workflow complete; contextual support/custom-development path in progress; WordPress.org submission not yet claimed**
+Status: **Development `0.5.0-dev` — local Free workflow and optional contextual support accepted; WordPress.org hardening gates accepted; directory publication not yet claimed**
 
 ```text
 Product: AI Search Optimizer
@@ -100,9 +100,9 @@ The current `0.5.0-dev` source must not be treated as that accepted package.
 
 ### WordPress.org readiness
 
-WordPress.org compatibility is a design constraint, not a post-release cleanup task. The repository now runs the official WordPress Plugin Check as a blocking CI dependency in addition to its WordPress/PHP runtime matrix, Multisite/WooCommerce checks, EN/ES browser acceptance and reproducible package evidence.
+WordPress.org compatibility is a design constraint, not a post-release cleanup task. Phase 3 hardening is accepted: production PHP passes WordPress Coding Standards and PHPCompatibilityWP, and CI blocks on the official WordPress Plugin Check in addition to the WordPress/PHP runtime matrix, Multisite/WooCommerce checks, EN/ES browser acceptance and reproducible package evidence.
 
-The plugin is not yet claimed as published on WordPress.org. Final directory submission still requires a stable version/tag/package, aligned plugin/readme metadata, final policy/readme review and successful external WordPress.org approval.
+The plugin is not yet claimed as published on WordPress.org. Final directory submission still requires a deliberate stable version/tag/package, aligned plugin/readme metadata, final release-policy/readme review and successful external WordPress.org approval.
 
 `ai-search-optimizer` remains the target WordPress.org slug until it is actually accepted/reserved.
 
@@ -194,9 +194,9 @@ El código actual `0.5.0-dev` no debe confundirse con ese paquete aceptado.
 
 ### Preparación para WordPress.org
 
-La compatibilidad con WordPress.org se trata como una restricción de diseño desde el desarrollo. El CI ejecuta WordPress Plugin Check oficial como gate bloqueante, además de matriz WordPress/PHP, Multisite/WooCommerce, navegador EN/ES y empaquetado reproducible.
+La compatibilidad con WordPress.org se trata como una restricción de diseño desde el desarrollo. El hardening de la Fase 3 está aceptado: el PHP de producción supera WordPress Coding Standards y PHPCompatibilityWP, y el CI bloquea con WordPress Plugin Check oficial, matriz WordPress/PHP, Multisite/WooCommerce, navegador EN/ES y empaquetado reproducible.
 
-Todavía no se afirma que el plugin esté publicado en WordPress.org. La presentación final requerirá versión/tag/paquete estable, metadata alineada, revisión final de políticas/readme y aprobación externa de WordPress.org.
+Todavía no se afirma que el plugin esté publicado en WordPress.org. La presentación final requerirá una versión/tag/paquete estable deliberado, metadata alineada, revisión final de políticas/readme de release y aprobación externa de WordPress.org.
 
 `ai-search-optimizer` sigue siendo el slug objetivo hasta su aceptación/reserva real.
 
@@ -215,6 +215,8 @@ AI Search Optimizer mejora la preparación y proporciona evidencia técnica repr
 - [`docs/PROVENANCE.md`](docs/PROVENANCE.md)
 - [`docs/PHASE2C4_CLOSURE.md`](docs/PHASE2C4_CLOSURE.md)
 - [`docs/PHASE3A_ACCEPTANCE.md`](docs/PHASE3A_ACCEPTANCE.md)
+- [`docs/PHASE3B_CONTEXTUAL_SUPPORT.md`](docs/PHASE3B_CONTEXTUAL_SUPPORT.md)
+- [`docs/PHASE3C_ACCEPTANCE.md`](docs/PHASE3C_ACCEPTANCE.md)
 - [`docs/ENGINEERING_RULES.md`](docs/ENGINEERING_RULES.md)
 - [`SECURITY.md`](SECURITY.md)
 
