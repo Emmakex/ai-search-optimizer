@@ -232,7 +232,7 @@ jobs:
         run: bash scripts/ci-run.sh "Real browser admin UX EN/ES" bash scripts/runtime-admin-ux.sh
 
   package_evidence:
-    name: Reproducible development package evidence
+    name: Reproducible package evidence
     needs: [validate, php_quality, wordpress_plugin_check, runtime, multisite_woocommerce, admin_ux]
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -241,20 +241,48 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build reproducible development package
-        run: bash scripts/ci-run.sh "Development package reproducibility" bash scripts/build-development-package.sh
+      - name: Select package evidence channel
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(sed -n 's/^ \* Version: //p' ai-search-optimizer.php | head -n1 | tr -d '\r')"
 
-      - name: Verify development package contents
-        run: bash scripts/ci-run.sh "Development package contents" bash scripts/check-package.sh
+          if [[ "$version" == *-dev ]]; then
+            echo "PACKAGE_BUILDER=scripts/build-development-package.sh" >> "$GITHUB_ENV"
+            echo "PACKAGE_CHANNEL=development" >> "$GITHUB_ENV"
+            echo "PACKAGE_MANIFEST=development-manifest.txt" >> "$GITHUB_ENV"
+          elif [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "PACKAGE_BUILDER=scripts/build-release-candidate.sh" >> "$GITHUB_ENV"
+            echo "PACKAGE_CHANNEL=release-candidate" >> "$GITHUB_ENV"
+            echo "PACKAGE_MANIFEST=release-manifest.txt" >> "$GITHUB_ENV"
+          else
+            echo "Unsupported package evidence version channel: $version" >&2
+            exit 1
+          fi
 
-      - name: Publish CI development-package evidence
+          echo "Package evidence version: $version"
+
+      - name: Build reproducible package
+        run: bash scripts/ci-run.sh "Package reproducibility" bash "$PACKAGE_BUILDER"
+
+      - name: Verify package contents
+        run: bash scripts/ci-run.sh "Package contents" bash scripts/check-package.sh
+
+      - name: Verify package manifest channel
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f "dist/$PACKAGE_MANIFEST"
+          grep -Fx "channel=$PACKAGE_CHANNEL" "dist/$PACKAGE_MANIFEST"
+
+      - name: Publish CI package evidence
         uses: actions/upload-artifact@v4
         with:
-          name: ai-search-optimizer-development-package-${{ github.sha }}
+          name: ai-search-optimizer-${{ env.PACKAGE_CHANNEL }}-package-${{ github.sha }}
           path: |
             dist/ai-search-optimizer-*.zip
             dist/ai-search-optimizer-*.sha256
-            dist/development-manifest.txt
+            dist/${{ env.PACKAGE_MANIFEST }}
           if-no-files-found: error
           retention-days: 30
           compression-level: 0
