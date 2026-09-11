@@ -45,9 +45,19 @@ The production PHP was normalized without disabling, ignoring or baselining qual
 
 The permanent CI workflow now retains structured PHPCS diagnostics and remediation evidence as artifacts when this quality gate fails.
 
+## Secondary regression-test failure
+
+After source normalization, **CI #66** failed in `validate → Contract and security regression` with signature `1fef1f92ccbfe514a4fb5f5928468e9db97079a82671439a448ce3234cb7fb79a`. The contract test was matching exact PHP source strings such as constant spacing, function-call spacing and a multiline ternary layout. WPCS changed formatting while preserving behavior, so those assertions produced false negatives.
+
+**Root cause: confirmed.** The regression test coupled security/contract guarantees to source formatting instead of semantic tokens.
+
+**Fix:** required positive contracts, the Multisite `get_site()` guard and the REST permission callback are now compared through whitespace-normalized source; the connector-version regex accepts layout whitespace. Forbidden security patterns remain exact raw-source checks, so the test is less formatting-sensitive without weakening the protections.
+
 ## Prevention
 
 When a new static-analysis gate is introduced over historical code, first produce a machine-readable full report and classify findings as auto-fixable versus semantic/manual. Do not infer problem size from GitHub annotation count and do not weaken the ruleset to make the gate green.
+
+Regression tests that inspect source code must assert behaviorally significant tokens or normalized syntax, not indentation/alignment produced by a formatter. Forbidden dangerous mechanisms should continue to be checked explicitly.
 
 CI failures must continue to expose actionable structured evidence: pipeline/job/step, command, exit code, primary error, file/line and sniff where available, error signature, confirmed root cause, applied fix and validation.
 
@@ -58,6 +68,10 @@ Phase 3C remediation run 34635584693
 PHPCBF: no violations found
 PHPCS:  0 errors, 0 warnings, 0 fixable
 PHP syntax: PASS for ai-search-optimizer.php, uninstall.php and every includes/*.php file
+
+CI #66
+validate / Contract and security regression: FAIL before test hardening
+signature: 1fef1f92ccbfe514a4fb5f5928468e9db97079a82671439a448ce3234cb7fb79a
 ```
 
 The normal PR CI remains the authoritative merge gate; PR #20 must not merge until all required jobs pass on the cleaned branch head.
