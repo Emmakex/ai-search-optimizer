@@ -37,7 +37,7 @@ jobs:
           python3 scripts/phase3c-docblock-remediation.py
 
           for target in ai-search-optimizer.php uninstall.php includes; do
-            /tmp/php-cs-fixer/vendor/bin/php-cs-fixer fix "$target" \
+            /tmp/php-cs-fixer/php-cs-fixer fix "$target" \
               --using-cache=no \
               --allow-risky=no \
               --rules='{"yoda_style":{"equal":true,"identical":true,"less_and_greater":null,"always_move_variable":true}}'
