@@ -72,7 +72,6 @@ $requiredUninstall = array(
     'remove_role(KAIROSETH_AISO_UNINSTALL_ROLE)',
     'delete_option(KAIROSETH_AISO_UNINSTALL_SETUP_OPTION)',
     'delete_option(KAIROSETH_AISO_UNINSTALL_MODE_OPTION)',
-    "if (\$mode === 'delete')",
     'delete_option(KAIROSETH_AISO_UNINSTALL_DEPLOYMENT_OPTION)',
     'is_multisite()',
     "'fields' => 'ids'",
@@ -82,6 +81,10 @@ $requiredUninstall = array(
 foreach ($requiredUninstall as $needle) {
     lifecycle_assert(strpos($normalizedUninstall, $normalizePhpLayout($needle)) !== false, "missing uninstall contract: {$needle}");
 }
+
+$deleteConditionPresent = strpos($normalizedUninstall, "if('delete'===\$mode)") !== false
+    || strpos($normalizedUninstall, "if(\$mode==='delete')") !== false;
+lifecycle_assert($deleteConditionPresent, 'deployment deletion must remain gated by explicit delete retention mode');
 
 lifecycle_assert(substr_count($normalizedUninstall, $normalizePhpLayout('delete_option(KAIROSETH_AISO_UNINSTALL_DEPLOYMENT_OPTION)')) === 1, 'deployment deletion must have one bounded uninstall point');
 lifecycle_assert(strpos($uninstall, 'delete_site_option(') === false, 'site-local data must not be deleted through a network-global option API');
