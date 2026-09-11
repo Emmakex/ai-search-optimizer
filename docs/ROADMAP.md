@@ -1,6 +1,6 @@
 # AI Search Optimizer — Roadmap
 
-Status: **Phase 3 in progress — contextual support/custom-development path is the active workstream; WordPress.org readiness is a blocking release constraint**  
+Status: **Phase 3 in progress — Phase 3B accepted; WordPress.org support/privacy hardening (3C) is the active workstream**  
 Last reviewed: **10 September 2026**
 
 ```text
@@ -12,8 +12,8 @@ Phase 2  useful local Free workflow                COMPLETE
   2C     Free release hardening                    COMPLETE
 Phase 3  optional support / custom-development UX  IN PROGRESS
   3A     connection-readiness technical slice      COMPLETE / SUPERSEDED AS PRIMARY CTA
-  3B     contextual support + custom CTA            IN PROGRESS
-  3C     support/privacy + directory hardening      BLOCKED by 3B
+  3B     contextual support + custom CTA            COMPLETE
+  3C     support/privacy + directory hardening      IN PROGRESS
 Phase 4  Extensions catalog integration            BLOCKED by Phase 3 acceptance
 Phase 5  stable public distribution / WordPress.org BLOCKED by release gates
 ```
@@ -86,11 +86,11 @@ Phase 3A proved that the standalone plugin can expose local connection prerequis
 
 The customer-facing strategy changed after comparing the plugin with the accepted AI Transparency WordPress.org model. Connection readiness is **not** the primary growth/support CTA going forward. The inherited REST connector remains for compatible managed integrations, but local Free users are not pushed into cloud onboarding.
 
-### 3B — contextual support + custom CTA — in progress
+### 3B — contextual support + custom CTA — complete
 
-Goal: provide a small administrator-only, privacy-bounded bridge to Kairoseth while preserving local independence.
+Accepted in PR #18 and verified after merge. The administrator-only support bridge is privacy-bounded, optional and independent from the local Free feature set.
 
-Required contract:
+Accepted contract:
 
 ```text
 Tools → AI Search Optimizer Support
@@ -108,39 +108,27 @@ explicit click
 → user chooses what information to submit
 ```
 
-Automatic context is limited to:
-
-```text
-source
-extensionSlug
-extensionName
-extensionVersion
-hostPlatform
-hostPlatformVersion
-locale
-requestType
-```
-
-Forbidden automatic context includes site URL, llms.txt content/hash, public-content inventory, administrator/customer identity, WooCommerce content, plugin/theme inventory, credentials, tokens, prompts, conversations, logs, database contents and arbitrary WordPress options.
+Automatic context is limited to `source`, `extensionSlug`, `extensionName`, `extensionVersion`, `hostPlatform`, `hostPlatformVersion`, `locale` and `requestType`. Forbidden automatic context includes site URL, llms.txt content/hash, public-content inventory, administrator/customer identity, WooCommerce content, plugin/theme inventory, credentials, tokens, prompts, conversations, logs, database contents and arbitrary WordPress options.
 
 Kairoseth Platform independently allow-lists `ai-search-optimizer` and resolves its canonical product name server-side. Browser/plugin-controlled context cannot select an arbitrary extension identity or recipient mailbox.
 
-Exit gates:
+Acceptance evidence:
 
-- EN/ES support page and both CTAs;
-- exact destination validation and request-type allow-list;
-- zero outbound network activity on page load;
-- no plugin-side lead submission or telemetry;
-- no local feature gating/entitlement dependency;
-- real browser desktop/mobile acceptance;
-- inherited Phase 2 runtime/security/package gates remain green;
-- official WordPress Plugin Check green;
-- PR CI + post-merge CI green;
-- blockers = 0.
+```text
+PR #18                    merged
+merge SHA                 c05d9e162310700ed6ac1b1037ae9f96fbe43db6
+final PR CI #48           PASS
+post-merge CI #49         PASS — 8/8 jobs
+Plugin Check PCP 2.1.0    PASS — No errors found
+package SHA-256           2f2896031c72ce4ad8d561bd0d5c2a5820ec0ecd7e18c106250c9066683d80d7
+blockers                   0
+```
 
-### 3C — WordPress.org support/privacy hardening — blocked by 3B
+Canonical acceptance record: [`PHASE3B_CONTEXTUAL_SUPPORT.md`](PHASE3B_CONTEXTUAL_SUPPORT.md).
 
-After 3B acceptance, align the repository with the same release discipline used by AI Transparency. Required work includes:
+### 3C — WordPress.org support/privacy hardening — in progress
+
+Phase 3C is now unblocked and is the active workstream. Align the repository with the same release discipline used by AI Transparency. Required work includes:
 
 - WordPress Coding Standards baseline;
 - PHPCompatibility across supported PHP versions;
@@ -150,6 +138,8 @@ After 3B acceptance, align the repository with the same release discipline used 
 - install/update/deactivate/uninstall regression;
 - final no-trialware/no-tracking/admin-UX policy review;
 - stable-version metadata preparation.
+
+Phase 3C cannot close until its implementation, required gates, acceptance evidence and documentation are complete.
 
 ## Phase 4 — Kairoseth Extensions integration
 
