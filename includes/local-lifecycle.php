@@ -1,23 +1,51 @@
 <?php
+/**
+ * Plugin lifecycle and retention settings.
+ *
+ * @package AI_Search_Optimizer
+ */
+
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Provides the local uninstall option name operation.
+ *
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_uninstall_option_name() {
 	return 'kairoseth_ai_web_readiness_uninstall_mode';
 }
 
+/**
+ * Provides the local normalize uninstall mode operation.
+ *
+ * @param mixed $value The value value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_normalize_uninstall_mode( $value ) {
-	return $value === 'delete' ? 'delete' : 'preserve';
+	return 'delete' === $value ? 'delete' : 'preserve';
 }
 
+/**
+ * Provides the local uninstall mode operation.
+ *
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_uninstall_mode() {
 	return kairoseth_aiwr_local_normalize_uninstall_mode(
 		get_option( kairoseth_aiwr_local_uninstall_option_name(), 'preserve' )
 	);
 }
 
+/**
+ * Provides the local lifecycle text operation.
+ *
+ * @param mixed $key The key value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_lifecycle_text( $key ) {
 	$locale = function_exists( 'determine_locale' ) ? determine_locale() : get_locale();
 	$locale = strpos( strtolower( (string) $locale ), 'es' ) === 0 ? 'es' : 'en';
@@ -54,6 +82,9 @@ function kairoseth_aiwr_local_lifecycle_text( $key ) {
 	return isset( $copy[ $locale ][ $key ] ) ? $copy[ $locale ][ $key ] : $copy['en'][ $key ];
 }
 
+/**
+ * Provides the local register lifecycle page operation.
+ */
 function kairoseth_aiwr_local_register_lifecycle_page() {
 	add_management_page(
 		kairoseth_aiwr_local_lifecycle_text( 'page_title' ),
@@ -64,6 +95,9 @@ function kairoseth_aiwr_local_register_lifecycle_page() {
 	);
 }
 
+/**
+ * Provides the local render lifecycle page operation.
+ */
 function kairoseth_aiwr_local_render_lifecycle_page() {
 	if ( ! current_user_can( KAIROSETH_AIWR_CAPABILITY ) ) {
 		wp_die( esc_html__( 'You do not have permission to access this page.', 'ai-search-optimizer' ) );
@@ -74,9 +108,9 @@ function kairoseth_aiwr_local_render_lifecycle_page() {
 	$request_method = isset( $_SERVER['REQUEST_METHOD'] )
 		? strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) )
 		: '';
-	if ( $request_method === 'POST' ) {
+	if ( 'POST' === $request_method ) {
 		$nonce = isset( $_POST['aiso_retention_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['aiso_retention_nonce'] ) ) : '';
-		if ( $nonce === '' || ! wp_verify_nonce( $nonce, 'aiso_retention_settings' ) ) {
+		if ( '' === $nonce || ! wp_verify_nonce( $nonce, 'aiso_retention_settings' ) ) {
 			$nonce_error = true;
 		} else {
 			$requested = isset( $_POST['aiso_uninstall_mode'] ) ? sanitize_key( wp_unslash( $_POST['aiso_uninstall_mode'] ) ) : 'preserve';

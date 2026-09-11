@@ -8,6 +8,8 @@
  * Author: Kairoseth
  * License: MIT
  * Text Domain: ai-search-optimizer
+ *
+ * @package AI_Search_Optimizer
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -30,6 +32,9 @@ const KAIROSETH_AIWR_SETUP_OPTION      = 'kairoseth_ai_web_readiness_setup_versi
 const KAIROSETH_AIWR_QUERY_VAR         = 'kairoseth_ai_web_readiness_llms';
 const KAIROSETH_AIWR_MAX_CONTENT_BYTES = 524288;
 
+/**
+ * Provides the register site role operation.
+ */
 function kairoseth_aiwr_register_site_role() {
 	add_role(
 		KAIROSETH_AIWR_DEPLOYER_ROLE,
@@ -46,6 +51,9 @@ function kairoseth_aiwr_register_site_role() {
 	}
 }
 
+/**
+ * Provides the register llms route operation.
+ */
 function kairoseth_aiwr_register_llms_route() {
 	add_rewrite_rule(
 		'^llms\\.txt$',
@@ -55,10 +63,15 @@ function kairoseth_aiwr_register_llms_route() {
 }
 add_action( 'init', 'kairoseth_aiwr_register_llms_route', 5 );
 
+/**
+ * Provides the ensure current site setup operation.
+ *
+ * @param bool $force The force value.
+ */
 function kairoseth_aiwr_ensure_current_site_setup( $force = false ) {
 	kairoseth_aiwr_register_site_role();
 	$current = (string) get_option( KAIROSETH_AIWR_SETUP_OPTION, '' );
-	if ( $force || $current !== KAIROSETH_AIWR_SCHEMA_VERSION ) {
+	if ( $force || KAIROSETH_AIWR_SCHEMA_VERSION !== $current ) {
 		kairoseth_aiwr_register_llms_route();
 		flush_rewrite_rules( false );
 		update_option( KAIROSETH_AIWR_SETUP_OPTION, KAIROSETH_AIWR_SCHEMA_VERSION, false );
@@ -66,10 +79,19 @@ function kairoseth_aiwr_ensure_current_site_setup( $force = false ) {
 }
 add_action( 'init', 'kairoseth_aiwr_ensure_current_site_setup', 20 );
 
+/**
+ * Provides the activate current site operation.
+ */
 function kairoseth_aiwr_activate_current_site() {
 	kairoseth_aiwr_ensure_current_site_setup( true );
 }
 
+/**
+ * Provides the activate operation.
+ *
+ * @param bool $network_wide The network wide value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_activate( $network_wide = false ) {
 	if ( is_multisite() && $network_wide ) {
 		$site_ids = get_sites(
@@ -92,6 +114,11 @@ function kairoseth_aiwr_activate( $network_wide = false ) {
 }
 register_activation_hook( __FILE__, 'kairoseth_aiwr_activate' );
 
+/**
+ * Provides the is network active operation.
+ *
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_is_network_active() {
 	if ( ! is_multisite() ) {
 		return false;
@@ -100,6 +127,12 @@ function kairoseth_aiwr_is_network_active() {
 	return isset( $active[ plugin_basename( __FILE__ ) ] );
 }
 
+/**
+ * Provides the initialize new site operation.
+ *
+ * @param mixed $new_site The new site value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_initialize_new_site( $new_site ) {
 	if ( ! kairoseth_aiwr_is_network_active() || ! isset( $new_site->blog_id ) ) {
 		return;
@@ -110,6 +143,12 @@ function kairoseth_aiwr_initialize_new_site( $new_site ) {
 }
 add_action( 'wp_initialize_site', 'kairoseth_aiwr_initialize_new_site', 200, 1 );
 
+/**
+ * Provides the deactivate operation.
+ *
+ * @param bool $network_wide The network wide value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_deactivate( $network_wide = false ) {
 	if ( is_multisite() && $network_wide ) {
 		$site_ids = get_sites(
@@ -131,12 +170,23 @@ function kairoseth_aiwr_deactivate( $network_wide = false ) {
 }
 register_deactivation_hook( __FILE__, 'kairoseth_aiwr_deactivate' );
 
+/**
+ * Provides the query vars operation.
+ *
+ * @param mixed $vars The vars value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_query_vars( $vars ) {
 	$vars[] = KAIROSETH_AIWR_QUERY_VAR;
 	return $vars;
 }
 add_filter( 'query_vars', 'kairoseth_aiwr_query_vars' );
 
+/**
+ * Provides the site identity operation.
+ *
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_site_identity() {
 	$blog_id   = (int) get_current_blog_id();
 	$multisite = is_multisite();
@@ -160,6 +210,11 @@ function kairoseth_aiwr_site_identity() {
 	);
 }
 
+/**
+ * Provides the public llms operation.
+ *
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_public_llms() {
 	if ( (string) get_query_var( KAIROSETH_AIWR_QUERY_VAR ) !== '1' ) {
 		return;
@@ -196,6 +251,11 @@ function kairoseth_aiwr_public_llms() {
 }
 add_action( 'template_redirect', 'kairoseth_aiwr_public_llms', 0 );
 
+/**
+ * Provides the permission check operation.
+ *
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_permission_check() {
 	if ( ! is_user_logged_in() ) {
 		return new WP_Error(
@@ -214,10 +274,21 @@ function kairoseth_aiwr_permission_check() {
 	return true;
 }
 
+/**
+ * Provides the append identity operation.
+ *
+ * @param mixed $payload The payload value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_append_identity( $payload ) {
 	return array_merge( $payload, kairoseth_aiwr_site_identity() );
 }
 
+/**
+ * Provides the connection response operation.
+ *
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_connection_response() {
 	return rest_ensure_response(
 		kairoseth_aiwr_append_identity(
@@ -240,6 +311,11 @@ function kairoseth_aiwr_connection_response() {
 	);
 }
 
+/**
+ * Provides the deployment state operation.
+ *
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_deployment_state() {
 	$deployment = get_option( KAIROSETH_AIWR_DEPLOYMENT_OPTION, null );
 	if ( ! is_array( $deployment ) ) {
@@ -266,17 +342,29 @@ function kairoseth_aiwr_deployment_state() {
 	);
 }
 
+/**
+ * Provides the normalized url operation.
+ *
+ * @param mixed $value The value value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_normalized_url( $value ) {
-	if ( ! is_string( $value ) || $value === '' ) {
+	if ( ! is_string( $value ) || '' === $value ) {
 		return '';
 	}
 	return untrailingslashit( esc_url_raw( $value ) );
 }
 
+/**
+ * Provides the verify expected site operation.
+ *
+ * @param mixed $body The body value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_verify_expected_site( $body ) {
 	$identity            = kairoseth_aiwr_site_identity();
 	$expected_blog_id    = isset( $body['expectedBlogId'] ) ? (int) $body['expectedBlogId'] : 0;
-	$expected_network_id = array_key_exists( 'expectedNetworkId', $body ) && $body['expectedNetworkId'] !== null
+	$expected_network_id = array_key_exists( 'expectedNetworkId', $body ) && null !== $body['expectedNetworkId']
 		? (int) $body['expectedNetworkId']
 		: null;
 	$expected_home_url   = isset( $body['expectedHomeUrl'] ) && is_string( $body['expectedHomeUrl'] )
@@ -285,10 +373,10 @@ function kairoseth_aiwr_verify_expected_site( $body ) {
 
 	if (
 		$expected_blog_id <= 0 ||
-		$expected_blog_id !== (int) $identity['blogId'] ||
+		(int) $identity['blogId'] !== $expected_blog_id ||
 		$expected_network_id !== $identity['networkId'] ||
-		$expected_home_url === '' ||
-		$expected_home_url !== kairoseth_aiwr_normalized_url( $identity['homeUrl'] )
+		'' === $expected_home_url ||
+		kairoseth_aiwr_normalized_url( $identity['homeUrl'] ) !== $expected_home_url
 	) {
 		return new WP_Error(
 			'kairoseth_aiwr_site_mismatch',
@@ -299,6 +387,13 @@ function kairoseth_aiwr_verify_expected_site( $body ) {
 	return true;
 }
 
+/**
+ * Provides the verify expected remote state operation.
+ *
+ * @param mixed $body The body value.
+ * @param mixed $current The current value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_verify_expected_remote_state( $body, $current ) {
 	if ( ! array_key_exists( 'expectedCurrentDeployed', $body ) || ! is_bool( $body['expectedCurrentDeployed'] ) ) {
 		return new WP_Error(
@@ -314,7 +409,7 @@ function kairoseth_aiwr_verify_expected_remote_state( $body, $current ) {
 		: null;
 	if (
 		( $expected_deployed && ( ! is_string( $expected_hash ) || ! preg_match( '/^[a-f0-9]{64}$/', $expected_hash ) ) ) ||
-		( ! $expected_deployed && $expected_hash !== null )
+		( ! $expected_deployed && null !== $expected_hash )
 	) {
 		return new WP_Error(
 			'kairoseth_aiwr_invalid_expected_state',
@@ -354,6 +449,12 @@ function kairoseth_aiwr_verify_expected_remote_state( $body, $current ) {
 	return true;
 }
 
+/**
+ * Provides the deploy operation.
+ *
+ * @param WP_REST_Request $request The request value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_deploy( WP_REST_Request $request ) {
 	$body = $request->get_json_params();
 	if ( ! is_array( $body ) ) {
@@ -376,9 +477,9 @@ function kairoseth_aiwr_deploy( WP_REST_Request $request ) {
 		: null;
 
 	if (
-		$revision_slug === '' || strlen( $revision_slug ) > 180 ||
+		'' === $revision_slug || strlen( $revision_slug ) > 180 ||
 		! preg_match( '/^[a-f0-9]{64}$/', $content_hash ) ||
-		$content === null || strlen( $content ) > KAIROSETH_AIWR_MAX_CONTENT_BYTES
+		null === $content || strlen( $content ) > KAIROSETH_AIWR_MAX_CONTENT_BYTES
 	) {
 		return new WP_Error(
 			'kairoseth_aiwr_invalid_deployment',
@@ -450,6 +551,9 @@ function kairoseth_aiwr_deploy( WP_REST_Request $request ) {
 	);
 }
 
+/**
+ * Provides the register rest routes operation.
+ */
 function kairoseth_aiwr_register_rest_routes() {
 	register_rest_route(
 		'kairoseth-ai-web-readiness/v1',

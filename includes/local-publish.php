@@ -1,21 +1,40 @@
 <?php
+/**
+ * Local llms.txt publication and verification helpers.
+ *
+ * @package AI_Search_Optimizer
+ */
+
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Provides the local inventory key operation.
+ *
+ * @param mixed $item The item value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_inventory_key( $item ) {
 	if ( ! is_array( $item ) ) {
 		return '';
 	}
 	$type = isset( $item['type'] ) && is_string( $item['type'] ) ? preg_replace( '/[^a-z0-9_-]/i', '', $item['type'] ) : '';
 	$id   = isset( $item['id'] ) ? (int) $item['id'] : 0;
-	if ( $type === '' || $id <= 0 ) {
+	if ( '' === $type || $id <= 0 ) {
 		return '';
 	}
 	return strtolower( $type ) . ':' . $id;
 }
 
+/**
+ * Provides the local filter selected inventory operation.
+ *
+ * @param mixed $inventory The inventory value.
+ * @param mixed $selected_keys The selected keys value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_filter_selected_inventory( $inventory, $selected_keys ) {
 	$allowed = array();
 	foreach ( (array) $selected_keys as $key ) {
@@ -27,7 +46,7 @@ function kairoseth_aiwr_local_filter_selected_inventory( $inventory, $selected_k
 	$selected = array();
 	foreach ( (array) $inventory as $item ) {
 		$key = kairoseth_aiwr_local_inventory_key( $item );
-		if ( $key !== '' && isset( $allowed[ $key ] ) ) {
+		if ( '' !== $key && isset( $allowed[ $key ] ) ) {
 			$selected[] = $item;
 		}
 	}
@@ -35,6 +54,12 @@ function kairoseth_aiwr_local_filter_selected_inventory( $inventory, $selected_k
 	return kairoseth_aiwr_local_sort_inventory( $selected );
 }
 
+/**
+ * Provides the local deployment token operation.
+ *
+ * @param mixed $deployment The deployment value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_deployment_token( $deployment ) {
 	if ( ! is_array( $deployment ) ) {
 		return hash( 'sha256', 'none' );
@@ -47,13 +72,19 @@ function kairoseth_aiwr_local_deployment_token( $deployment ) {
 		'actualHash'   => hash( 'sha256', $content ),
 		'updatedAt'    => isset( $deployment['updatedAt'] ) && is_string( $deployment['updatedAt'] ) ? $deployment['updatedAt'] : '',
 		'blogId'       => isset( $deployment['blogId'] ) ? (int) $deployment['blogId'] : 0,
-		'networkId'    => array_key_exists( 'networkId', $deployment ) && $deployment['networkId'] !== null ? (int) $deployment['networkId'] : null,
+		'networkId'    => array_key_exists( 'networkId', $deployment ) && null !== $deployment['networkId'] ? (int) $deployment['networkId'] : null,
 		'homeUrl'      => isset( $deployment['homeUrl'] ) && is_string( $deployment['homeUrl'] ) ? $deployment['homeUrl'] : '',
 	);
 
-	return hash( 'sha256', json_encode( $snapshot, JSON_UNESCAPED_SLASHES ) );
+	return hash( 'sha256', wp_json_encode( $snapshot, JSON_UNESCAPED_SLASHES ) );
 }
 
+/**
+ * Provides the local deployment is valid operation.
+ *
+ * @param mixed $deployment The deployment value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_deployment_is_valid( $deployment ) {
 	return is_array( $deployment )
 		&& isset( $deployment['content'], $deployment['contentHash'] )
@@ -63,6 +94,13 @@ function kairoseth_aiwr_local_deployment_is_valid( $deployment ) {
 		&& hash_equals( $deployment['contentHash'], hash( 'sha256', $deployment['content'] ) );
 }
 
+/**
+ * Provides the local verify public content operation.
+ *
+ * @param mixed $content The content value.
+ * @param mixed $content_hash The content hash value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_verify_public_content( $content, $content_hash ) {
 	if ( ! is_string( $content ) || ! is_string( $content_hash ) || ! preg_match( '/^[a-f0-9]{64}$/', $content_hash ) ) {
 		return array(
@@ -91,7 +129,7 @@ function kairoseth_aiwr_local_verify_public_content( $content, $content_hash ) {
 	}
 
 	$status = (int) wp_remote_retrieve_response_code( $response );
-	if ( $status !== 200 ) {
+	if ( 200 !== $status ) {
 		return array(
 			'verified'   => false,
 			'code'       => 'public_http_status',
@@ -128,6 +166,11 @@ function kairoseth_aiwr_local_verify_public_content( $content, $content_hash ) {
 	);
 }
 
+/**
+ * Provides the local verify current publication operation.
+ *
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_verify_current_publication() {
 	$deployment = get_option( KAIROSETH_AIWR_DEPLOYMENT_OPTION, null );
 	if ( ! kairoseth_aiwr_local_deployment_is_valid( $deployment ) ) {
@@ -140,6 +183,14 @@ function kairoseth_aiwr_local_verify_current_publication() {
 	return kairoseth_aiwr_local_verify_public_content( $deployment['content'], $deployment['contentHash'] );
 }
 
+/**
+ * Provides the local publish content operation.
+ *
+ * @param mixed $content The content value.
+ * @param mixed $expected_state_token The expected state token value.
+ * @param int   $selected_count The selected count value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_publish_content( $content, $expected_state_token, $selected_count = 0 ) {
 	$content              = is_string( $content ) ? $content : '';
 	$expected_state_token = is_string( $expected_state_token ) ? trim( $expected_state_token ) : '';
@@ -147,7 +198,7 @@ function kairoseth_aiwr_local_publish_content( $content, $expected_state_token, 
 
 	$current       = get_option( KAIROSETH_AIWR_DEPLOYMENT_OPTION, null );
 	$current_token = kairoseth_aiwr_local_deployment_token( $current );
-	if ( $expected_state_token === '' || ! hash_equals( $current_token, $expected_state_token ) ) {
+	if ( '' === $expected_state_token || ! hash_equals( $current_token, $expected_state_token ) ) {
 		return array(
 			'ok'           => false,
 			'changed'      => false,

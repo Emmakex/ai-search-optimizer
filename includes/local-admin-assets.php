@@ -1,9 +1,18 @@
 <?php
+/**
+ * Local administration presentation hardening.
+ *
+ * @package AI_Search_Optimizer
+ */
+
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Provides the local admin hardening styles operation.
+ */
 function kairoseth_aiwr_local_admin_hardening_styles() {
 	?>
 	<style id="ai-search-optimizer-admin-hardening">

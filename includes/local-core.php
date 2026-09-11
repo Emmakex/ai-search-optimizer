@@ -1,9 +1,22 @@
 <?php
+/**
+ * Local analysis and llms.txt generation primitives.
+ *
+ * @package AI_Search_Optimizer
+ */
+
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Provides the local plain text operation.
+ *
+ * @param mixed $value The value value.
+ * @param int   $max_length The max length value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_plain_text( $value, $max_length = 180 ) {
 	$text = is_string( $value ) ? $value : '';
 	$text = html_entity_decode( wp_strip_all_tags( $text ), ENT_QUOTES, 'UTF-8' );
@@ -27,6 +40,13 @@ function kairoseth_aiwr_local_plain_text( $value, $max_length = 180 ) {
 	return rtrim( substr( $text, 0, $max_length - 3 ) ) . '...';
 }
 
+/**
+ * Provides the local markdown text operation.
+ *
+ * @param mixed $value The value value.
+ * @param int   $max_length The max length value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_markdown_text( $value, $max_length = 180 ) {
 	$text = kairoseth_aiwr_local_plain_text( $value, $max_length );
 	return str_replace(
@@ -36,6 +56,12 @@ function kairoseth_aiwr_local_markdown_text( $value, $max_length = 180 ) {
 	);
 }
 
+/**
+ * Provides the local url key operation.
+ *
+ * @param mixed $url The url value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_url_key( $url ) {
 	if ( ! is_string( $url ) ) {
 		return '';
@@ -43,6 +69,12 @@ function kairoseth_aiwr_local_url_key( $url ) {
 	return rtrim( strtolower( trim( $url ) ), '/' );
 }
 
+/**
+ * Provides the local type priority operation.
+ *
+ * @param mixed $type The type value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_type_priority( $type ) {
 	$priorities = array(
 		'page'    => 10,
@@ -52,6 +84,12 @@ function kairoseth_aiwr_local_type_priority( $type ) {
 	return isset( $priorities[ $type ] ) ? $priorities[ $type ] : 40;
 }
 
+/**
+ * Provides the local sort inventory operation.
+ *
+ * @param mixed $inventory The inventory value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_sort_inventory( $inventory ) {
 	$normalized = array();
 	foreach ( (array) $inventory as $item ) {
@@ -60,7 +98,7 @@ function kairoseth_aiwr_local_sort_inventory( $inventory ) {
 		}
 		$title = isset( $item['title'] ) ? kairoseth_aiwr_local_plain_text( $item['title'], 180 ) : '';
 		$url   = isset( $item['url'] ) && is_string( $item['url'] ) ? trim( $item['url'] ) : '';
-		if ( $title === '' || $url === '' ) {
+		if ( '' === $title || '' === $url ) {
 			continue;
 		}
 		$normalized[] = array(
@@ -77,15 +115,15 @@ function kairoseth_aiwr_local_sort_inventory( $inventory ) {
 		$normalized,
 		function ( $left, $right ) {
 			$priority = kairoseth_aiwr_local_type_priority( $left['type'] ) <=> kairoseth_aiwr_local_type_priority( $right['type'] );
-			if ( $priority !== 0 ) {
+			if ( 0 !== $priority ) {
 				return $priority;
 			}
 			$type = strcasecmp( $left['typeLabel'], $right['typeLabel'] );
-			if ( $type !== 0 ) {
+			if ( 0 !== $type ) {
 				return $type;
 			}
 			$title = strcasecmp( $left['title'], $right['title'] );
-			if ( $title !== 0 ) {
+			if ( 0 !== $title ) {
 				return $title;
 			}
 			return strcmp( $left['url'], $right['url'] );
@@ -95,6 +133,13 @@ function kairoseth_aiwr_local_sort_inventory( $inventory ) {
 	return $normalized;
 }
 
+/**
+ * Provides the local build llms operation.
+ *
+ * @param mixed $site The site value.
+ * @param mixed $inventory The inventory value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_build_llms( $site, $inventory ) {
 	$site        = is_array( $site ) ? $site : array();
 	$name        = isset( $site['name'] ) ? kairoseth_aiwr_local_markdown_text( $site['name'], 180 ) : '';
@@ -102,18 +147,18 @@ function kairoseth_aiwr_local_build_llms( $site, $inventory ) {
 	$home_url    = isset( $site['homeUrl'] ) && is_string( $site['homeUrl'] ) ? trim( $site['homeUrl'] ) : '';
 	$items       = kairoseth_aiwr_local_sort_inventory( $inventory );
 
-	if ( $name === '' ) {
+	if ( '' === $name ) {
 		$name = 'Website';
 	}
 
 	$lines = array( '# ' . $name, '' );
-	if ( $description !== '' ) {
+	if ( '' !== $description ) {
 		$lines[] = '> ' . $description;
 		$lines[] = '';
 	}
 
 	$seen_urls = array();
-	if ( $home_url !== '' ) {
+	if ( '' !== $home_url ) {
 		$lines[] = '## Main';
 		$lines[] = '';
 		$lines[] = '- [' . $name . '](' . $home_url . ')';
@@ -124,12 +169,12 @@ function kairoseth_aiwr_local_build_llms( $site, $inventory ) {
 	$groups = array();
 	foreach ( $items as $item ) {
 		$url_key = kairoseth_aiwr_local_url_key( $item['url'] );
-		if ( $url_key === '' || isset( $seen_urls[ $url_key ] ) ) {
+		if ( '' === $url_key || isset( $seen_urls[ $url_key ] ) ) {
 			continue;
 		}
 		$seen_urls[ $url_key ] = true;
 
-		$label = $item['typeLabel'] !== '' ? $item['typeLabel'] : 'Content';
+		$label = '' !== $item['typeLabel'] ? $item['typeLabel'] : 'Content';
 		if ( ! isset( $groups[ $label ] ) ) {
 			$groups[ $label ] = array();
 		}
@@ -141,7 +186,7 @@ function kairoseth_aiwr_local_build_llms( $site, $inventory ) {
 		$lines[] = '';
 		foreach ( $group as $item ) {
 			$line = '- [' . kairoseth_aiwr_local_markdown_text( $item['title'], 180 ) . '](' . $item['url'] . ')';
-			if ( $item['description'] !== '' ) {
+			if ( '' !== $item['description'] ) {
 				$line .= ': ' . kairoseth_aiwr_local_markdown_text( $item['description'], 180 );
 			}
 			$lines[] = $line;
@@ -152,12 +197,20 @@ function kairoseth_aiwr_local_build_llms( $site, $inventory ) {
 	return rtrim( implode( "\n", $lines ) ) . "\n";
 }
 
+/**
+ * Provides the local validate llms operation.
+ *
+ * @param mixed $content The content value.
+ * @param mixed $home_url The home url value.
+ * @param int   $max_bytes The max bytes value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_validate_llms( $content, $home_url, $max_bytes = 524288 ) {
 	$content  = is_string( $content ) ? $content : '';
 	$home_url = is_string( $home_url ) ? trim( $home_url ) : '';
 	$findings = array();
 
-	if ( $content === '' || ! preg_match( '/^#\s+\S/m', $content ) ) {
+	if ( '' === $content || ! preg_match( '/^#\s+\S/m', $content ) ) {
 		$findings[] = array(
 			'code'     => 'missing_heading',
 			'severity' => 'error',
@@ -173,7 +226,7 @@ function kairoseth_aiwr_local_validate_llms( $content, $home_url, $max_bytes = 5
 	}
 
 	$home_host = wp_parse_url( $home_url, PHP_URL_HOST );
-	if ( ! is_string( $home_host ) || $home_host === '' ) {
+	if ( ! is_string( $home_host ) || '' === $home_host ) {
 		$findings[] = array(
 			'code'     => 'invalid_home_url',
 			'severity' => 'error',
@@ -183,7 +236,7 @@ function kairoseth_aiwr_local_validate_llms( $content, $home_url, $max_bytes = 5
 
 	preg_match_all( '/\]\((https?:\/\/[^)\s]+)\)/i', $content, $matches );
 	$urls = isset( $matches[1] ) && is_array( $matches[1] ) ? $matches[1] : array();
-	if ( $urls === array() ) {
+	if ( array() === $urls ) {
 		$findings[] = array(
 			'code'     => 'no_resources',
 			'severity' => 'error',
@@ -204,7 +257,7 @@ function kairoseth_aiwr_local_validate_llms( $content, $home_url, $max_bytes = 5
 		$seen[ $key ] = true;
 
 		$host = wp_parse_url( $url, PHP_URL_HOST );
-		if ( ! is_string( $host ) || $host === '' || ( $home_host !== '' && strcasecmp( $home_host, $host ) !== 0 ) ) {
+		if ( ! is_string( $host ) || '' === $host || ( '' !== $home_host && strcasecmp( $home_host, $host ) !== 0 ) ) {
 			$findings[] = array(
 				'code'     => 'external_url',
 				'severity' => 'error',
@@ -215,7 +268,7 @@ function kairoseth_aiwr_local_validate_llms( $content, $home_url, $max_bytes = 5
 
 	$valid = true;
 	foreach ( $findings as $finding ) {
-		if ( isset( $finding['severity'] ) && $finding['severity'] === 'error' ) {
+		if ( isset( $finding['severity'] ) && 'error' === $finding['severity'] ) {
 			$valid = false;
 			break;
 		}

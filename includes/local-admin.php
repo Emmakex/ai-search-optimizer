@@ -1,4 +1,10 @@
 <?php
+/**
+ * Local analysis administration UI and workflow helpers.
+ *
+ * @package AI_Search_Optimizer
+ */
+
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -6,11 +12,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once __DIR__ . '/local-publish.php';
 
+/**
+ * Provides the local locale operation.
+ *
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_locale() {
 	$locale = function_exists( 'determine_locale' ) ? determine_locale() : get_locale();
 	return strpos( strtolower( (string) $locale ), 'es' ) === 0 ? 'es' : 'en';
 }
 
+/**
+ * Provides the local text operation.
+ *
+ * @param mixed $key The key value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_text( $key ) {
 	$copy = array(
 		'en' => array(
@@ -160,6 +177,11 @@ function kairoseth_aiwr_local_text( $key ) {
 	return isset( $copy['en'][ $key ] ) ? $copy['en'][ $key ] : $key;
 }
 
+/**
+ * Provides the local public post types operation.
+ *
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_public_post_types() {
 	$objects = get_post_types( array( 'public' => true ), 'objects' );
 	$result  = array();
@@ -172,10 +194,16 @@ function kairoseth_aiwr_local_public_post_types() {
 	return $result;
 }
 
+/**
+ * Provides the local inventory operation.
+ *
+ * @param int $limit The limit value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_inventory( $limit = 100 ) {
 	$limit = max( 1, min( 100, (int) $limit ) );
 	$types = kairoseth_aiwr_local_public_post_types();
-	if ( $types === array() ) {
+	if ( array() === $types ) {
 		return array();
 	}
 
@@ -196,10 +224,10 @@ function kairoseth_aiwr_local_inventory( $limit = 100 ) {
 
 		foreach ( $posts as $post ) {
 			$url = get_permalink( $post );
-			if ( ! is_string( $url ) || $url === '' ) {
+			if ( ! is_string( $url ) || '' === $url ) {
 				continue;
 			}
-			$raw_description = isset( $post->post_excerpt ) && $post->post_excerpt !== ''
+			$raw_description = isset( $post->post_excerpt ) && '' !== $post->post_excerpt
 				? $post->post_excerpt
 				: ( isset( $post->post_content ) ? strip_shortcodes( $post->post_content ) : '' );
 			$items[]         = array(
@@ -215,10 +243,15 @@ function kairoseth_aiwr_local_inventory( $limit = 100 ) {
 	return array_slice( kairoseth_aiwr_local_sort_inventory( $items ), 0, $limit );
 }
 
+/**
+ * Provides the local readiness operation.
+ *
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_readiness() {
 	$robots_ready  = (string) get_option( 'blog_public', '1' ) === '1';
 	$sitemap_url   = function_exists( 'get_sitemap_url' ) ? get_sitemap_url( 'index' ) : '';
-	$sitemap_ready = is_string( $sitemap_url ) && $sitemap_url !== '';
+	$sitemap_ready = is_string( $sitemap_url ) && '' !== $sitemap_url;
 	$deployment    = get_option( KAIROSETH_AIWR_DEPLOYMENT_OPTION, null );
 	$llms_ready    = kairoseth_aiwr_local_deployment_is_valid( $deployment );
 
@@ -244,25 +277,38 @@ function kairoseth_aiwr_local_readiness() {
 	);
 }
 
+/**
+ * Provides the local finding text operation.
+ *
+ * @param mixed $finding The finding value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_finding_text( $finding ) {
 	$code    = isset( $finding['code'] ) ? (string) $finding['code'] : '';
 	$message = kairoseth_aiwr_local_text( 'finding_' . $code );
-	if ( isset( $finding['value'] ) && is_string( $finding['value'] ) && $finding['value'] !== '' ) {
+	if ( isset( $finding['value'] ) && is_string( $finding['value'] ) && '' !== $finding['value'] ) {
 		$message .= ' ' . $finding['value'];
 	}
 	return $message;
 }
 
+/**
+ * Provides the local selected keys operation.
+ *
+ * @param mixed $inventory The inventory value.
+ * @param mixed $action The action value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_selected_keys( $inventory, $action ) {
-	if ( $action !== '' ) {
+	if ( '' !== $action ) {
 		$nonce = isset( $_POST['aiso_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['aiso_nonce'] ) ) : '';
-		if ( $nonce !== '' && wp_verify_nonce( $nonce, 'aiso_local_workflow' ) && isset( $_POST['aiso_selection_present'] ) ) {
+		if ( '' !== $nonce && wp_verify_nonce( $nonce, 'aiso_local_workflow' ) && isset( $_POST['aiso_selection_present'] ) ) {
 			$posted = isset( $_POST['aiso_selected'] ) && is_array( $_POST['aiso_selected'] )
 				? array_map( 'sanitize_text_field', wp_unslash( $_POST['aiso_selected'] ) )
 				: array();
 			$keys   = array();
 			foreach ( $posted as $key ) {
-				if ( is_string( $key ) && $key !== '' ) {
+				if ( is_string( $key ) && '' !== $key ) {
 					$keys[] = $key;
 				}
 			}
@@ -273,31 +319,44 @@ function kairoseth_aiwr_local_selected_keys( $inventory, $action ) {
 	$keys = array();
 	foreach ( $inventory as $item ) {
 		$key = kairoseth_aiwr_local_inventory_key( $item );
-		if ( $key !== '' ) {
+		if ( '' !== $key ) {
 			$keys[] = $key;
 		}
 	}
 	return $keys;
 }
 
+/**
+ * Provides the local request action operation.
+ *
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_request_action() {
 	$request_method = isset( $_SERVER['REQUEST_METHOD'] )
 		? strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) )
 		: '';
-	if ( $request_method !== 'POST' ) {
+	if ( 'POST' !== $request_method ) {
 		return '';
 	}
 
 	$nonce = isset( $_POST['aiso_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['aiso_nonce'] ) ) : '';
-	if ( $nonce === '' || ! wp_verify_nonce( $nonce, 'aiso_local_workflow' ) ) {
+	if ( '' === $nonce || ! wp_verify_nonce( $nonce, 'aiso_local_workflow' ) ) {
 		return 'invalid_nonce';
 	}
 
 	return isset( $_POST['aiso_action'] ) ? sanitize_key( wp_unslash( $_POST['aiso_action'] ) ) : '';
 }
 
+/**
+ * Provides the local process action operation.
+ *
+ * @param mixed $action The action value.
+ * @param mixed $preview The preview value.
+ * @param mixed $selected_count The selected count value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_process_action( $action, $preview, $selected_count ) {
-	if ( $action === 'invalid_nonce' ) {
+	if ( 'invalid_nonce' === $action ) {
 		return array(
 			'ok'           => false,
 			'code'         => 'invalid_nonce',
@@ -309,7 +368,7 @@ function kairoseth_aiwr_local_process_action( $action, $preview, $selected_count
 	}
 
 	$nonce = isset( $_POST['aiso_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['aiso_nonce'] ) ) : '';
-	if ( $nonce === '' || ! wp_verify_nonce( $nonce, 'aiso_local_workflow' ) ) {
+	if ( '' === $nonce || ! wp_verify_nonce( $nonce, 'aiso_local_workflow' ) ) {
 		return array(
 			'ok'           => false,
 			'code'         => 'invalid_nonce',
@@ -317,7 +376,7 @@ function kairoseth_aiwr_local_process_action( $action, $preview, $selected_count
 		);
 	}
 
-	if ( $action === 'preview' ) {
+	if ( 'preview' === $action ) {
 		return array(
 			'ok'           => true,
 			'code'         => 'preview_ready',
@@ -325,7 +384,7 @@ function kairoseth_aiwr_local_process_action( $action, $preview, $selected_count
 		);
 	}
 
-	if ( $action === 'verify' ) {
+	if ( 'verify' === $action ) {
 		$verification = kairoseth_aiwr_local_verify_current_publication();
 		return array(
 			'ok'           => (bool) $verification['verified'],
@@ -338,12 +397,18 @@ function kairoseth_aiwr_local_process_action( $action, $preview, $selected_count
 	return kairoseth_aiwr_local_publish_content( $preview, $expected, $selected_count );
 }
 
+/**
+ * Provides the local result detail operation.
+ *
+ * @param mixed $result The result value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiwr_local_result_detail( $result ) {
 	if ( ! is_array( $result ) || ! isset( $result['verification'] ) || ! is_array( $result['verification'] ) ) {
 		return '';
 	}
 	$code = isset( $result['verification']['code'] ) ? (string) $result['verification']['code'] : '';
-	if ( $code === '' || $code === 'verified' ) {
+	if ( '' === $code || 'verified' === $code ) {
 		return '';
 	}
 	$message = kairoseth_aiwr_local_text( 'verification_' . $code );
@@ -353,6 +418,9 @@ function kairoseth_aiwr_local_result_detail( $result ) {
 	return $message;
 }
 
+/**
+ * Provides the local register admin page operation.
+ */
 function kairoseth_aiwr_local_register_admin_page() {
 	add_management_page(
 		kairoseth_aiwr_local_text( 'page_title' ),
@@ -364,6 +432,9 @@ function kairoseth_aiwr_local_register_admin_page() {
 }
 add_action( 'admin_menu', 'kairoseth_aiwr_local_register_admin_page' );
 
+/**
+ * Provides the local render admin page operation.
+ */
 function kairoseth_aiwr_local_render_admin_page() {
 	if ( ! current_user_can( KAIROSETH_AIWR_CAPABILITY ) ) {
 		wp_die( esc_html__( 'You do not have permission to access this page.', 'ai-search-optimizer' ) );
@@ -398,7 +469,7 @@ function kairoseth_aiwr_local_render_admin_page() {
 			<?php $result_class = ! empty( $result['ok'] ) ? 'notice-success' : 'notice-warning'; ?>
 			<div class="notice <?php echo esc_attr( $result_class ); ?> inline"><p><strong><?php echo esc_html( kairoseth_aiwr_local_text( 'result_' . $result['code'] ) ); ?></strong>
 			<?php
-			$detail = kairoseth_aiwr_local_result_detail( $result ); if ( $detail !== '' ) :
+			$detail = kairoseth_aiwr_local_result_detail( $result ); if ( '' !== $detail ) :
 				?>
 				<?php echo esc_html( $detail ); ?><?php endif; ?></p></div>
 		<?php endif; ?>
@@ -428,7 +499,7 @@ function kairoseth_aiwr_local_render_admin_page() {
 
 			<h2><?php echo esc_html( kairoseth_aiwr_local_text( 'inventory' ) ); ?></h2>
 			<p><?php echo esc_html( kairoseth_aiwr_local_text( 'inventory_limit' ) ); ?></p>
-			<?php if ( $inventory === array() ) : ?>
+			<?php if ( array() === $inventory ) : ?>
 				<p><?php echo esc_html( kairoseth_aiwr_local_text( 'no_content' ) ); ?></p>
 			<?php else : ?>
 				<table class="widefat striped">
@@ -464,7 +535,7 @@ function kairoseth_aiwr_local_render_admin_page() {
 				<span><?php echo esc_html( (string) $validation['byteCount'] . ' ' . kairoseth_aiwr_local_text( 'bytes' ) ); ?></span>
 				<span><?php echo esc_html( kairoseth_aiwr_local_text( 'sha256' ) ); ?>: <code><?php echo esc_html( $validation['contentHash'] ); ?></code></span>
 			</div>
-			<?php if ( $validation['findings'] !== array() ) : ?>
+			<?php if ( array() !== $validation['findings'] ) : ?>
 				<ul>
 				<?php
 				foreach ( $validation['findings'] as $finding ) :
@@ -475,12 +546,12 @@ function kairoseth_aiwr_local_render_admin_page() {
 			<h2><?php echo esc_html( kairoseth_aiwr_local_text( 'publication' ) ); ?></h2>
 			<p><?php echo esc_html( kairoseth_aiwr_local_text( 'publish_warning' ) ); ?></p>
 			<?php
-			if ( $current_hash !== '' ) :
+			if ( '' !== $current_hash ) :
 				?>
 				<p><?php echo esc_html( kairoseth_aiwr_local_text( 'published_hash' ) ); ?>: <code><?php echo esc_html( $current_hash ); ?></code></p><?php endif; ?>
 			<div class="aiso-actions">
 				<button type="submit" class="button button-primary" name="aiso_action" value="publish" <?php disabled( ! $validation['valid'] ); ?>><?php echo esc_html( kairoseth_aiwr_local_text( 'publish' ) ); ?></button>
-				<button type="submit" class="button" name="aiso_action" value="verify" <?php disabled( $current_hash === '' ); ?>><?php echo esc_html( kairoseth_aiwr_local_text( 'verify' ) ); ?></button>
+				<button type="submit" class="button" name="aiso_action" value="verify" <?php disabled( '' === $current_hash ); ?>><?php echo esc_html( kairoseth_aiwr_local_text( 'verify' ) ); ?></button>
 			</div>
 		</form>
 	</div>

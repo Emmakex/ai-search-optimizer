@@ -1,4 +1,10 @@
 <?php
+/**
+ * Plugin uninstall and retention cleanup.
+ *
+ * @package AI_Search_Optimizer
+ */
+
 
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
@@ -10,9 +16,12 @@ const KAIROSETH_AISO_UNINSTALL_DEPLOYMENT_OPTION = 'kairoseth_ai_web_readiness_d
 const KAIROSETH_AISO_UNINSTALL_SETUP_OPTION      = 'kairoseth_ai_web_readiness_setup_version';
 const KAIROSETH_AISO_UNINSTALL_MODE_OPTION       = 'kairoseth_ai_web_readiness_uninstall_mode';
 
+/**
+ * Provides the uninstall current site operation.
+ */
 function kairoseth_aiso_uninstall_current_site() {
 	$mode = get_option( KAIROSETH_AISO_UNINSTALL_MODE_OPTION, 'preserve' );
-	$mode = $mode === 'delete' ? 'delete' : 'preserve';
+	$mode = 'delete' === $mode ? 'delete' : 'preserve';
 
 	$administrator = get_role( 'administrator' );
 	if ( $administrator && $administrator->has_cap( KAIROSETH_AISO_UNINSTALL_CAPABILITY ) ) {
@@ -34,7 +43,7 @@ function kairoseth_aiso_uninstall_current_site() {
 	delete_option( KAIROSETH_AISO_UNINSTALL_SETUP_OPTION );
 	delete_option( KAIROSETH_AISO_UNINSTALL_MODE_OPTION );
 
-	if ( $mode === 'delete' ) {
+	if ( 'delete' === $mode ) {
 		delete_option( KAIROSETH_AISO_UNINSTALL_DEPLOYMENT_OPTION );
 	}
 }

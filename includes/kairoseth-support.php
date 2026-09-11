@@ -1,4 +1,10 @@
 <?php
+/**
+ * Contextual Kairoseth support integration helpers.
+ *
+ * @package AI_Search_Optimizer
+ */
+
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -8,11 +14,22 @@ const KAIROSETH_AISO_CUSTOM_REQUESTS_URL = 'https://kairoseth.com/custom-request
 const KAIROSETH_AISO_EXTENSION_SLUG      = 'ai-search-optimizer';
 const KAIROSETH_AISO_EXTENSION_NAME      = 'AI Search Optimizer';
 
+/**
+ * Provides the support locale operation.
+ *
+ * @return mixed The operation result.
+ */
 function kairoseth_aiso_support_locale() {
 	$locale = function_exists( 'determine_locale' ) ? determine_locale() : get_locale();
 	return strpos( strtolower( (string) $locale ), 'es' ) === 0 ? 'es' : 'en';
 }
 
+/**
+ * Provides the support text operation.
+ *
+ * @param mixed $key The key value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiso_support_text( $key ) {
 	$copy = array(
 		'en' => array(
@@ -66,19 +83,30 @@ function kairoseth_aiso_support_text( $key ) {
 	return isset( $copy['en'][ $key ] ) ? $copy['en'][ $key ] : $key;
 }
 
+/**
+ * Provides the support bounded version operation.
+ *
+ * @param mixed $value The value value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiso_support_bounded_version( $value ) {
 	$value = trim( (string) $value );
-	if ( $value === '' || strlen( $value ) > 40 || ! preg_match( '/^[A-Za-z0-9][A-Za-z0-9._+\-]*$/', $value ) ) {
+	if ( '' === $value || strlen( $value ) > 40 || ! preg_match( '/^[A-Za-z0-9][A-Za-z0-9._+\-]*$/', $value ) ) {
 		return '';
 	}
 	return $value;
 }
 
+/**
+ * Provides the support context operation.
+ *
+ * @return mixed The operation result.
+ */
 function kairoseth_aiso_support_context() {
 	$plugin_version    = kairoseth_aiso_support_bounded_version( KAIROSETH_AIWR_CONNECTOR_VERSION );
 	$wordpress_version = kairoseth_aiso_support_bounded_version( get_bloginfo( 'version' ) );
 
-	if ( $plugin_version === '' || $wordpress_version === '' ) {
+	if ( '' === $plugin_version || '' === $wordpress_version ) {
 		return null;
 	}
 
@@ -93,6 +121,12 @@ function kairoseth_aiso_support_context() {
 	);
 }
 
+/**
+ * Provides the support canonical destination operation.
+ *
+ * @param mixed $destination The destination value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiso_support_canonical_destination( $destination ) {
 	$destination = trim( (string) $destination );
 	$parts       = wp_parse_url( $destination );
@@ -104,7 +138,7 @@ function kairoseth_aiso_support_canonical_destination( $destination ) {
 	$host   = isset( $parts['host'] ) ? strtolower( (string) $parts['host'] ) : '';
 	$path   = isset( $parts['path'] ) ? (string) $parts['path'] : '';
 
-	if ( $scheme !== 'https' || $host !== 'kairoseth.com' || $path !== '/custom-requests' ) {
+	if ( 'https' !== $scheme || 'kairoseth.com' !== $host || '/custom-requests' !== $path ) {
 		return '';
 	}
 
@@ -117,6 +151,12 @@ function kairoseth_aiso_support_canonical_destination( $destination ) {
 	return 'https://kairoseth.com/custom-requests';
 }
 
+/**
+ * Provides the support url operation.
+ *
+ * @param mixed $request_type The request type value.
+ * @return mixed The operation result.
+ */
 function kairoseth_aiso_support_url( $request_type ) {
 	$allowed_types = array( 'implementation_support', 'business_customization' );
 	if ( ! in_array( $request_type, $allowed_types, true ) ) {
@@ -125,7 +165,7 @@ function kairoseth_aiso_support_url( $request_type ) {
 
 	$destination = kairoseth_aiso_support_canonical_destination( KAIROSETH_AISO_CUSTOM_REQUESTS_URL );
 	$context     = kairoseth_aiso_support_context();
-	if ( $destination === '' || ! is_array( $context ) ) {
+	if ( '' === $destination || ! is_array( $context ) ) {
 		return '';
 	}
 
@@ -147,6 +187,9 @@ function kairoseth_aiso_support_url( $request_type ) {
 	return $destination . '?' . http_build_query( $context, '', '&', PHP_QUERY_RFC3986 );
 }
 
+/**
+ * Provides the register support page operation.
+ */
 function kairoseth_aiso_register_support_page() {
 	add_management_page(
 		kairoseth_aiso_support_text( 'page_title' ),
@@ -158,6 +201,9 @@ function kairoseth_aiso_register_support_page() {
 }
 add_action( 'admin_menu', 'kairoseth_aiso_register_support_page' );
 
+/**
+ * Provides the render support page operation.
+ */
 function kairoseth_aiso_render_support_page() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		wp_die( esc_html__( 'You do not have permission to access this page.', 'ai-search-optimizer' ) );
@@ -165,7 +211,7 @@ function kairoseth_aiso_render_support_page() {
 
 	$improve_url = kairoseth_aiso_support_url( 'implementation_support' );
 	$custom_url  = kairoseth_aiso_support_url( 'business_customization' );
-	$has_urls    = $improve_url !== '' && $custom_url !== '';
+	$has_urls    = '' !== $improve_url && '' !== $custom_url;
 	?>
 	<div class="wrap ai-search-optimizer-support">
 		<h1><?php echo esc_html( kairoseth_aiso_support_text( 'page_title' ) ); ?></h1>
