@@ -90,7 +90,32 @@ jobs:
         run: composer install --no-interaction --prefer-dist --no-progress
 
       - name: Run WPCS and PHPCompatibility
-        run: bash scripts/ci-run.sh "WPCS + PHPCompatibility" composer verify
+        run: bash scripts/ci-run.sh "WPCS + PHPCompatibility" bash -c 'vendor/bin/phpcs --standard=phpcs.xml.dist --report=json > phpcs-report.json'
+
+      - name: Summarize WPCS and PHPCompatibility findings
+        if: ${{ always() && hashFiles('phpcs-report.json') != '' }}
+        shell: bash
+        run: |
+          {
+            echo "## WPCS + PHPCompatibility structured findings"
+            echo
+            jq -r '
+              .files
+              | to_entries[]
+              | .key as $file
+              | .value.messages[]
+              | "- **\($file):\(.line):\(.column)** `\(.source)` — \(.message)"
+            ' phpcs-report.json
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload WPCS structured report
+        if: ${{ always() && hashFiles('phpcs-report.json') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: phpcs-report-${{ github.sha }}
+          path: phpcs-report.json
+          if-no-files-found: error
+          retention-days: 30
 
   wordpress_plugin_check:
     name: WordPress Plugin Check
