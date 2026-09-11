@@ -66,6 +66,32 @@ jobs:
             exit 1
           fi
 
+  php_quality:
+    name: WordPress coding standards + PHPCompatibility
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP and Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer:v2
+
+      - name: Validate Composer metadata
+        run: composer validate --no-check-publish
+
+      - name: Install quality dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Run WPCS and PHPCompatibility
+        run: bash scripts/ci-run.sh "WPCS + PHPCompatibility" composer verify
+
   wordpress_plugin_check:
     name: WordPress Plugin Check
     needs: validate
@@ -160,7 +186,7 @@ jobs:
 
   package_evidence:
     name: Reproducible development package evidence
-    needs: [validate, wordpress_plugin_check, runtime, multisite_woocommerce, admin_ux]
+    needs: [validate, php_quality, wordpress_plugin_check, runtime, multisite_woocommerce, admin_ux]
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
