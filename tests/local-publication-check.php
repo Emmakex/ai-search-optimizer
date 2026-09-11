@@ -35,6 +35,10 @@ function publication_assert($condition, string $message): void {
     }
 }
 
+$normalizePhpLayout = static function (string $value): string {
+    return preg_replace('/\s+/', '', $value) ?? '';
+};
+
 $inventory = [
     ['id' => 1, 'type' => 'page', 'typeLabel' => 'Pages', 'title' => 'About', 'url' => 'https://example.com/about/', 'description' => 'About'],
     ['id' => 2, 'type' => 'product', 'typeLabel' => 'Products', 'title' => 'Product', 'url' => 'https://example.com/product/item/', 'description' => 'Product'],
@@ -69,6 +73,9 @@ if ($publish === false || $admin === false) {
     publication_fail('cannot read Phase 2B source files');
 }
 
+$normalizedPublish = $normalizePhpLayout($publish);
+$normalizedAdmin = $normalizePhpLayout($admin);
+
 $requiredPublishContracts = [
     'function kairoseth_aiwr_local_filter_selected_inventory($inventory, $selected_keys)',
     'function kairoseth_aiwr_local_deployment_token($deployment)',
@@ -88,7 +95,7 @@ $requiredPublishContracts = [
     "'published_unverified'",
 ];
 foreach ($requiredPublishContracts as $needle) {
-    publication_assert(strpos($publish, $needle) !== false, "missing publication contract: {$needle}");
+    publication_assert(strpos($normalizedPublish, $normalizePhpLayout($needle)) !== false, "missing publication contract: {$needle}");
 }
 
 $requiredAdminContracts = [
@@ -105,7 +112,7 @@ $requiredAdminContracts = [
     'La publicación sustituye el llms.txt guardado solo si no ha cambiado desde que se cargó esta página.',
 ];
 foreach ($requiredAdminContracts as $needle) {
-    publication_assert(strpos($admin, $needle) !== false, "missing admin publication contract: {$needle}");
+    publication_assert(strpos($normalizedAdmin, $normalizePhpLayout($needle)) !== false, "missing admin publication contract: {$needle}");
 }
 
 $forbidden = [
@@ -125,7 +132,7 @@ foreach ($forbidden as $needle) {
     publication_assert(strpos($publish . "\n" . $admin, $needle) === false, "forbidden Phase 2B pattern: {$needle}");
 }
 
-publication_assert(substr_count($publish, "update_option(KAIROSETH_AIWR_DEPLOYMENT_OPTION") === 1, 'Phase 2B must have one bounded local deployment mutation point');
+publication_assert(substr_count($normalizedPublish, $normalizePhpLayout('update_option(KAIROSETH_AIWR_DEPLOYMENT_OPTION')) === 1, 'Phase 2B must have one bounded local deployment mutation point');
 publication_assert(strpos($publish, '$_POST') === false, 'publication core must not consume raw request input directly');
 
 echo "PASS: explicit selection, compare-before-write, bounded publication and public SHA-256 verification contracts\n";
