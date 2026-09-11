@@ -10,6 +10,11 @@ if ($source === false) {
     exit(1);
 }
 
+$normalizePhpLayout = static function (string $value): string {
+    return preg_replace('/\s+/', '', $value) ?? '';
+};
+$normalizedSource = $normalizePhpLayout($source);
+
 $required = [
     'Plugin Name: AI Search Optimizer',
     'License: MIT',
@@ -36,7 +41,7 @@ $required = [
 
 $failures = [];
 foreach ($required as $needle) {
-    if (strpos($source, $needle) === false) {
+    if (strpos($normalizedSource, $normalizePhpLayout($needle)) === false) {
         $failures[] = "missing required contract: {$needle}";
     }
 }
@@ -45,7 +50,7 @@ if (!preg_match('/^ \* Version:\s*\S+$/m', $source)) {
     $failures[] = 'plugin Version header is missing or empty';
 }
 
-if (!preg_match("/const KAIROSETH_AIWR_CONNECTOR_VERSION = '[^']+';/", $source)) {
+if (!preg_match("/const\\s+KAIROSETH_AIWR_CONNECTOR_VERSION\\s*=\\s*'[^']+';/", $source)) {
     $failures[] = 'connector version constant is missing or empty';
 }
 
@@ -54,7 +59,7 @@ $site = $multisite && function_exists('get_site')
         ? get_site($blog_id)
         : null;
 PHP;
-if (strpos($source, $guard) === false) {
+if (strpos($normalizedSource, $normalizePhpLayout($guard)) === false) {
     $failures[] = 'single-site regression guard is missing: get_site() must remain Multisite-gated';
 }
 
@@ -77,11 +82,12 @@ foreach ($forbidden as $needle) {
     }
 }
 
-if (substr_count($source, "register_rest_route(") !== 2) {
+if (substr_count($source, 'register_rest_route(') !== 2) {
     $failures[] = 'unexpected REST route registration count; expected exactly two route declarations';
 }
 
-if (strpos($source, "'permission_callback' => 'kairoseth_aiwr_permission_check'") === false) {
+$permissionCallback = "'permission_callback' => 'kairoseth_aiwr_permission_check'";
+if (strpos($normalizedSource, $normalizePhpLayout($permissionCallback)) === false) {
     $failures[] = 'REST permission callback is missing';
 }
 
