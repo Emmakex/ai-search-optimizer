@@ -1,7 +1,7 @@
 # AI Search Optimizer — Acceptance
 
-Status: **Phase 2 accepted; Phase 3A historical technical slice accepted; Phase 3B contextual support/custom-development path in progress; public WordPress.org distribution not yet claimed**  
-Last reviewed: **10 September 2026**
+Status: **Phases 0–3 accepted; Phase 4 is the next permitted workstream; public WordPress.org distribution not yet claimed**  
+Last reviewed: **11 September 2026**
 
 ## Engineering inheritance
 
@@ -58,11 +58,11 @@ Canonical closure documents retain the detailed CI/run evidence for 2A, 2B and 2
 
 Phase 3A proved that a WordPress-side Kairoseth readiness surface could remain local, non-authoritative and secret-free. Its exact evidence remains in [`PHASE3A_ACCEPTANCE.md`](PHASE3A_ACCEPTANCE.md).
 
-The customer-facing direction has since been intentionally simplified to the same WordPress.org-first pattern used by Kairoseth AI Transparency. Phase 3A remains historical technical evidence; it is no longer the primary growth/support journey.
+The customer-facing direction was intentionally simplified to the WordPress.org-first pattern used by Kairoseth AI Transparency. Phase 3A remains historical technical evidence; it is no longer the primary growth/support journey.
 
 The inherited REST connector remains available for separately configured managed integrations and continues to require exact site identity, least privilege and compare-and-set mutation.
 
-## Phase 3B — contextual support/custom-development — current acceptance
+## Phase 3B — contextual support/custom-development — accepted
 
 Canonical customer model:
 
@@ -73,113 +73,104 @@ local Free plugin
 → user chooses what information to submit
 ```
 
-Required WordPress surface:
+Accepted privacy/authority and UX gates:
 
 ```text
-Tools → AI Search Optimizer Support
-capability = manage_options
+[x] support page load makes zero Kairoseth request
+[x] no automatic lead submission
+[x] no telemetry/click tracking
+[x] no local Free feature lock or entitlement dependency
+[x] exact destination = https://kairoseth.com/custom-requests
+[x] hostile destination variants fail closed
+[x] automatic context keys exactly allow-listed
+[x] extension slug/name are plugin-owned constants
+[x] request types are plugin-owned allow-list
+[x] site URL/home URL not automatically transmitted
+[x] llms.txt content/hash not automatically transmitted
+[x] content/readiness inventory not automatically transmitted
+[x] administrator/customer identity not automatically transmitted
+[x] WooCommerce content not automatically transmitted
+[x] credentials/passwords/tokens not automatically transmitted
+[x] prompts/conversations/logs/database/options not automatically transmitted
+[x] external links use noopener+noreferrer
+[x] Kairoseth server re-normalizes extension identity
+[x] browser/query context cannot choose recipient mailbox
+[x] support page and CTAs EN/ES
+[x] desktop + 390px mobile browser acceptance
+[x] local Free workflow unchanged and green
+[x] WordPress/PHP matrix green
+[x] Multisite + WooCommerce green
+[x] reproducible development package green
+[x] official WordPress Plugin Check blocking and PASS
+[x] blockers = 0
 ```
 
-Required actions:
+Canonical evidence: [`PHASE3B_CONTEXTUAL_SUPPORT.md`](PHASE3B_CONTEXTUAL_SUPPORT.md).
+
+## Phase 3C — WordPress.org support/privacy hardening — accepted
+
+Phase 3C adds and accepts the quality/release-discipline baseline without converting the plugin into trialware or weakening its privacy boundary.
 
 ```text
-Improve with Kairoseth
-→ requestType=implementation_support
-
-Request custom development
-→ requestType=business_customization
+[x] WPCS blocking over production PHP
+[x] PHPCompatibilityWP blocking for PHP 7.4+ baseline
+[x] structured PHPCS diagnostics retained by CI
+[x] PHPCS final result = 0 errors / 0 warnings / 0 fixable
+[x] official Plugin Check PASS on production-shaped package
+[x] WordPress 5.6 / PHP 7.4 packaged runtime PASS
+[x] WordPress 6.8 / PHP 8.2 packaged runtime PASS
+[x] WordPress 7.1 / PHP 8.3 packaged runtime PASS
+[x] Multisite + WooCommerce PASS
+[x] real browser EN/ES responsive/accessibility PASS
+[x] contract/security/local Free/publication/lifecycle regressions PASS
+[x] no-trialware/no-tracking/no-silent-contact boundary retained
+[x] development/release metadata aligned
+[x] reproducible 0.5.0-dev package evidence PASS
+[x] PR #20 merged
+[x] final PR CI #74 PASS
+[x] post-merge main CI #75 PASS
+[x] blocking Phase 3C defects = 0
 ```
 
-### Privacy and authority gates
+Post-merge development package:
 
 ```text
-[ ] support page load makes zero Kairoseth request
-[ ] no automatic lead submission
-[ ] no telemetry/click tracking
-[ ] no local Free feature lock or entitlement dependency
-[ ] exact destination = https://kairoseth.com/custom-requests
-[ ] destination rejects HTTP/foreign/lookalike/wrong-path/userinfo/port/query/fragment
-[ ] automatic context keys exactly allow-listed
-[ ] extension slug/name are plugin-owned constants
-[ ] request types are plugin-owned allow-list
-[ ] site URL/home URL not automatically transmitted
-[ ] llms.txt content/hash not automatically transmitted
-[ ] content/readiness inventory not automatically transmitted
-[ ] administrator/customer identity not automatically transmitted
-[ ] WooCommerce content not automatically transmitted
-[ ] credentials/passwords/tokens not automatically transmitted
-[ ] prompts/conversations/logs/database/options not automatically transmitted
-[ ] external links use noopener+noreferrer
-[ ] Kairoseth server re-normalizes extension identity
-[ ] browser/query context cannot choose recipient mailbox
-[ ] user supplies personal/business/request details only on Kairoseth form
+source commit       393c35e67724b69ed6c7a4728b7d5a8595ee8169
+source tree         72121f93a097391c3c30da82cb582259f04748dc
+package             ai-search-optimizer-0.5.0-dev.zip
+package bytes       29365
+package entries     13
+package SHA-256     c10b2a780824fc08e43b557def3423a3d25bf313412ac6436ef9f6c53bad0137
 ```
 
-### UX and regression gates
+Canonical evidence: [`PHASE3C_ACCEPTANCE.md`](PHASE3C_ACCEPTANCE.md).
 
-```text
-[ ] support page EN/ES
-[ ] both CTAs EN/ES
-[ ] desktop browser acceptance
-[ ] 390px mobile browser acceptance
-[ ] accessible headings/links/focus/touch targets
-[ ] local Free workflow unchanged and green
-[ ] WordPress/PHP matrix green
-[ ] Multisite + WooCommerce green
-[ ] inherited managed REST protocol unchanged
-[ ] reproducible development package green
-[ ] blocking defects = 0
-```
+**Phase 3 is complete.**
 
-### WordPress.org gates introduced in Phase 3B
+## Phase 4 — Kairoseth Extensions `Available` gate — next / not started
 
-```text
-[ ] readme.txt has valid directory-oriented headers and description
-[ ] External services section documents exact circumstances of Kairoseth navigation
-[ ] service URL and privacy policy documented
-[ ] no trialware behavior
-[ ] no automatic tracking/external contact without consent
-[ ] no public-site promotional links/credits
-[ ] admin CTA remains contextual and non-hijacking
-[ ] official WordPress Plugin Check is blocking in CI
-[ ] official WordPress Plugin Check PASS on production-shaped package
-```
-
-Phase 3B is not accepted until PR CI, merge and post-merge CI verify all applicable gates.
-
-## Phase 3C — directory/release hardening — blocked by Phase 3B
-
-Before a stable WordPress.org submission candidate, add/confirm the same quality baseline used by AI Transparency:
-
-- WordPress Coding Standards;
-- PHPCompatibility for supported PHP lines;
-- final EN/ES package coverage;
-- official Plugin Check on final production-shaped package;
-- final external-service/readme policy review;
-- install/upgrade/deactivate/uninstall acceptance from final package;
-- stable version/tag/readme alignment;
-- zero blocking security/privacy/accessibility defects.
-
-## Kairoseth Extensions `Available` gate
-
-The extension may remain `Building` until all required distribution truth exists. `Available` additionally requires:
+Phase 4 is unblocked by Phase 3 acceptance but is not yet accepted. `Available` requires:
 
 - canonical registry/product record;
-- real public distribution action;
+- real and truthful public plugin identity/version/distribution state;
 - contextual Custom Request path accepted;
-- truthful package/version/repository metadata;
-- required platform CI and production verification.
+- user-initiated share if included in the shared Extensions contract;
+- required Kairoseth Platform CI and production verification.
 
-## WordPress.org publication gate
+The extension may remain `Building` until all Phase 4 gates are complete.
+
+## Phase 5 — WordPress.org publication gate
 
 Directory availability must not be claimed until:
 
-- a stable complete version exists;
+- a deliberate stable complete version exists;
 - plugin header and `readme.txt` metadata agree;
-- final package passes official Plugin Check and repository release gates;
+- immutable Git tag and GitHub Release package/checksum exist;
+- the final package passes official Plugin Check and repository release gates;
 - external services are fully and plainly documented;
 - no prohibited trialware/tracking/deceptive claims/admin hijacking exist;
 - code/assets/dependencies have compatible licensing;
+- install/upgrade/deactivate/uninstall acceptance passes on the final package;
 - WordPress.org independently approves and publishes the plugin.
 
 `ai-search-optimizer` remains only the target directory slug until actually accepted/reserved.

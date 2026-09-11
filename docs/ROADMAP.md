@@ -1,7 +1,7 @@
 # AI Search Optimizer — Roadmap
 
-Status: **Phase 3 in progress — Phase 3B accepted; WordPress.org support/privacy hardening (3C) is the active workstream**  
-Last reviewed: **10 September 2026**
+Status: **Phase 3 complete — contextual support and WordPress.org hardening accepted; Phase 4 Extensions integration is the next permitted workstream**  
+Last reviewed: **11 September 2026**
 
 ```text
 Phase 0  product/repository foundation              COMPLETE
@@ -10,11 +10,11 @@ Phase 2  useful local Free workflow                COMPLETE
   2A     local analysis + deterministic preview    COMPLETE
   2B     selection + safe local publication        COMPLETE
   2C     Free release hardening                    COMPLETE
-Phase 3  optional support / custom-development UX  IN PROGRESS
+Phase 3  optional support / custom-development UX  COMPLETE
   3A     connection-readiness technical slice      COMPLETE / SUPERSEDED AS PRIMARY CTA
   3B     contextual support + custom CTA            COMPLETE
-  3C     support/privacy + directory hardening      IN PROGRESS
-Phase 4  Extensions catalog integration            BLOCKED by Phase 3 acceptance
+  3C     support/privacy + directory hardening      COMPLETE
+Phase 4  Extensions catalog integration            NEXT / NOT STARTED
 Phase 5  stable public distribution / WordPress.org BLOCKED by release gates
 ```
 
@@ -78,7 +78,7 @@ Phase 2 blockers       0
 
 Canonical closures: [`PHASE2A_CLOSURE.md`](PHASE2A_CLOSURE.md), [`PHASE2B_CLOSURE.md`](PHASE2B_CLOSURE.md), [`PHASE2C1_CLOSURE.md`](PHASE2C1_CLOSURE.md), [`PHASE2C2_CLOSURE.md`](PHASE2C2_CLOSURE.md), [`PHASE2C3_CLOSURE.md`](PHASE2C3_CLOSURE.md), [`PHASE2C4_CLOSURE.md`](PHASE2C4_CLOSURE.md).
 
-## Phase 3 — optional support / custom-development UX
+## Phase 3 — optional support / custom-development UX — complete
 
 ### 3A — connection-readiness technical slice — complete, customer direction superseded
 
@@ -118,7 +118,7 @@ Acceptance evidence:
 PR #18                    merged
 merge SHA                 c05d9e162310700ed6ac1b1037ae9f96fbe43db6
 final PR CI #48           PASS
-post-merge CI #49         PASS — 8/8 jobs
+post-merge CI #49         PASS — all required jobs
 Plugin Check PCP 2.1.0    PASS — No errors found
 package SHA-256           2f2896031c72ce4ad8d561bd0d5c2a5820ec0ecd7e18c106250c9066683d80d7
 blockers                   0
@@ -126,24 +126,45 @@ blockers                   0
 
 Canonical acceptance record: [`PHASE3B_CONTEXTUAL_SUPPORT.md`](PHASE3B_CONTEXTUAL_SUPPORT.md).
 
-### 3C — WordPress.org support/privacy hardening — in progress
+### 3C — WordPress.org support/privacy hardening — complete
 
-Phase 3C is now unblocked and is the active workstream. Align the repository with the same release discipline used by AI Transparency. Required work includes:
+Phase 3C established the production-code quality baseline and closed the hardening workstream without weakening the local Free or privacy contracts.
 
-- WordPress Coding Standards baseline;
-- PHPCompatibility across supported PHP versions;
-- EN/ES coverage suitable for the final package;
-- official WordPress Plugin Check on production-shaped package;
-- final external-service/readme review;
-- install/update/deactivate/uninstall regression;
-- final no-trialware/no-tracking/admin-UX policy review;
-- stable-version metadata preparation.
+Accepted gates:
 
-Phase 3C cannot close until its implementation, required gates, acceptance evidence and documentation are complete.
+- WordPress Coding Standards over production PHP;
+- PHPCompatibilityWP for the supported PHP baseline;
+- machine-readable PHPCS diagnostics retained by CI;
+- official WordPress Plugin Check on a production-shaped package;
+- WordPress 5.6/PHP 7.4, WordPress 6.8/PHP 8.2 and WordPress 7.1/PHP 8.3 runtime acceptance;
+- Multisite + WooCommerce runtime acceptance;
+- real-browser EN/ES responsive/accessibility acceptance;
+- lifecycle/deactivate/uninstall regression;
+- development/release metadata alignment;
+- reproducible development-package evidence;
+- no trialware, telemetry or silent external-contact regression.
 
-## Phase 4 — Kairoseth Extensions integration
+Acceptance evidence:
 
-Before the catalog says `Available`:
+```text
+PR #20                    merged
+final PR CI #74           PASS
+merge SHA                 393c35e67724b69ed6c7a4728b7d5a8595ee8169
+post-merge CI #75         PASS
+final PHPCS               0 errors / 0 warnings / 0 fixable
+package SHA-256           c10b2a780824fc08e43b557def3423a3d25bf313412ac6436ef9f6c53bad0137
+blockers                   0
+```
+
+The package above is development evidence for `0.5.0-dev`, not a stable public release. WordPress.org external approval is still not claimed.
+
+Canonical acceptance record: [`PHASE3C_ACCEPTANCE.md`](PHASE3C_ACCEPTANCE.md).
+
+With 3A, 3B and 3C accepted, **Phase 3 is closed**.
+
+## Phase 4 — Kairoseth Extensions integration — next / not started
+
+Phase 4 is now unblocked by Phase 3 acceptance and is the next permitted workstream. Before the catalog says `Available`:
 
 - canonical Extensions registry/product record;
 - public plugin identity and truthful version/distribution state;
@@ -151,7 +172,7 @@ Before the catalog says `Available`:
 - user-initiated share if included in the shared Extensions contract;
 - required platform CI and production verification.
 
-The product may remain `Building` before these gates complete.
+The product may remain `Building` before these gates complete. Phase 4 must follow feature branch → PR → CI → merge → production verification and cannot be marked complete from documentation alone.
 
 ## Phase 5 — stable public distribution / WordPress.org
 
