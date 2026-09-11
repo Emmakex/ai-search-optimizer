@@ -62,6 +62,22 @@ def has_return(body):
     return re.search(r'(?m)^\s*return(?:\s+[^;]+)?;', body) is not None
 
 
+def normalize_file_comment_spacing(text):
+    if not text.startswith('<?php\n'):
+        return text
+    after = text[len('<?php\n'):]
+    stripped = after.lstrip('\n')
+    if not stripped.startswith('/**'):
+        return text
+    comment_end = stripped.find('*/')
+    if comment_end < 0:
+        return text
+    comment_end += 2
+    comment = stripped[:comment_end]
+    remainder = stripped[comment_end:].lstrip('\n')
+    return '<?php\n' + comment + '\n\n' + remainder
+
+
 def add_file_docblock(path, text, description):
     if path.name == 'ai-search-optimizer.php':
         header_end = text.find('*/')
@@ -76,7 +92,7 @@ def add_file_docblock(path, text, description):
         raise RuntimeError('Unexpected PHP header in {}'.format(path))
     after = text[len('<?php\n'):]
     if after.lstrip().startswith('/**'):
-        return text
+        return normalize_file_comment_spacing(text)
     block = (
         '/**\n'
         ' * {}\n'.format(description)
@@ -84,7 +100,7 @@ def add_file_docblock(path, text, description):
         + ' * @package AI_Search_Optimizer\n'
         + ' */\n\n'
     )
-    return '<?php\n' + block + after
+    return '<?php\n' + block + after.lstrip('\n')
 
 
 def add_function_docblocks(text):
@@ -127,6 +143,11 @@ def main():
             text = text.replace(
                 "hash( 'sha256', json_encode( $snapshot, JSON_UNESCAPED_SLASHES ) )",
                 "hash( 'sha256', wp_json_encode( $snapshot, JSON_UNESCAPED_SLASHES ) )",
+            )
+        if rel == 'includes/kairoseth-support.php':
+            text = text.replace(
+                "isset( $parts[ $forbidden ] ) && (string) $parts[ $forbidden ] !== ''",
+                "isset( $parts[ $forbidden ] ) && '' !== (string) $parts[ $forbidden ]",
             )
         path.write_text(text, encoding='utf-8')
 
