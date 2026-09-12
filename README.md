@@ -4,7 +4,7 @@
 
 [English](#english) · [Español](#español)
 
-Status: **Stable candidate `0.5.0` accepted in Phase 5A; immutable GitHub release and final packaged lifecycle proof are next; WordPress.org publication is not yet claimed**
+Status: **Public GitHub Release `0.5.0` published and Phase 5B accepted; WordPress.org publication is not yet claimed**
 
 ```text
 Product: AI Search Optimizer
@@ -12,7 +12,7 @@ Host: WordPress / WooCommerce
 Technical slug: ai-search-optimizer
 WordPress text domain: ai-search-optimizer
 License: MIT
-Current accepted stable candidate: 0.5.0
+Current public GitHub release: 0.5.0
 Historical accepted Free release candidate: 0.4.0
 ```
 
@@ -35,18 +35,24 @@ inspect WordPress AI-search readiness
 → verify exact SHA-256
 ```
 
-Safeguards include a dedicated least-privilege WordPress capability/role for the inherited managed connector, exact single-site/Multisite identity, deterministic source-grounded generation, compare-before-write, independent public verification, no arbitrary filesystem writes and no silent transmission of local site content to Kairoseth, AI providers or third-party analytics.
+Safeguards include least privilege for the inherited managed connector, exact single-site/Multisite identity, deterministic source-grounded generation, compare-before-write, independent public verification, no arbitrary filesystem writes and no silent transmission of local site content to Kairoseth, AI providers or third-party analytics.
 
 ### Optional Kairoseth support
 
-The accepted `0.5.0` stable candidate includes an administrator-only **Tools → AI Search Optimizer Support** page with two optional actions:
+The public `0.5.0` release includes an administrator-only **Tools → AI Search Optimizer Support** page with two optional actions:
 
-- **Improve with Kairoseth** — implementation guidance and help improving an AI Search / llms.txt setup.
+- **Improve with Kairoseth** — implementation guidance and AI Search / llms.txt optimization help.
 - **Request custom development** — tailored integrations, automation, workflows and additional features.
 
 Loading the support page makes no Kairoseth request. External navigation occurs only after an administrator deliberately clicks a CTA.
 
-The link goes only to `https://kairoseth.com/custom-requests` and carries a bounded technical/product context:
+The destination is fixed to:
+
+```text
+https://kairoseth.com/custom-requests
+```
+
+The link carries only bounded technical/product context:
 
 ```text
 source
@@ -60,6 +66,17 @@ requestType
 ```
 
 It does not automatically attach the site URL, `llms.txt` content/hash, content inventory, administrator identity, WooCommerce content, plugin/theme inventory, credentials, tokens, prompts, conversations, logs, database contents or arbitrary WordPress options. The user decides what contact, business, website and request details to submit on Kairoseth.
+
+Before GitHub Release `0.5.0` was allowed to publish, the release workflow verified the **live production CTA** in all four customer combinations:
+
+```text
+EN + implementation support      PASS / HTTP 200
+EN + business customization      PASS / HTTP 200
+ES + implementation support      PASS / HTTP 200
+ES + business customization      PASS / HTTP 200
+```
+
+The gate also verifies the canonical AI Search Optimizer identity, WordPress host context, EN/ES form copy and absence of forbidden automatically attached context. A broken or incompatible CTA therefore blocks future publication rather than shipping silently.
 
 Kairoseth is optional. It is not a license server, entitlement requirement or feature unlock for the local Free workflow.
 
@@ -84,22 +101,23 @@ Deactivation preserves the stored `llms.txt` deployment and uninstall preference
 
 See [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md).
 
-### Accepted stable candidate 0.5.0
+### Public GitHub Release 0.5.0
 
-Phase 5A accepted the exact reproducible candidate below after PR and post-merge validation:
+Phase 5A froze the exact candidate identity and Phase 5B published that same package without redefining it:
 
 ```text
 version            0.5.0
+tag                0.5.0
 source commit      b116ae5df76c7a72ad37ff4e8e80632d6ebb457b
 source tree        6a837ed67049ae04cdf59656cc15997a8d9bb7b3
 package            ai-search-optimizer-0.5.0.zip
 package bytes      29397
 package entries    13
 package SHA-256    0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e
-CI artifact ID     10290013554
+GitHub Release ID  387492480
 ```
 
-The candidate package was built twice with the same SHA-256. PR CI #87 passed, and post-merge `main` CI #88 passed on attempt 2 after a transient Docker Hub connection reset in the WP 5.6/PHP 7.4 image pull was diagnosed and re-run without any code change.
+The annotated `0.5.0` tag peels exactly to the accepted source commit above. The release workflow rebuilt the package reproducibly, verified the historical `0.4.0` package, ran clean-install/upgrade/preserve/delete lifecycle acceptance, created the release as a draft, downloaded its ZIP back from GitHub, required byte identity and the exact SHA-256, reran lifecycle acceptance against the downloaded ZIP, and only then made the release public.
 
 The historical accepted `0.4.0` candidate remains preserved as prior evidence:
 
@@ -107,19 +125,16 @@ The historical accepted `0.4.0` candidate remains preserved as prior evidence:
 version            0.4.0
 source commit      4d68b111d1f796fdc9bfbc3e670eeecc69c09a76
 source tree        472e8c5e5bc20ed8f4eed412ab5515561b89ff16
-package            ai-search-optimizer-0.4.0.zip
-package bytes      21745
-package entries    11
 package SHA-256    27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c
 ```
 
 ### WordPress.org readiness
 
-WordPress.org compatibility is a design constraint, not a post-release cleanup task. Production PHP passes WordPress Coding Standards and PHPCompatibilityWP, and CI blocks on the official WordPress Plugin Check in addition to the WordPress/PHP runtime matrix, Multisite/WooCommerce checks, EN/ES browser acceptance and reproducible package evidence.
+WordPress.org compatibility is a design constraint, not a post-release cleanup task. Production PHP passes WordPress Coding Standards and PHPCompatibilityWP, and CI blocks on official WordPress Plugin Check, the WordPress/PHP runtime matrix, Multisite/WooCommerce, EN/ES browser acceptance, release lifecycle and reproducible package evidence.
 
-The exact stable `0.5.0` candidate is accepted, but the plugin is **not yet claimed as published on WordPress.org**. Phase 5B must still create the immutable `0.5.0` tag/GitHub Release and prove clean install, upgrade, deactivate and uninstall behavior from the released package. WordPress.org submission/review remains a later external gate.
+GitHub Release `0.5.0` is public, but the plugin is **not yet claimed as published on WordPress.org**. Phase 5C is the separate WordPress.org submission/review/approval gate.
 
-`ai-search-optimizer` remains the target WordPress.org slug until it is actually accepted/reserved.
+`ai-search-optimizer` remains only the target WordPress.org slug until it is actually accepted/reserved and published by WordPress.org.
 
 ### Claims boundary
 
@@ -144,18 +159,24 @@ analizar preparación AI Search de WordPress
 → verificar SHA-256 exacto
 ```
 
-Las protecciones incluyen capability/rol WordPress de mínimo privilegio para el conector gestionado heredado, identidad single-site/Multisite exacta, generación determinista basada en fuentes, compare-before-write, verificación pública independiente, ausencia de escrituras arbitrarias en filesystem y ninguna transmisión silenciosa del contenido local a Kairoseth, proveedores IA o analítica de terceros.
+Las protecciones incluyen mínimo privilegio para el conector gestionado heredado, identidad single-site/Multisite exacta, generación determinista basada en fuentes, compare-before-write, verificación pública independiente, ausencia de escrituras arbitrarias en filesystem y ninguna transmisión silenciosa del contenido local a Kairoseth, proveedores IA o analítica de terceros.
 
 ### Soporte Kairoseth opcional
 
-El candidato estable aceptado `0.5.0` incluye **Herramientas → Soporte de AI Search Optimizer** con dos acciones opcionales:
+El release público `0.5.0` incluye **Herramientas → Soporte de AI Search Optimizer** con dos acciones opcionales:
 
-- **Mejorar con Kairoseth** — orientación de implementación y ayuda para mejorar la configuración AI Search / llms.txt.
+- **Mejorar con Kairoseth** — orientación de implementación y mejora de AI Search / llms.txt.
 - **Solicitar desarrollo a medida** — integraciones, automatizaciones, flujos y funciones adaptadas.
 
 Cargar la página no realiza ninguna petición a Kairoseth. La navegación externa empieza únicamente cuando un administrador pulsa deliberadamente un CTA.
 
-El enlace utiliza únicamente `https://kairoseth.com/custom-requests` y transporta un contexto técnico/producto acotado:
+El destino está fijado a:
+
+```text
+https://kairoseth.com/custom-requests
+```
+
+Solo transporta contexto técnico/producto acotado:
 
 ```text
 source
@@ -170,11 +191,20 @@ requestType
 
 No adjunta automáticamente URL del sitio, contenido/hash de `llms.txt`, inventario de contenido, identidad del administrador, datos WooCommerce, inventario de plugins/temas, credenciales, tokens, prompts, conversaciones, logs, base de datos ni opciones arbitrarias de WordPress. El usuario decide qué información de contacto, empresa, web y solicitud enviar en Kairoseth.
 
+Antes de permitir publicar el GitHub Release `0.5.0`, el workflow validó el **CTA real de producción** en las cuatro combinaciones:
+
+```text
+EN + soporte de implementación      PASS / HTTP 200
+EN + personalización de negocio     PASS / HTTP 200
+ES + soporte de implementación      PASS / HTTP 200
+ES + personalización de negocio     PASS / HTTP 200
+```
+
+También se verifica identidad canónica, contexto WordPress, formulario EN/ES y ausencia de campos prohibidos enviados automáticamente. Un CTA roto o incompatible bloquea la publicación.
+
 Kairoseth es opcional. No es un servidor de licencias, requisito de entitlement ni desbloqueo de funciones Free locales.
 
 ### Compatibilidad del conector gestionado heredado
-
-Se conserva la compatibilidad técnica aceptada para integraciones gestionadas configuradas por separado:
 
 ```text
 namespace REST      kairoseth-ai-web-readiness/v1
@@ -189,46 +219,41 @@ Esta superficie REST no inicia comunicaciones salientes por sí sola y no es nec
 
 ### Datos y desinstalación
 
-Desactivar conserva el despliegue `llms.txt` y la preferencia de desinstalación. Antes de desinstalar, un administrador autorizado puede elegir en **Herramientas → Datos de AI Search Optimizer** entre conservar los datos publicados (opción segura por defecto) o eliminarlos. La desinstalación siempre limpia el estado de seguridad/configuración del plugin y en Multisite actúa sitio por sitio.
+Desactivar conserva el despliegue `llms.txt` y la preferencia de desinstalación. Antes de desinstalar, un administrador puede elegir en **Herramientas → Datos de AI Search Optimizer** entre conservar los datos publicados o eliminarlos. La desinstalación siempre limpia el estado de seguridad/configuración y en Multisite actúa sitio por sitio.
 
 Consulta [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md).
 
-### Candidato estable 0.5.0 aceptado
-
-La Fase 5A aceptó la identidad reproducible exacta siguiente tras validar PR y `main` post-merge:
+### GitHub Release público 0.5.0
 
 ```text
 versión             0.5.0
+tag                 0.5.0
 commit fuente       b116ae5df76c7a72ad37ff4e8e80632d6ebb457b
 tree fuente         6a837ed67049ae04cdf59656cc15997a8d9bb7b3
 paquete             ai-search-optimizer-0.5.0.zip
 bytes               29397
 entradas            13
 SHA-256             0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e
-artifact CI ID      10290013554
+GitHub Release ID   387492480
 ```
 
-El paquete se construyó dos veces con el mismo SHA-256. El CI #87 del PR pasó y el CI #88 post-merge de `main` pasó en el intento 2 después de diagnosticar un reset transitorio de Docker Hub durante la descarga de la imagen WP 5.6/PHP 7.4; no fue necesario modificar código.
+El tag anotado `0.5.0` apunta exactamente al commit aceptado. El workflow reconstruyó el paquete, probó actualización desde `0.4.0`, instalación limpia y ambos modos de desinstalación, creó el release primero como draft, volvió a descargar el ZIP desde GitHub, exigió identidad byte-a-byte/SHA y repitió el lifecycle antes de hacerlo público.
 
-Se conserva la evidencia histórica del candidato `0.4.0`:
+La evidencia histórica `0.4.0` se mantiene sin redefinir:
 
 ```text
-versión             0.4.0
 commit fuente       4d68b111d1f796fdc9bfbc3e670eeecc69c09a76
 tree fuente         472e8c5e5bc20ed8f4eed412ab5515561b89ff16
-paquete             ai-search-optimizer-0.4.0.zip
-bytes               21745
-entradas            11
 SHA-256             27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c
 ```
 
 ### Preparación para WordPress.org
 
-La compatibilidad con WordPress.org se trata como una restricción de diseño desde el desarrollo. El PHP de producción supera WordPress Coding Standards y PHPCompatibilityWP, y el CI bloquea con WordPress Plugin Check oficial, matriz WordPress/PHP, Multisite/WooCommerce, navegador EN/ES y empaquetado reproducible.
+El PHP de producción supera WordPress Coding Standards y PHPCompatibilityWP, y el CI bloquea con WordPress Plugin Check oficial, matriz WordPress/PHP, Multisite/WooCommerce, navegador EN/ES, lifecycle y empaquetado reproducible.
 
-El candidato estable exacto `0.5.0` está aceptado, pero **todavía no se afirma que el plugin esté publicado en WordPress.org**. La Fase 5B debe crear el tag inmutable `0.5.0`/GitHub Release y probar instalación limpia, actualización, desactivación y desinstalación desde el paquete publicado. El envío/revisión de WordPress.org seguirá siendo una puerta externa posterior.
+El GitHub Release `0.5.0` ya es público, pero **todavía no se afirma que el plugin esté publicado en WordPress.org**. La Fase 5C cubre el envío, revisión y aprobación externa del directorio.
 
-`ai-search-optimizer` sigue siendo el slug objetivo hasta su aceptación/reserva real.
+`ai-search-optimizer` sigue siendo el slug objetivo hasta su aceptación/reserva y publicación real.
 
 ### Límite de claims
 
@@ -243,12 +268,8 @@ AI Search Optimizer mejora la preparación y proporciona evidencia técnica repr
 - [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md)
 - [`docs/NAMING_SEO.md`](docs/NAMING_SEO.md)
 - [`docs/PROVENANCE.md`](docs/PROVENANCE.md)
-- [`docs/PHASE2C4_CLOSURE.md`](docs/PHASE2C4_CLOSURE.md)
-- [`docs/PHASE3A_ACCEPTANCE.md`](docs/PHASE3A_ACCEPTANCE.md)
-- [`docs/PHASE3B_CONTEXTUAL_SUPPORT.md`](docs/PHASE3B_CONTEXTUAL_SUPPORT.md)
-- [`docs/PHASE3C_ACCEPTANCE.md`](docs/PHASE3C_ACCEPTANCE.md)
-- [`docs/PHASE4_EXTENSIONS_INTEGRATION.md`](docs/PHASE4_EXTENSIONS_INTEGRATION.md)
 - [`docs/PHASE5A_STABLE_CANDIDATE.md`](docs/PHASE5A_STABLE_CANDIDATE.md)
+- [`docs/PHASE5B_GITHUB_RELEASE.md`](docs/PHASE5B_GITHUB_RELEASE.md)
 - [`docs/CI_INCIDENTS.md`](docs/CI_INCIDENTS.md)
 - [`docs/ENGINEERING_RULES.md`](docs/ENGINEERING_RULES.md)
 - [`SECURITY.md`](SECURITY.md)

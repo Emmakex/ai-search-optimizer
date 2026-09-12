@@ -4,11 +4,11 @@ AI Search Optimizer is a local-first WordPress extension that can publish a site
 
 ## Supported versions
 
-`0.4.0` is the historical accepted standalone Free release candidate and remains identified by its accepted source commit/tree/package SHA-256. It is not claimed as publicly distributed through GitHub Releases or WordPress.org.
+`0.5.0` is the current public GitHub Release and the accepted Phase 5B release line. Its exact source/tree/package identity is frozen below. It is **not yet claimed as published on WordPress.org**.
 
-`0.5.0` is the current stable candidate and is accepted under Phase 5A. It is not yet claimed as an official public GitHub Release or as published on WordPress.org. Stable-candidate packages must remain reproducible and must not overwrite or redefine the historical 0.4.0 package identity.
+`0.4.0` is the historical accepted standalone Free release candidate and remains preserved by its accepted source commit/tree/package SHA-256. It must not be silently redefined.
 
-A new blocking security or WordPress.org policy finding affecting a candidate before public distribution must reopen the relevant acceptance decision. Public-user support begins when an official distribution channel is published.
+A new blocking security, privacy or WordPress.org policy finding affecting the release line must reopen the relevant acceptance decision before directory submission/publication proceeds.
 
 ## Reporting a vulnerability
 
@@ -32,7 +32,9 @@ Include only the minimum evidence needed to reproduce the issue. Never post real
 - customer-facing remote navigation is explicit, bounded and documented;
 - loading the support page performs no outbound Kairoseth request;
 - support context never automatically includes site URL, llms.txt content/hash, administrator identity, WooCommerce content, credentials, tokens, prompts, logs or database content;
-- uninstall performs no outbound network requests and no arbitrary filesystem writes.
+- uninstall performs no outbound network requests and no arbitrary filesystem writes;
+- GitHub release publication fails closed on release/tag/package identity drift;
+- the production support CTA must pass its live contract before a release is allowed to become public.
 
 ## Optional Kairoseth support and custom development
 
@@ -75,9 +77,22 @@ business_customization
 
 The URL builder fails closed for HTTP, foreign/lookalike hosts, wrong paths, URL userinfo/password, custom ports, preloaded query strings, fragments or unknown request types.
 
-Kairoseth independently re-normalizes the extension context server-side. A browser-supplied product name, site URL, arbitrary context field or request value cannot change the canonical extension identity or choose the recipient mailbox.
+Kairoseth independently re-normalizes extension context server-side. A browser-supplied product name, site URL, arbitrary context field or request value cannot change the canonical extension identity or choose the recipient mailbox.
 
 No support request is submitted by the WordPress plugin. The browser opens the Kairoseth form only after an administrator action; Kairoseth owns consent, validation and final submission. Kairoseth unavailability does not disable local Free functionality.
+
+### Production CTA release gate
+
+Phase 5B added a live release preflight. Before the public GitHub Release was allowed to publish, production returned HTTP `200` and the expected bounded context/form for:
+
+```text
+en + implementation_support   PASS
+en + business_customization   PASS
+es + implementation_support   PASS
+es + business_customization   PASS
+```
+
+The verifier also rejects forbidden automatically attached keys such as site URL, llms.txt/hash, username/email, credentials/tokens and WooCommerce context. Future publication is blocked if the production destination drifts or becomes incompatible.
 
 ## Inherited managed connector compatibility
 
@@ -107,7 +122,7 @@ See [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md).
 
 ## Release integrity
 
-The historical accepted `0.4.0` release-candidate package is identified by:
+Historical `0.4.0` evidence:
 
 ```text
 source commit      4d68b111d1f796fdc9bfbc3e670eeecc69c09a76
@@ -115,20 +130,25 @@ source tree        472e8c5e5bc20ed8f4eed412ab5515561b89ff16
 package SHA-256    27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c
 ```
 
-The accepted `0.5.0` stable candidate is identified by:
+Public GitHub Release `0.5.0`:
 
 ```text
+tag                0.5.0
+annotated tag       6433cca08a8d8a213f0c0326447910c5ee732ff5
 source commit      b116ae5df76c7a72ad37ff4e8e80632d6ebb457b
 source tree        6a837ed67049ae04cdf59656cc15997a8d9bb7b3
 package            ai-search-optimizer-0.5.0.zip
 package bytes      29397
 package entries    13
 package SHA-256    0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e
+GitHub Release ID  387492480
 ```
 
-The repository build process normalizes package metadata, and the stable package builder rejects prerelease/development version strings. Official WordPress Plugin Check remains a blocking CI dependency. Phase 5B must now bind the accepted source/package identity to an immutable `0.5.0` tag and GitHub Release and verify final install/upgrade/deactivate/uninstall behavior. WordPress.org review/approval remains a separate external gate.
+The annotated tag peels exactly to the accepted source commit. The tag is unsigned; tag signing was not a Phase 5B acceptance requirement. Integrity is instead pinned by exact source/tree/package SHA, reproducible builds, draft-first release publication, release-asset download/byte comparison and a second lifecycle run against the downloaded ZIP.
 
-See [`docs/PHASE5A_STABLE_CANDIDATE.md`](docs/PHASE5A_STABLE_CANDIDATE.md).
+The stable package builder rejects prerelease/development version strings. Official WordPress Plugin Check remains blocking. WordPress.org review/approval remains a separate Phase 5C external gate.
+
+See [`docs/PHASE5A_STABLE_CANDIDATE.md`](docs/PHASE5A_STABLE_CANDIDATE.md) and [`docs/PHASE5B_GITHUB_RELEASE.md`](docs/PHASE5B_GITHUB_RELEASE.md).
 
 ## Diagnostics
 

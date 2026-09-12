@@ -6,8 +6,9 @@ $readme = file_get_contents($root . '/readme.txt');
 $repoReadme = file_get_contents($root . '/README.md');
 $changelog = file_get_contents($root . '/CHANGELOG.md');
 $security = file_get_contents($root . '/SECURITY.md');
+$phase5b = file_get_contents($root . '/docs/PHASE5B_GITHUB_RELEASE.md');
 
-if ($plugin === false || $readme === false || $repoReadme === false || $changelog === false || $security === false) {
+if ($plugin === false || $readme === false || $repoReadme === false || $changelog === false || $security === false || $phase5b === false) {
     fwrite(STDERR, "FAIL: could not read release metadata sources.\n");
     exit(1);
 }
@@ -32,7 +33,10 @@ $testedUpTo = aiso_capture('/^Tested up to:\s*(.+)$/m', $readme, 'readme Tested 
 $expectedStableVersion = '0.5.0';
 $historicalReleaseCandidate = '0.4.0';
 $expectedTestedWp = '7.1';
-$releaseMetadata = $plugin . $readme . $repoReadme . $changelog . $security;
+$acceptedSource = 'b116ae5df76c7a72ad37ff4e8e80632d6ebb457b';
+$acceptedPackageSha = '0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e';
+$historicalPackageSha = '27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c';
+$releaseMetadata = $plugin . $readme . $repoReadme . $changelog . $security . $phase5b;
 
 $checks = array(
     array($version === $expectedStableVersion, "plugin stable version expected {$expectedStableVersion}, received {$version}"),
@@ -42,18 +46,25 @@ $checks = array(
     array($readmeRequiresWp === $requiresWp, "readme/plugin WordPress minimum mismatch: {$readmeRequiresWp} vs {$requiresWp}"),
     array($readmeRequiresPhp === $requiresPhp, "readme/plugin PHP minimum mismatch: {$readmeRequiresPhp} vs {$requiresPhp}"),
     array($testedUpTo === $expectedTestedWp, "Tested up to expected {$expectedTestedWp}, received {$testedUpTo}"),
-    array(strpos($changelog, '## 0.5.0 — Stable candidate') !== false, 'CHANGELOG must identify 0.5.0 as the stable candidate'),
+    array(strpos($changelog, '## 0.5.0 — Public GitHub release') !== false, 'CHANGELOG must identify 0.5.0 as the public GitHub release'),
     array(strpos($changelog, '## 0.4.0 — Release candidate') !== false, 'CHANGELOG must retain the historical 0.4.0 release candidate'),
-    array(strpos($readme, '= 0.5.0 =') !== false, 'WordPress readme changelog must contain the stable candidate'),
+    array(strpos($readme, '= 0.5.0 =') !== false, 'WordPress readme changelog must contain 0.5.0'),
     array(strpos($readme, '= 0.4.0 =') !== false, 'WordPress readme changelog must retain 0.4.0'),
-    array(strpos($repoReadme, 'Stable candidate `0.5.0`') !== false, 'repository README must describe the current stable candidate'),
-    array(strpos($repoReadme, '27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c') !== false, 'repository README must retain historical 0.4.0 package identity'),
-    array(strpos($security, '`0.5.0` is the current stable candidate') !== false, 'SECURITY must identify 0.5.0 as the current stable candidate'),
-    array(strpos($security, '0.4.0') !== false, 'SECURITY must retain historical 0.4.0 release integrity'),
-    array(strpos($releaseMetadata, '0.5.0-dev') === false, 'stale 0.5.0-dev release metadata remains after stable promotion'),
-    array(strpos($changelog, '## 0.5.0 — Unreleased') === false, 'stable 0.5.0 must not be marked Unreleased'),
-    array(strpos($changelog, '## 0.4.0 — Unreleased') === false, 'historical 0.4.0 must not regress to Unreleased'),
-    array(strpos($changelog, 'Phase 2C release hardening remains in progress') === false, 'stale Phase 2C in-progress claim remains in CHANGELOG'),
+    array(strpos($repoReadme, 'Public GitHub Release `0.5.0`') !== false, 'repository README must describe the current public GitHub release'),
+    array(strpos($repoReadme, $acceptedPackageSha) !== false, 'repository README must publish the accepted 0.5.0 package identity'),
+    array(strpos($repoReadme, $historicalPackageSha) !== false, 'repository README must retain historical 0.4.0 package identity'),
+    array(strpos($security, '`0.5.0` is the current public GitHub Release') !== false, 'SECURITY must identify 0.5.0 as the current public GitHub release'),
+    array(strpos($security, $acceptedPackageSha) !== false, 'SECURITY must retain public 0.5.0 package integrity'),
+    array(strpos($security, $historicalPackageSha) !== false, 'SECURITY must retain historical 0.4.0 release integrity'),
+    array(strpos($phase5b, 'Status: **ACCEPTED') !== false, 'Phase 5B canonical record must be accepted'),
+    array(strpos($phase5b, $acceptedSource) !== false, 'Phase 5B canonical record must retain the accepted source commit'),
+    array(strpos($phase5b, $acceptedPackageSha) !== false, 'Phase 5B canonical record must retain the accepted package SHA-256'),
+    array(strpos($phase5b, 'WordPress.org') !== false, 'Phase 5B canonical record must retain the WordPress.org boundary'),
+    array(strpos($releaseMetadata, '0.5.0-dev') === false, 'stale 0.5.0-dev release metadata remains after public release'),
+    array(strpos($changelog, '## 0.5.0 — Unreleased') === false, 'public 0.5.0 must not be marked Unreleased'),
+    array(strpos($changelog, 'not yet an immutable GitHub Release') === false, 'stale pre-publication GitHub Release claim remains in CHANGELOG'),
+    array(strpos($repoReadme, 'Phase 5B must still create') === false, 'stale Phase 5B-next claim remains in README'),
+    array(strpos($security, 'It is not yet claimed as an official public GitHub Release') === false, 'stale pre-publication claim remains in SECURITY'),
 );
 
 foreach ($checks as $check) {
@@ -63,4 +74,4 @@ foreach ($checks as $check) {
     }
 }
 
-echo "PASS: stable release metadata alignment {$version} with historical RC {$historicalReleaseCandidate}\n";
+echo "PASS: public GitHub release metadata alignment {$version} with historical RC {$historicalReleaseCandidate}\n";
