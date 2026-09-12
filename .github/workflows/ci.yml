@@ -29,7 +29,7 @@ jobs:
         run: bash scripts/ci-run.sh "PHP syntax" bash -c 'find ai-search-optimizer.php uninstall.php includes tests -name "*.php" -type f -print0 | xargs -0 -n1 php -l'
 
       - name: Shell syntax
-        run: bash scripts/ci-run.sh "Shell syntax" bash -n scripts/build-plugin.sh scripts/build-release-candidate.sh scripts/build-development-package.sh scripts/runtime-wordpress.sh scripts/runtime-multisite-woocommerce.sh scripts/runtime-admin-ux.sh scripts/runtime-release-lifecycle.sh scripts/publish-github-release.sh
+        run: bash scripts/ci-run.sh "Shell syntax" bash -n scripts/build-plugin.sh scripts/build-release-candidate.sh scripts/build-development-package.sh scripts/runtime-wordpress.sh scripts/runtime-multisite-woocommerce.sh scripts/runtime-admin-ux.sh scripts/runtime-release-lifecycle.sh scripts/verify-kairoseth-cta.sh scripts/publish-github-release.sh
 
       - name: Contract and security regression
         run: bash scripts/ci-run.sh "Contract and security regression" php tests/contract-check.php
@@ -54,6 +54,9 @@ jobs:
 
       - name: GitHub release publication contract
         run: bash scripts/ci-run.sh "GitHub release publication contract" php tests/release-publication-check.php
+
+      - name: Kairoseth CTA production contract
+        run: bash scripts/ci-run.sh "Kairoseth CTA production contract" bash scripts/verify-kairoseth-cta.sh
 
       - name: Build plugin package
         run: bash scripts/ci-run.sh "Build plugin package" bash scripts/build-plugin.sh
