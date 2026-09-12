@@ -75,6 +75,20 @@ Phase 5A is accepted only when all of the following are true:
 
 Only after that acceptance may Phase 5B create the immutable public tag/GitHub Release package and perform the final install/upgrade/uninstall release proof.
 
+## Execution sequence
+
+Phase 5 work must advance in small accepted slices:
+
+```text
+5A.0  freeze stable-candidate contract
+5A.1  promote source/readme metadata to 0.5.0 + switch CI to stable package evidence
+5A.2  accept exact reproducible candidate identity on PR and post-merge main
+5B    immutable tag + GitHub Release + final packaged install/upgrade/uninstall proof
+5C    WordPress.org submission/review/approval and truthful availability update
+```
+
+A later slice cannot bypass a failed gate from an earlier slice.
+
 ## WordPress.org boundary
 
 WordPress.org submission/approval is a later external gate. Until approval exists, repository documentation, Kairoseth Extensions and release notes must use wording equivalent to **prepared for submission**, **stable candidate**, or **submitted/pending review** as factually applicable.
