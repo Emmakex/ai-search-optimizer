@@ -41,6 +41,10 @@ jobs:
           docker --version
           php --version
           node --version
+          curl --version | head -n 1
+
+      - name: Verify Kairoseth CTA production target
+        run: bash scripts/ci-run.sh "Kairoseth CTA production contract" bash scripts/verify-kairoseth-cta.sh
 
       - name: Publish verified 0.5.0 GitHub Release
         env:
