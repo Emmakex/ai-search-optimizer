@@ -234,68 +234,68 @@ jobs:
           PHP_VERSION: '8.3'
         run: bash scripts/ci-run.sh "Real browser admin UX EN/ES" bash scripts/runtime-admin-ux.sh
 
-cta_production:
-  name: Kairoseth CTA production EN/ES
-  needs: validate
-  runs-on: ubuntu-latest
-  timeout-minutes: 10
+  cta_production:
+    name: Kairoseth CTA production EN/ES
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
 
-  steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Verify live production CTA for 0.5.1
-      env:
-        AISO_RELEASE_VERSION: '0.5.1'
-        AISO_WORDPRESS_VERSION: '7.1'
-      run: bash scripts/ci-run.sh "Kairoseth CTA production contract 0.5.1" bash scripts/verify-kairoseth-cta.sh
+      - name: Verify live production CTA for 0.5.1
+        env:
+          AISO_RELEASE_VERSION: '0.5.1'
+          AISO_WORDPRESS_VERSION: '7.1'
+        run: bash scripts/ci-run.sh "Kairoseth CTA production contract 0.5.1" bash scripts/verify-kairoseth-cta.sh
 
-release_lifecycle:
-  name: Release package lifecycle + 0.5.0 upgrade
-  needs: validate
-  runs-on: ubuntu-latest
-  timeout-minutes: 25
+  release_lifecycle:
+    name: Release package lifecycle + 0.5.0 upgrade
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
 
-  steps:
-    - name: Checkout full release history
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+    steps:
+      - name: Checkout full release history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Build current 0.5.1 submission candidate
-      id: current_package
-      shell: bash
-      run: |
-        set -euo pipefail
-        bash scripts/ci-run.sh "Build current 0.5.1 submission candidate" bash scripts/build-release-candidate.sh
-        current_sha="$(sha256sum dist/ai-search-optimizer-0.5.1.zip | awk '{print $1}')"
-        test -n "$current_sha"
-        echo "sha=$current_sha" >> "$GITHUB_OUTPUT"
-        echo "Current 0.5.1 candidate SHA-256: $current_sha"
+      - name: Build current 0.5.1 submission candidate
+        id: current_package
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/ci-run.sh "Build current 0.5.1 submission candidate" bash scripts/build-release-candidate.sh
+          current_sha="$(sha256sum dist/ai-search-optimizer-0.5.1.zip | awk '{print $1}')"
+          test -n "$current_sha"
+          echo "sha=$current_sha" >> "$GITHUB_OUTPUT"
+          echo "Current 0.5.1 candidate SHA-256: $current_sha"
 
-    - name: Rebuild accepted 0.5.0 package
-      shell: bash
-      run: |
-        set -euo pipefail
-        previous_dir="$RUNNER_TEMP/ai-search-optimizer-0.5.0-source"
-        previous_zip="$RUNNER_TEMP/ai-search-optimizer-0.5.0.zip"
-        git worktree add --detach "$previous_dir" b116ae5df76c7a72ad37ff4e8e80632d6ebb457b
-        bash "$previous_dir/scripts/build-plugin.sh"
-        echo "0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e  $previous_dir/dist/ai-search-optimizer-0.5.0.zip" | sha256sum -c -
-        cp "$previous_dir/dist/ai-search-optimizer-0.5.0.zip" "$previous_zip"
-        git worktree remove --force "$previous_dir"
+      - name: Rebuild accepted 0.5.0 package
+        shell: bash
+        run: |
+          set -euo pipefail
+          previous_dir="$RUNNER_TEMP/ai-search-optimizer-0.5.0-source"
+          previous_zip="$RUNNER_TEMP/ai-search-optimizer-0.5.0.zip"
+          git worktree add --detach "$previous_dir" b116ae5df76c7a72ad37ff4e8e80632d6ebb457b
+          bash "$previous_dir/scripts/build-plugin.sh"
+          echo "0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e  $previous_dir/dist/ai-search-optimizer-0.5.0.zip" | sha256sum -c -
+          cp "$previous_dir/dist/ai-search-optimizer-0.5.0.zip" "$previous_zip"
+          git worktree remove --force "$previous_dir"
 
-    - name: Clean install, 0.5.0 upgrade and uninstall acceptance
-      env:
-        CURRENT_PACKAGE: ${{ github.workspace }}/dist/ai-search-optimizer-0.5.1.zip
-        PREVIOUS_PACKAGE: ${{ runner.temp }}/ai-search-optimizer-0.5.0.zip
-        CURRENT_VERSION: '0.5.1'
-        PREVIOUS_VERSION: '0.5.0'
-        EXPECTED_CURRENT_SHA: ${{ steps.current_package.outputs.sha }}
-        EXPECTED_PREVIOUS_SHA: 0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e
-        WP_VERSION: '7.1'
-        PHP_VERSION: '8.3'
-      run: bash scripts/ci-run.sh "Release package lifecycle 0.5.0 -> 0.5.1" bash scripts/runtime-release-lifecycle.sh
+      - name: Clean install, 0.5.0 upgrade and uninstall acceptance
+        env:
+          CURRENT_PACKAGE: ${{ github.workspace }}/dist/ai-search-optimizer-0.5.1.zip
+          PREVIOUS_PACKAGE: ${{ runner.temp }}/ai-search-optimizer-0.5.0.zip
+          CURRENT_VERSION: '0.5.1'
+          PREVIOUS_VERSION: '0.5.0'
+          EXPECTED_CURRENT_SHA: ${{ steps.current_package.outputs.sha }}
+          EXPECTED_PREVIOUS_SHA: 0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e
+          WP_VERSION: '7.1'
+          PHP_VERSION: '8.3'
+        run: bash scripts/ci-run.sh "Release package lifecycle 0.5.0 -> 0.5.1" bash scripts/runtime-release-lifecycle.sh
 
   package_evidence:
     name: Reproducible stable candidate package evidence
