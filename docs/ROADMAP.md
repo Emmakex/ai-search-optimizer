@@ -1,6 +1,6 @@
 # AI Search Optimizer — Roadmap
 
-Status: **Phase 5B complete — public GitHub Release `0.5.0` verified; Phase 5C.0 submission-hardening contract frozen; `0.5.1` is required before WordPress.org upload**  
+Status: **Phase 5B complete; Phase 5C.0 complete; exact `0.5.1` 5C.1 candidate is green in PR CI and awaiting merge/post-merge verification; WordPress.org submission has not started**  
 Last reviewed: **12 September 2026**
 
 ```text
@@ -12,15 +12,17 @@ Phase 2  useful local Free workflow                COMPLETE
   2C     Free release hardening                    COMPLETE
 Phase 3  optional support / custom-development UX  COMPLETE
   3A     connection-readiness technical slice      COMPLETE / SUPERSEDED AS PRIMARY CTA
-  3B     contextual support + custom CTA            COMPLETE
-  3C     support/privacy + directory hardening      COMPLETE
+  3B     contextual support + custom CTA           COMPLETE
+  3C     support/privacy + directory hardening     COMPLETE
 Phase 4  Extensions catalog integration            COMPLETE
 Phase 5  stable public distribution / WordPress.org IN PROGRESS
   5A     stable candidate identity                 COMPLETE
   5B     GitHub release + lifecycle proof          COMPLETE
   5C     WordPress.org submission/review           IN PROGRESS
     5C.0 submission-hardening contract             COMPLETE
-    5C.1 0.5.1 package hardening                   NEXT
+    5C.1 0.5.1 package hardening                   PR CI GREEN / MERGE PENDING
+    5C.2 immutable 0.5.1 GitHub release            BLOCKED ON 5C.1 MERGE
+    5C.3 WordPress.org exact-ZIP submission         BLOCKED ON 5C.2
 ```
 
 ## Product model
@@ -175,41 +177,44 @@ Canonical acceptance: [`PHASE5B_GITHUB_RELEASE.md`](PHASE5B_GITHUB_RELEASE.md). 
 
 ### 5C — WordPress.org submission/review — in progress
 
-#### 5C.0 — submission-hardening contract — complete by documentation
+#### 5C.0 — submission-hardening contract — complete
 
-The Phase 5C preflight found that the immutable public `0.5.0` ZIP still contains a bundled `readme.txt` sentence from before GitHub publication, describing `0.5.0` as a stable candidate and saying an official public GitHub Release is not yet claimed.
+The Phase 5C preflight found that immutable public `0.5.0` still contains stale pre-publication readme wording. That release remains immutable, so WordPress.org submission moved to the minimal `0.5.1` submission-hardening line.
 
-The released `0.5.0` ZIP must **not** be modified in place because its public package SHA-256 is already frozen. WordPress.org submission therefore moves to a minimal `0.5.1` submission-hardening patch.
+#### 5C.1 — exact 0.5.1 package hardening — PR CI green / merge pending
 
-`0.5.1` will:
+The patch aligns Version/connector/Stable tag at `0.5.1`, removes stale packaged readme wording, preserves the absent Plugin URI/Author URI safety choice and changes no customer feature, REST namespace, schema, authorization rule or outbound-data policy.
 
-- update only release/submission metadata unless a separately confirmed blocker requires more;
-- remove the stale pre-publication statement from packaged `readme.txt`;
-- align plugin Version, connector version constant and Stable tag at `0.5.1`;
-- preserve the exact historical `0.5.0` source/tag/package identity;
-- keep Plugin URI and Author URI absent rather than introduce an unnecessary equality hazard;
-- retain MIT as the GPL-compatible license;
-- retain `Tested up to: 7.1`, which matches the current stable WordPress major verified for this preflight;
-- require official Plugin Check, the runtime matrix, Multisite/WooCommerce, browser EN/ES, CTA production preflight, reproducibility and a real `0.5.0 -> 0.5.1` lifecycle proof before upload;
-- publish an immutable GitHub `0.5.1` package first, then submit that exact ZIP to WordPress.org.
+Frozen candidate identity:
 
-Canonical contract: [`PHASE5C_WORDPRESS_ORG_SUBMISSION.md`](PHASE5C_WORDPRESS_ORG_SUBMISSION.md).
+```text
+version                   0.5.1
+package                   ai-search-optimizer-0.5.1.zip
+package bytes             29560
+package entries           13
+package SHA-256           2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b
+PR                        #32
+PR CI discovery           #104 / run 34686969817
+PR CI confirmation        #105 / run 34692395181 — PASS
+```
 
-**Next: 5C.1 — implement and accept the minimal `0.5.1` submission-hardening package.**
+The exact candidate passed metadata alignment, WPCS/PHPCompatibility, official Plugin Check, WP 5.6/PHP 7.4, WP 6.8/PHP 8.2, WP 7.1/PHP 8.3, Multisite/WooCommerce, real-browser EN/ES, production CTA EN/ES × both request types, clean install, `0.5.0 -> 0.5.1` upgrade, preserve/reinstall/delete lifecycle and reproducible packaging.
 
-Required before any WordPress.org availability claim:
+CI #104's CTA 403 is retained as a structured incident. CI #105 proved both curl-default and browser-equivalent HTTP 200 without Kairoseth application-code or packaged-product changes; the exact upstream edge condition behind the earlier 403 remains unconfirmed rather than being mislabeled as a version defect.
 
-- exact `0.5.1` submission package accepted and released;
-- final directory-policy/readme/external-service review;
-- compatible code/assets/licenses;
-- official Plugin Check PASS on the exact submission line;
-- WordPress.org upload uses the exact accepted `0.5.1` ZIP;
-- WordPress.org external review/approval completes successfully;
-- only after real approval/publication may Kairoseth/catalog/readme copy claim directory availability.
+Canonical contract/evidence: [`PHASE5C_WORDPRESS_ORG_SUBMISSION.md`](PHASE5C_WORDPRESS_ORG_SUBMISSION.md). Incident evidence: [`CI_INCIDENTS.md`](CI_INCIDENTS.md).
 
-`ai-search-optimizer` remains only the target WordPress.org slug until actually accepted/reserved.
+**Current gate:** merge PR #32 only after its final CI on the documentation-complete head passes, then require post-merge `main` CI with the same package SHA.
 
-Phase 5 continues to follow feature branch → PR → CI → merge → verification. GitHub publication is real; WordPress.org publication remains an external gate.
+#### 5C.2 — immutable 0.5.1 GitHub release — blocked on 5C.1 merge
+
+After 5C.1 merge/post-merge acceptance, publish an immutable GitHub `0.5.1` release from the accepted package identity and prove the released ZIP SHA remains exactly `2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b`.
+
+#### 5C.3+ — external WordPress.org gate
+
+Only after 5C.2 may the exact accepted ZIP be submitted to WordPress.org. External review, requested changes, approval and actual directory publication remain separate gates. `ai-search-optimizer` remains only the target directory slug until accepted/reserved, and no customer-facing copy may claim WordPress.org availability before the directory listing is genuinely live.
+
+Phase 5 continues to follow feature branch → PR → CI → merge → verification.
 
 ## Post-v1 candidates
 
