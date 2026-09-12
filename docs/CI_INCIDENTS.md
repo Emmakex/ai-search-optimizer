@@ -4,6 +4,73 @@ This file is the durable failure-learning register required by the repository en
 
 Record only non-obvious CI/build/test/runtime failures that are useful for future diagnosis. Each incident must preserve the actionable diagnosis contract: pipeline/job/step, command, exit code, primary error, file/line when available, minimal context, normalized signature, root-cause status, verified fix/recovery and validation evidence.
 
+## 2026-09-12 — CI #94 — transient Playwright login submission timeout before ES browser acceptance
+
+Status: **RESOLVED — harness/login flake; exact tree/package passed on selective rerun; no product code change required**
+
+```text
+pipeline              GitHub Actions / CI
+run                   #94 / 34671531167
+attempt               1
+commit                6c47abe32152835debbc9a76869ea5af037f0501
+job                   Real browser admin UX EN/ES
+step                  Browser responsive and accessibility acceptance
+command               bash scripts/ci-run.sh "Real browser admin UX EN/ES" bash scripts/runtime-admin-ux.sh
+exit code             1
+file/line             scripts/admin-ux.mjs:73:27
+primary error         page.waitForURL: Timeout 30000ms exceeded
+error signature       1599dfa6cd1067fcd852668922e8e512629e1c0a4f4bac298822a3e6cec249ec
+root-cause status     isolated harness timing failure; underlying browser scheduling cause not independently reproducible
+```
+
+### Observed failure boundary
+
+The exact `0.5.0` package built successfully with SHA-256 `0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e`.
+
+The first browser pass completed successfully:
+
+```text
+PASS: browser admin UX locale=en desktop=1280x900 mobile=390x844 contextual-support=present
+```
+
+The second process, after switching WordPress/site/user locale to Spanish, loaded `/wp-login.php` but timed out waiting for the post-login `/wp-admin/` URL. Apache logs show the login page/assets were served, but **no `POST /wp-login.php` was emitted** before the timeout. The failure therefore occurred in the browser-login harness before navigation to an AI Search Optimizer admin surface.
+
+### Evidence against product regression
+
+- PR CI #93 executed the same `scripts/admin-ux.mjs` / `scripts/runtime-admin-ux.sh` tree and the same package SHA minutes earlier and passed EN + ES completely;
+- the EN pass inside CI #94 attempt 1 also completed against the exact same package;
+- WordPress/PHP runtimes, Multisite/WooCommerce, Plugin Check, WPCS/PHPCompatibility and the new 0.4.0 → 0.5.0 lifecycle/upgrade gate passed on the same `main` commit;
+- the failure happened before the Spanish process submitted credentials and before it opened any plugin admin page;
+- no product, test or harness code changed before recovery.
+
+### Recovery
+
+Re-run only the failed `Real browser admin UX EN/ES` job after the first attempt completed. No code change and no timeout relaxation was applied.
+
+### Validation
+
+```text
+CI run               #94 / 34671531167
+attempt               2
+browser EN            PASS
+browser ES            PASS
+release lifecycle     PASS
+final package job     PASS
+workflow conclusion   success
+source unchanged      6c47abe32152835debbc9a76869ea5af037f0501
+```
+
+### Regression boundary
+
+Do **not** weaken or remove browser EN/ES acceptance because of this incident. A future occurrence may be classified with this incident only when all of the following match:
+
+- timeout at the login wait before an affected locale reaches a plugin admin page;
+- no login POST is observed for the timed-out process;
+- package/source identity is unchanged and another locale or immediately adjacent accepted run proves the product UI itself;
+- a selective rerun passes without code changes.
+
+If the login POST is emitted but authentication/navigation fails, if a plugin page is reached and then fails, or if the same signature repeats persistently, treat it as a new defect and harden the harness or product as appropriate rather than retrying indefinitely.
+
 ## 2026-09-12 — CI #88 — Docker Hub authentication reset during WP 5.6/PHP 7.4 runtime
 
 Status: **RESOLVED — confirmed external infrastructure failure; no product code change required**
