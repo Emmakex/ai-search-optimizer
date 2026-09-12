@@ -1,0 +1,26 @@
+name: Kairoseth CTA Production
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  cta_production:
+    name: Kairoseth CTA live contract EN/ES
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify shell syntax
+        run: bash -n scripts/verify-kairoseth-cta.sh
+
+      - name: Verify Kairoseth Custom Requests production CTA
+        run: bash scripts/ci-run.sh "Kairoseth CTA production contract" bash scripts/verify-kairoseth-cta.sh
