@@ -6,7 +6,7 @@ AI Search Optimizer is a local-first WordPress extension that can publish a site
 
 `0.4.0` is the historical accepted standalone Free release candidate and remains identified by its accepted source commit/tree/package SHA-256. It is not claimed as publicly distributed through GitHub Releases or WordPress.org.
 
-`0.5.0` is the current stable candidate. It is undergoing Phase 5A release acceptance and is not yet claimed as an official public GitHub Release or as published on WordPress.org. Stable-candidate packages must remain reproducible and must not overwrite or redefine the accepted 0.4.0 package identity.
+`0.5.0` is the current **accepted stable candidate**. Phase 5A acceptance is complete, but `0.5.0` is not yet claimed as an official public GitHub Release or as published on WordPress.org. Stable-candidate packages must remain reproducible and must not overwrite or redefine the historical 0.4.0 package identity.
 
 A new blocking security or WordPress.org policy finding affecting a candidate before public distribution must reopen the relevant acceptance decision. Public-user support begins when an official distribution channel is published.
 
@@ -115,10 +115,21 @@ source tree        472e8c5e5bc20ed8f4eed412ab5515561b89ff16
 package SHA-256    27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c
 ```
 
-The repository build process normalizes package metadata. The `0.5.0` stable candidate uses separate reproducible release-candidate evidence containing the exact source commit/tree, package bytes/entries and SHA-256. The stable package builder rejects prerelease/development version strings. Official WordPress Plugin Check remains a blocking CI dependency; public distribution still requires final candidate acceptance, immutable tag/GitHub Release proof and external WordPress.org review/approval.
+The accepted `0.5.0` stable candidate is identified by:
+
+```text
+source commit      b116ae5df76c7a72ad37ff4e8e80632d6ebb457b
+source tree        6a837ed67049ae04cdf59656cc15997a8d9bb7b3
+package            ai-search-optimizer-0.5.0.zip
+package bytes      29397
+package entries    13
+package SHA-256    0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e
+```
+
+The repository build process normalizes package metadata, and the stable package builder rejects prerelease/development version strings. Official WordPress Plugin Check remains a blocking CI dependency. Phase 5B must now bind the accepted source/package identity to an immutable `0.5.0` tag and GitHub Release and verify final install/upgrade/deactivate/uninstall behavior. WordPress.org review/approval remains a separate external gate.
 
 See [`docs/PHASE5A_STABLE_CANDIDATE.md`](docs/PHASE5A_STABLE_CANDIDATE.md).
 
 ## Diagnostics
 
-Security failures should use bounded reason codes and structured evidence. Raw credentials, secrets, ciphertext and arbitrary private response bodies are prohibited from normal logs/diagnostics.
+Security failures should use bounded reason codes and structured evidence. Raw credentials, secrets, ciphertext and arbitrary private response bodies are prohibited from normal logs/diagnostics. Non-obvious CI/runtime failures are retained in [`docs/CI_INCIDENTS.md`](docs/CI_INCIDENTS.md) with a bounded structured diagnosis and verified recovery.
