@@ -6,7 +6,7 @@ AI Search Optimizer is a local-first WordPress extension that can publish a site
 
 `0.4.0` is the historical accepted standalone Free release candidate and remains identified by its accepted source commit/tree/package SHA-256. It is not claimed as publicly distributed through GitHub Releases or WordPress.org.
 
-`0.5.0` is the current **accepted stable candidate**. Phase 5A acceptance is complete, but `0.5.0` is not yet claimed as an official public GitHub Release or as published on WordPress.org. Stable-candidate packages must remain reproducible and must not overwrite or redefine the historical 0.4.0 package identity.
+`0.5.0` is the current stable candidate and is accepted under Phase 5A. It is not yet claimed as an official public GitHub Release or as published on WordPress.org. Stable-candidate packages must remain reproducible and must not overwrite or redefine the historical 0.4.0 package identity.
 
 A new blocking security or WordPress.org policy finding affecting a candidate before public distribution must reopen the relevant acceptance decision. Public-user support begins when an official distribution channel is published.
 
