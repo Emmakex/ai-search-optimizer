@@ -13,6 +13,11 @@ if [[ -z "$VERSION" ]]; then
   exit 1
 fi
 
+if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  echo "Release candidate builder requires a stable semantic version, received: $VERSION" >&2
+  exit 1
+fi
+
 DIST="$ROOT/dist"
 ZIP="$DIST/ai-search-optimizer-$VERSION.zip"
 SHA_FILE="$DIST/ai-search-optimizer-$VERSION.sha256"
@@ -44,6 +49,7 @@ printf '%s  %s\n' "$SECOND_SHA" "$PACKAGE_NAME" > "$SHA_FILE"
 cat > "$MANIFEST" <<EOF
 product=AI Search Optimizer
 version=$VERSION
+channel=stable-candidate
 source_commit=$SOURCE_COMMIT
 source_tree=$SOURCE_TREE
 package=$PACKAGE_NAME
@@ -59,13 +65,14 @@ EOF
 )
 
 grep -Fx "version=$VERSION" "$MANIFEST" >/dev/null
+grep -Fx "channel=stable-candidate" "$MANIFEST" >/dev/null
 grep -Fx "source_commit=$SOURCE_COMMIT" "$MANIFEST" >/dev/null
 grep -Fx "source_tree=$SOURCE_TREE" "$MANIFEST" >/dev/null
 grep -Fx "package=$PACKAGE_NAME" "$MANIFEST" >/dev/null
 grep -Fx "package_sha256=$SECOND_SHA" "$MANIFEST" >/dev/null
 grep -Fx "reproducible_build=PASS" "$MANIFEST" >/dev/null
 
-echo "Release candidate reproducibility PASS"
+echo "Stable release candidate reproducibility PASS"
 echo "Version: $VERSION"
 echo "Source commit: $SOURCE_COMMIT"
 echo "Source tree: $SOURCE_TREE"
