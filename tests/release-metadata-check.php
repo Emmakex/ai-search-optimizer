@@ -29,25 +29,30 @@ $readmeRequiresWp = aiso_capture('/^Requires at least:\s*(.+)$/m', $readme, 'rea
 $readmeRequiresPhp = aiso_capture('/^Requires PHP:\s*(.+)$/m', $readme, 'readme minimum PHP version');
 $testedUpTo = aiso_capture('/^Tested up to:\s*(.+)$/m', $readme, 'readme Tested up to');
 
-$expectedDevelopmentVersion = '0.5.0-dev';
-$acceptedReleaseCandidate = '0.4.0';
+$expectedStableVersion = '0.5.0';
+$historicalReleaseCandidate = '0.4.0';
 $expectedTestedWp = '7.1';
+$releaseMetadata = $plugin . $readme . $repoReadme . $changelog . $security;
 
 $checks = array(
-    array($version === $expectedDevelopmentVersion, "plugin development version expected {$expectedDevelopmentVersion}, received {$version}"),
+    array($version === $expectedStableVersion, "plugin stable version expected {$expectedStableVersion}, received {$version}"),
+    array((bool) preg_match('/^[0-9]+\.[0-9]+\.[0-9]+$/', $version), "plugin Version {$version} is not a stable semantic version"),
     array($constantVersion === $version, "connector constant {$constantVersion} does not match plugin version {$version}"),
     array($stableTag === $version, "readme Stable tag {$stableTag} must match plugin Version {$version} for WordPress.org package correctness"),
     array($readmeRequiresWp === $requiresWp, "readme/plugin WordPress minimum mismatch: {$readmeRequiresWp} vs {$requiresWp}"),
     array($readmeRequiresPhp === $requiresPhp, "readme/plugin PHP minimum mismatch: {$readmeRequiresPhp} vs {$requiresPhp}"),
     array($testedUpTo === $expectedTestedWp, "Tested up to expected {$expectedTestedWp}, received {$testedUpTo}"),
-    array(strpos($changelog, '## 0.5.0-dev — Unreleased') !== false, 'CHANGELOG must identify the Phase 3 development line'),
-    array(strpos($changelog, '## 0.4.0 — Release candidate') !== false, 'CHANGELOG must retain the accepted 0.4.0 release candidate'),
-    array(strpos($readme, '= 0.5.0-dev =') !== false, 'WordPress readme changelog must contain the development line'),
+    array(strpos($changelog, '## 0.5.0 — Stable candidate') !== false, 'CHANGELOG must identify 0.5.0 as the stable candidate'),
+    array(strpos($changelog, '## 0.4.0 — Release candidate') !== false, 'CHANGELOG must retain the historical 0.4.0 release candidate'),
+    array(strpos($readme, '= 0.5.0 =') !== false, 'WordPress readme changelog must contain the stable candidate'),
     array(strpos($readme, '= 0.4.0 =') !== false, 'WordPress readme changelog must retain 0.4.0'),
-    array(strpos($repoReadme, '0.5.0-dev') !== false, 'repository README must describe the current development line'),
-    array(strpos($repoReadme, '27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c') !== false, 'repository README must retain accepted 0.4.0 package identity'),
-    array(strpos($security, '0.4.0') !== false && strpos($security, '0.5.0-dev') !== false, 'SECURITY must distinguish accepted RC and current development line'),
-    array(strpos($changelog, '## 0.4.0 — Unreleased') === false, 'accepted 0.4.0 must not regress to Unreleased'),
+    array(strpos($repoReadme, 'Stable candidate `0.5.0`') !== false, 'repository README must describe the current stable candidate'),
+    array(strpos($repoReadme, '27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c') !== false, 'repository README must retain historical 0.4.0 package identity'),
+    array(strpos($security, '`0.5.0` is the current stable candidate') !== false, 'SECURITY must identify 0.5.0 as the current stable candidate'),
+    array(strpos($security, '0.4.0') !== false, 'SECURITY must retain historical 0.4.0 release integrity'),
+    array(strpos($releaseMetadata, '0.5.0-dev') === false, 'stale 0.5.0-dev release metadata remains after stable promotion'),
+    array(strpos($changelog, '## 0.5.0 — Unreleased') === false, 'stable 0.5.0 must not be marked Unreleased'),
+    array(strpos($changelog, '## 0.4.0 — Unreleased') === false, 'historical 0.4.0 must not regress to Unreleased'),
     array(strpos($changelog, 'Phase 2C release hardening remains in progress') === false, 'stale Phase 2C in-progress claim remains in CHANGELOG'),
 );
 
@@ -58,4 +63,4 @@ foreach ($checks as $check) {
     }
 }
 
-echo "PASS: development/release metadata alignment {$version} with accepted RC {$acceptedReleaseCandidate}\n";
+echo "PASS: stable release metadata alignment {$version} with historical RC {$historicalReleaseCandidate}\n";
