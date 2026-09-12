@@ -2,7 +2,7 @@
 
 All notable standalone AI Search Optimizer changes are recorded here.
 
-## 0.5.0-dev — Unreleased
+## 0.5.0 — Stable candidate
 
 ### Added
 - Optional EN/ES **AI Search Optimizer Support** page under WordPress Tools.
@@ -11,18 +11,20 @@ All notable standalone AI Search Optimizer changes are recorded here.
 - Strict server-owned support context containing only plugin identity/version, WordPress version, locale and bounded request type.
 - Fail-closed validation of the exact `https://kairoseth.com/custom-requests` destination.
 - Static and real-browser regression coverage for the contextual support privacy boundary.
-- Official WordPress Plugin Check as a blocking CI dependency before development-package evidence.
+- Official WordPress Plugin Check as a blocking CI dependency before stable-candidate package evidence.
 - WordPress Coding Standards and PHPCompatibilityWP as blocking production-code quality gates.
 - Machine-readable PHPCS diagnostics for actionable CI failures.
-- Reproducible development-package evidence so later development is not mislabeled as the accepted 0.4.0 release candidate.
+- Reproducible stable-candidate package evidence with source commit/tree, package bytes/entries and SHA-256.
 
 ### Changed
-- The Phase 3 customer strategy now follows the same WordPress.org-first local-Free model as Kairoseth AI Transparency: useful local functionality first, optional explicit support/improvement CTA, and bespoke development when requested.
+- The customer strategy follows the WordPress.org-first local-Free model: useful local functionality first, optional explicit support/improvement CTA, and bespoke development when requested.
 - The former connection-readiness admin surface is superseded as the primary customer flow. The inherited REST connector remains available for compatible managed integrations but is not a license, entitlement or required Free workflow.
 - Production PHP was normalized to the blocking WordPress Coding Standards baseline without suppressing or baselining violations.
 - WordPress-facing JSON encoding in the flagged publication path now uses `wp_json_encode()`.
 - Source-inspection regressions validate semantic contract markers without depending on formatter-specific whitespace or Yoda comparison orientation.
 - Browser runtime credentials are generated ephemerally and passed through the test environment instead of being hardcoded in the acceptance script.
+- Plugin/readme/connector metadata is promoted from the development line to the deliberate stable `0.5.0` candidate.
+- CI release evidence now uses the stable/release-candidate reproducibility builder instead of development-package evidence.
 
 ### Security / privacy
 - Loading the support page performs no automatic request to Kairoseth.
@@ -32,12 +34,12 @@ All notable standalone AI Search Optimizer changes are recorded here.
 - No Kairoseth token, credential, entitlement or support state is persisted by the plugin support bridge.
 - The inherited WordPress REST namespace, schema, exact site pin and compare-and-set deployment protocol remain unchanged.
 
-### Phase 3 acceptance evidence
+### Prior acceptance evidence
 - Phase 3B contextual support remains accepted with its privacy-bounded explicit CTA contract.
 - Phase 3C WordPress.org support/privacy hardening is accepted in PR #20.
 - Final PR CI #74 and post-merge main CI #75 passed all required quality, runtime, Plugin Check, browser and reproducible-package gates.
-- Post-merge `0.5.0-dev` package SHA-256: `c10b2a780824fc08e43b557def3423a3d25bf313412ac6436ef9f6c53bad0137`.
-- No stable public release, GitHub Release or WordPress.org publication is claimed by this development line.
+- Historical post-merge development-package SHA-256: `c10b2a780824fc08e43b557def3423a3d25bf313412ac6436ef9f6c53bad0137`.
+- `0.5.0` is a stable candidate only until Phase 5A acceptance completes; no GitHub Release or WordPress.org publication is claimed yet.
 
 ## 0.4.0 — Release candidate
 
