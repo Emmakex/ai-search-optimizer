@@ -1,287 +1,133 @@
 # AI Search Optimizer — Acceptance
 
-Status: **Phases 0–4, 5A and 5B accepted; Phase 5C.0 and 5C.1 accepted; exact `0.5.1` package frozen; Phase 5C.2 immutable GitHub release is next; WordPress.org availability is not claimed**  
+Status: **Phases 0–4, 5A, 5B, 5C.0, 5C.1 and 5C.2 accepted; public GitHub Release `0.5.1` verified; Phase 5C.3 WordPress.org submission is next; directory availability is not claimed.**  
 Last reviewed: **12 September 2026**
 
 ## Engineering inheritance
 
-This repository inherits the Kairoseth rules for minimum-sufficient validation, finish-before-advance, EN/ES customer surfaces, least privilege, server-authoritative authorization, actionable diagnostics, durable failure learning and feature branch → PR → CI → merge → verification.
+Minimum-sufficient validation, finish-before-advance, EN/ES customer surfaces, least privilege, actionable diagnostics, durable failure learning and feature branch → PR → CI → merge → post-merge verification remain mandatory.
 
-## Phase 0 / 1 — accepted
-
-The standalone repository and connector extraction are accepted. Public plugin identity is `AI Search Optimizer`, technical slug/text domain `ai-search-optimizer`, license MIT, and the inherited connector protocol remains compatible with the accepted 0.3.2 predecessor.
-
-Foundation/extraction blockers: **0**.
-
-## Phase 2 — useful local Free workflow — accepted
+## Accepted product baseline
 
 ```text
 [x] useful without Kairoseth account/license/entitlement
 [x] local robots.txt / sitemap / llms.txt readiness
-[x] eligible public WordPress inventory
-[x] WooCommerce public-product awareness
+[x] public WordPress/WooCommerce inventory
 [x] deterministic source-grounded llms.txt generation
-[x] explicit resource selection and publication
+[x] explicit selection/publication
 [x] compare-before-write and idempotence
-[x] independent public read-back and exact SHA-256 comparison
-[x] EN/ES responsive/accessibility acceptance
-[x] WordPress single-site and Multisite isolation
-[x] WooCommerce runtime acceptance
-[x] representative WordPress/PHP runtime matrix
+[x] independent public read-back + exact SHA-256
+[x] EN/ES responsive/browser acceptance
+[x] single-site/Multisite isolation
 [x] explicit preserve/delete uninstall policy
 [x] no silent telemetry/content transmission
-[x] reproducible package evidence
-[x] blocking Phase 2 defects = 0
-```
-
-Historical accepted `0.4.0` identity:
-
-```text
-source commit       4d68b111d1f796fdc9bfbc3e670eeecc69c09a76
-source tree         472e8c5e5bc20ed8f4eed412ab5515561b89ff16
-package SHA-256     27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c
-```
-
-## Phase 3 — contextual support / WordPress.org hardening — accepted
-
-The primary customer model is:
-
-```text
-local Free plugin
-→ optional explicit administrator CTA
-→ Kairoseth Custom Requests
-→ user chooses what information to submit
-```
-
-Accepted support/privacy boundary:
-
-```text
-[x] page load makes zero Kairoseth request
-[x] no automatic lead submission or click tracking
-[x] local Free features do not depend on Kairoseth
-[x] exact destination = https://kairoseth.com/custom-requests
-[x] hostile destination variants fail closed
-[x] automatic context is exactly allow-listed
-[x] site URL / llms.txt content or hash / inventory not attached automatically
-[x] administrator/customer identity not attached automatically
-[x] WooCommerce content not attached automatically
-[x] credentials/tokens/prompts/logs/database/options not attached automatically
-[x] request types limited to implementation_support and business_customization
-[x] Kairoseth re-normalizes extension identity server-side
-[x] EN/ES desktop/mobile browser acceptance
+[x] optional privacy-bounded Kairoseth support CTA
 [x] WPCS + PHPCompatibilityWP blocking
 [x] official Plugin Check blocking
-[x] blockers = 0
+[x] WordPress/PHP runtime matrix blocking
 ```
 
-Canonical evidence: [`PHASE3A_ACCEPTANCE.md`](PHASE3A_ACCEPTANCE.md), [`PHASE3B_CONTEXTUAL_SUPPORT.md`](PHASE3B_CONTEXTUAL_SUPPORT.md), [`PHASE3C_ACCEPTANCE.md`](PHASE3C_ACCEPTANCE.md).
-
-**Phase 3 is complete.**
-
-## Phase 4 — Kairoseth Extensions integration — accepted
+## Phase 5B historical public release `0.5.0`
 
 ```text
-[x] extension registry slug = ai-search-optimizer
-[x] public route = https://kairoseth.com/products/ai-search-optimizer
-[x] EN/ES product copy matches implemented scope
-[x] server-side extension identity allow-list retained
-[x] Custom Requests uses bounded accepted context
-[x] public sitemap/shared SEO coverage includes product route
-[x] production proof passed
-[x] no false WordPress.org availability claim
-[x] blocking Phase 4 defects = 0
-```
-
-Canonical evidence: [`PHASE4_EXTENSIONS_INTEGRATION.md`](PHASE4_EXTENSIONS_INTEGRATION.md).
-
-**Phase 4 is complete.**
-
-## Phase 5A — stable candidate identity — accepted
-
-Accepted `0.5.0` identity:
-
-```text
-version             0.5.0
-source commit       b116ae5df76c7a72ad37ff4e8e80632d6ebb457b
-source tree         6a837ed67049ae04cdf59656cc15997a8d9bb7b3
-package             ai-search-optimizer-0.5.0.zip
-package bytes       29397
-package entries     13
-package SHA-256     0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e
-```
-
-```text
-[x] stable plugin/readme/connector metadata aligned
-[x] prerelease/development metadata rejected
-[x] WPCS + PHPCompatibilityWP PASS
-[x] official WordPress Plugin Check PASS
-[x] WP 5.6 / PHP 7.4 PASS
-[x] WP 6.8 / PHP 8.2 PASS
-[x] WP 7.1 / PHP 8.3 PASS
-[x] Multisite + WooCommerce PASS
-[x] real browser EN/ES PASS
-[x] byte-reproducible package PASS
-[x] PR #26 merged
-[x] PR CI #87 PASS
-[x] post-merge CI #88 PASS on attempt 2
-[x] blocking Phase 5A defects = 0
-```
-
-Canonical evidence: [`PHASE5A_STABLE_CANDIDATE.md`](PHASE5A_STABLE_CANDIDATE.md).
-
-**Phase 5A is complete.**
-
-## Phase 5B — public GitHub Release + final package lifecycle proof — accepted
-
-Accepted release identity:
-
-```text
-version                    0.5.0
 tag                        0.5.0
-annotated tag object       6433cca08a8d8a213f0c0326447910c5ee732ff5
-tag target                 b116ae5df76c7a72ad37ff4e8e80632d6ebb457b
+source commit              b116ae5df76c7a72ad37ff4e8e80632d6ebb457b
 source tree                6a837ed67049ae04cdf59656cc15997a8d9bb7b3
-GitHub Release ID          387492480
-package                    ai-search-optimizer-0.5.0.zip
 package bytes              29397
 package SHA-256            0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e
+GitHub Release ID          387492480
 publication run            34681042749
+```
+
+Canonical evidence: [`PHASE5B_GITHUB_RELEASE.md`](PHASE5B_GITHUB_RELEASE.md).
+
+## Phase 5C.1 — exact `0.5.1` package — accepted
+
+```text
+version                    0.5.1
+source commit              c93ac68c3698fa2c7e003dabc41f72e2e423b5cd
+source tree                e1cc7c3f017e92a5ed3de8835e3f9c8764f3d37b
+package                    ai-search-optimizer-0.5.1.zip
+package bytes              29560
+package entries            13
+package SHA-256            2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b
+final implementation CI    #107 / run 34692689075 — PASS
+implementation merge       c93ac68c3698fa2c7e003dabc41f72e2e423b5cd
+post-merge main CI         #108 / run 34692826856 — PASS
+closure CI                 #109 / run 34693128380 — PASS
+closure post-merge CI      #110 / run 34695428487 — PASS
+```
+
+```text
+[x] Version/connector/Stable tag = 0.5.1
+[x] stale packaged pre-publication wording removed
+[x] Plugin URI and Author URI remain absent
+[x] package contents PASS
+[x] WPCS + PHPCompatibilityWP PASS
+[x] official Plugin Check PASS
+[x] WP 5.6/PHP 7.4 PASS
+[x] WP 6.8/PHP 8.2 PASS
+[x] WP 7.1/PHP 8.3 PASS
+[x] Multisite + WooCommerce PASS
+[x] browser EN/ES PASS
+[x] CTA production EN/ES × both request types PASS
+[x] clean install PASS
+[x] 0.5.0 → 0.5.1 upgrade PASS
+[x] preserve/reinstall/delete lifecycle PASS
+[x] reproducible package PASS
+```
+
+## Phase 5C.2 — public GitHub Release `0.5.1` — accepted
+
+```text
+publication tooling PR     #34
+PR CI                      #111 / run 34695699823 — PASS
+publication tooling merge  108f276dc0774b6cf9c85d77d14546d01495cfc1
+post-merge main CI         #112 / run 34695819740 — PASS
+publication run            34695973744 — PASS
+annotated tag object       32a51daf4e32a8919114b6dc734a54a00952aed0
+tag target                 c93ac68c3698fa2c7e003dabc41f72e2e423b5cd
+GitHub Release ID          387576797
+published at               2026-09-12T13:17:34Z
+ZIP asset ID               559297134
+ZIP asset bytes            29560
+ZIP asset digest           sha256:2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b
+checksum asset ID          559297135
+manifest asset ID          559297132
 ```
 
 Acceptance gates:
 
 ```text
-[x] annotated tag 0.5.0 points to the accepted source
-[x] public GitHub Release is tied to tag 0.5.0
-[x] published ZIP SHA-256 equals the accepted Phase 5A package
-[x] checksum and release manifest are published
-[x] uploaded ZIP is downloaded back and byte-compared before publication
-[x] clean install from exact release package PASS
-[x] exact historical 0.4.0 rebuild/SHA proof PASS
-[x] 0.4.0 -> 0.5.0 in-place upgrade PASS
-[x] verified deployment survives upgrade unchanged
-[x] preserve uninstall + reinstall recovery PASS
-[x] delete uninstall PASS
-[x] release/tag/package drift fails closed
-[x] WPCS + PHPCompatibilityWP PASS
-[x] official WordPress Plugin Check PASS
-[x] WP 5.6 / PHP 7.4 PASS
-[x] WP 6.8 / PHP 8.2 PASS
-[x] WP 7.1 / PHP 8.3 PASS
-[x] Multisite + WooCommerce PASS
-[x] real browser EN/ES PASS
-[x] production CTA HTTP 200 in EN/ES for both request types
-[x] CTA retains canonical AI Search Optimizer identity and bounded context
-[x] CTA gate executes before any public release mutation
-[x] PR #28 / CI #93 / post-merge CI #94 accepted
-[x] PR #29 / CI #98 / post-merge CI #99 accepted
-[x] publication workflow run 34681042749 PASS
-[x] no false WordPress.org availability claim
-[x] blocking Phase 5B defects = 0
+[x] no pre-existing 0.5.1 tag/release before publication
+[x] trigger branch created from exact green main
+[x] live CTA 0.5.1 EN/ES gate PASS before mutation
+[x] annotated tag 0.5.1 points exactly to accepted source c93ac68c...
+[x] accepted source tree e1cc7c3... verified
+[x] exact 0.5.1 SHA/bytes/entries verified before upload
+[x] exact accepted 0.5.0 baseline rebuilt for upgrade proof
+[x] lifecycle proof PASS before release mutation
+[x] GitHub Release created as draft first
+[x] ZIP/checksum/manifest downloaded back from GitHub
+[x] downloaded ZIP byte-identical to accepted package
+[x] downloaded SHA/bytes/entries exact
+[x] second lifecycle proof PASS against downloaded ZIP
+[x] release made public only after all checks
+[x] public release is draft=false and prerelease=false
+[x] published ZIP digest equals accepted 5C.1 SHA
+[x] WordPress.org availability not falsely claimed
+[x] blocking 5C.2 defects = 0
 ```
 
-The publication workflow creates a draft first, verifies the uploaded assets by downloading them back from GitHub, reruns lifecycle acceptance against that downloaded ZIP, and only then makes the release public. A pre-publication failure cleans draft/tag state rather than leaving partial release state.
+Canonical evidence: [`PHASE5C2_GITHUB_RELEASE.md`](PHASE5C2_GITHUB_RELEASE.md).
 
-The production CTA preflight verifies `https://kairoseth.com/custom-requests` for EN/ES and both supported request types. The tag is annotated but unsigned; integrity is pinned by exact source/tree/package SHA, reproducible build and asset round-trip verification.
+**Phase 5C.2 is complete.**
 
-Canonical evidence: [`PHASE5B_GITHUB_RELEASE.md`](PHASE5B_GITHUB_RELEASE.md). Durable incidents: [`CI_INCIDENTS.md`](CI_INCIDENTS.md).
+## Phase 5C.3 — external WordPress.org gate — next
 
-**Phase 5B is complete.**
+The next action is to submit the exact released ZIP with SHA-256 `2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b` to WordPress.org. Review/approval and actual directory publication remain external gates.
 
-## Phase 5C — WordPress.org publication gate — in progress
-
-### 5C.0 — submission-hardening contract — accepted
-
-The WordPress.org preflight found a real release-metadata issue before submission: the immutable public `0.5.0` package contains stale pre-publication copy in bundled `readme.txt`. The accepted `0.5.0` package must not be modified under the same version, so the submission line advances to `0.5.1`.
-
-```text
-[x] 0.5.0 immutable release identity preserved
-[x] stale packaged readme statement identified before WordPress.org upload
-[x] 0.5.1 selected as minimal submission-hardening patch
-[x] Plugin URI / Author URI same-value rejection class explicitly prevented
-[x] current header intentionally keeps both URI fields absent
-[x] MIT confirmed as GPL-compatible for directory policy
-[x] Tested up to 7.1 matches tested/current release baseline
-[x] local-first / no-silent-telemetry boundary preserved
-[x] external Kairoseth Custom Requests service explicitly documented
-[x] no WordPress.org availability claim made
-```
-
-### 5C.1 — exact 0.5.1 submission package — accepted
-
-Accepted identity:
-
-```text
-version              0.5.1
-package              ai-search-optimizer-0.5.1.zip
-package bytes        29560
-package entries      13
-package SHA-256      2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b
-PR                   #32
-PR head              78f36816bd7bedc5f907f2d6ab9ad4fbf5898d4c
-final PR CI           #107 / run 34692689075 — PASS
-merge commit          c93ac68c3698fa2c7e003dabc41f72e2e423b5cd
-source tree           e1cc7c3f017e92a5ed3de8835e3f9c8764f3d37b
-post-merge main CI    #108 / run 34692826856 — PASS
-```
-
-Technical acceptance:
-
-```text
-[x] plugin Version = 0.5.1
-[x] connector version constant = 0.5.1
-[x] Stable tag = 0.5.1
-[x] stale 0.5.0 pre-publication statement removed from packaged readme.txt
-[x] concise 0.5.1 changelog entry added
-[x] no Plugin URI / Author URI equality hazard
-[x] readme/external-service policy review complete
-[x] package contents PASS
-[x] WPCS + PHPCompatibilityWP PASS
-[x] official Plugin Check PASS — No errors found
-[x] WP 5.6 / PHP 7.4 PASS
-[x] WP 6.8 / PHP 8.2 PASS
-[x] WP 7.1 / PHP 8.3 PASS
-[x] Multisite + WooCommerce PASS
-[x] real browser EN/ES PASS
-[x] production CTA preflight PASS
-[x] clean install 0.5.1 PASS
-[x] 0.5.0 -> 0.5.1 upgrade PASS with expected state preserved
-[x] preserve/reinstall/delete lifecycle PASS
-[x] byte-reproducible package PASS
-[x] PR #32 merged
-[x] post-merge main CI PASS with identical package SHA
-```
-
-CI #104's transient CTA HTTP 403 is recorded in [`CI_INCIDENTS.md`](CI_INCIDENTS.md). Subsequent CI proved both curl-default and browser-equivalent HTTP 200 without Kairoseth application-code or packaged-product changes; the exact upstream edge condition behind the earlier 403 remains unconfirmed rather than being mislabeled as a version defect.
-
-Canonical contract/evidence: [`PHASE5C_WORDPRESS_ORG_SUBMISSION.md`](PHASE5C_WORDPRESS_ORG_SUBMISSION.md).
-
-**Phase 5C.1 is complete.**
-
-### 5C.2 — immutable 0.5.1 GitHub release — next
-
-The public release must preserve the accepted package exactly:
-
-```text
-expected package SHA-256  2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b
-expected bytes            29560
-expected entries          13
-```
-
-The release/tag publication must fail closed on identity drift and must not mutate the already accepted packaged files.
-
-### Remaining external/publication gates
-
-```text
-[ ] immutable GitHub 0.5.1 tag/release published
-[ ] exact released 0.5.1 package SHA = frozen candidate SHA
-[ ] WordPress.org submission uses that exact ZIP
-[ ] external WordPress.org review/approval completes successfully
-[ ] directory listing is actually published
-[ ] only then customer/catalog copy may claim WordPress.org availability
-```
-
-`ai-search-optimizer` remains the target directory slug until actually accepted/reserved.
+`ai-search-optimizer` remains only the target slug until the directory accepts/reserves it. No customer-facing copy may claim WordPress.org availability until the listing is genuinely live.
 
 ## Claims gate
 
