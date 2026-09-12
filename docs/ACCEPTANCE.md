@@ -1,7 +1,7 @@
 # AI Search Optimizer — Acceptance
 
-Status: **Phases 0–3 accepted; Phase 4 is the next permitted workstream; public WordPress.org distribution not yet claimed**  
-Last reviewed: **11 September 2026**
+Status: **Phases 0–4 and Phase 5A accepted; Phase 5B is the next permitted workstream; WordPress.org availability not yet claimed**  
+Last reviewed: **12 September 2026**
 
 ## Engineering inheritance
 
@@ -109,7 +109,7 @@ Canonical evidence: [`PHASE3B_CONTEXTUAL_SUPPORT.md`](PHASE3B_CONTEXTUAL_SUPPORT
 
 ## Phase 3C — WordPress.org support/privacy hardening — accepted
 
-Phase 3C adds and accepts the quality/release-discipline baseline without converting the plugin into trialware or weakening its privacy boundary.
+Phase 3C added and accepted the quality/release-discipline baseline without converting the plugin into trialware or weakening its privacy boundary.
 
 ```text
 [x] WPCS blocking over production PHP
@@ -132,7 +132,7 @@ Phase 3C adds and accepts the quality/release-discipline baseline without conver
 [x] blocking Phase 3C defects = 0
 ```
 
-Post-merge development package:
+Historical post-merge development package:
 
 ```text
 source commit       393c35e67724b69ed6c7a4728b7d5a8595ee8169
@@ -147,30 +147,107 @@ Canonical evidence: [`PHASE3C_ACCEPTANCE.md`](PHASE3C_ACCEPTANCE.md).
 
 **Phase 3 is complete.**
 
-## Phase 4 — Kairoseth Extensions `Available` gate — next / not started
+## Phase 4 — Kairoseth Extensions integration — accepted
 
-Phase 4 is unblocked by Phase 3 acceptance but is not yet accepted. `Available` requires:
+The canonical extension identity and public product route are integrated into Kairoseth while preserving truthful distribution state.
 
-- canonical registry/product record;
-- real and truthful public plugin identity/version/distribution state;
-- contextual Custom Request path accepted;
-- user-initiated share if included in the shared Extensions contract;
-- required Kairoseth Platform CI and production verification.
+```text
+[x] extension registry slug = ai-search-optimizer
+[x] public route = https://kairoseth.com/products/ai-search-optimizer
+[x] EN/ES product copy matches implemented scope
+[x] server-side extension identity allow-list retained
+[x] Custom Requests uses bounded accepted context
+[x] public sitemap/shared SEO coverage includes product route
+[x] Kairoseth Platform PR #225 merged and verified
+[x] Kairoseth Platform PR #226 merged and verified
+[x] post-merge Production Smoke #132 PASS on attempt 2
+[x] AI Web Readiness Production Proof #32 PASS
+[x] no false WordPress.org availability claim
+[x] blocking Phase 4 defects = 0
+```
 
-The extension may remain `Building` until all Phase 4 gates are complete.
+Canonical evidence: [`PHASE4_EXTENSIONS_INTEGRATION.md`](PHASE4_EXTENSIONS_INTEGRATION.md).
 
-## Phase 5 — WordPress.org publication gate
+**Phase 4 is complete.**
+
+## Phase 5A — stable candidate identity — accepted
+
+The development line was deliberately promoted to stable candidate `0.5.0` and accepted only after PR and post-merge validation.
+
+Accepted identity:
+
+```text
+version             0.5.0
+source commit       b116ae5df76c7a72ad37ff4e8e80632d6ebb457b
+source tree         6a837ed67049ae04cdf59656cc15997a8d9bb7b3
+package             ai-search-optimizer-0.5.0.zip
+package bytes       29397
+package entries     13
+package SHA-256     0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e
+CI artifact ID      10290013554
+```
+
+Acceptance gates:
+
+```text
+[x] plugin header = 0.5.0
+[x] connector version = 0.5.0
+[x] WordPress Stable tag = 0.5.0
+[x] stale -dev/prerelease metadata rejected
+[x] stable package builder rejects prerelease version strings
+[x] PHP syntax PASS
+[x] shell syntax PASS
+[x] contract/security/local Free/publication/lifecycle regressions PASS
+[x] responsive/accessibility regression PASS
+[x] Kairoseth contextual-support privacy regression PASS
+[x] WPCS + PHPCompatibilityWP PASS
+[x] official WordPress Plugin Check PASS
+[x] WordPress 5.6 / PHP 7.4 packaged runtime PASS
+[x] WordPress 6.8 / PHP 8.2 packaged runtime PASS
+[x] WordPress 7.1 / PHP 8.3 packaged runtime PASS
+[x] Multisite + WooCommerce PASS
+[x] real browser EN/ES admin UX PASS
+[x] stable package byte reproducibility PASS
+[x] release manifest/checksum/artifact produced
+[x] PR #26 merged
+[x] PR CI #87 / run 34670016667 PASS
+[x] post-merge CI #88 / run 34670143261 PASS on attempt 2
+[x] blocking Phase 5A defects = 0
+```
+
+CI #88 attempt 1 failed in `Runtime WP 5.6 / PHP 7.4` before WordPress started because Docker Hub reset the connection during authentication for the WordPress image pull. Exit `125`; signature `bf51ce903a3c0225ead510f42cb6594f4119f069df93e762f9d6c2edab72a8a5`. No code was changed. Re-running only that failed job passed and unlocked final reproducible package evidence. This is a confirmed external infrastructure incident, not a product regression.
+
+Canonical evidence: [`PHASE5A_STABLE_CANDIDATE.md`](PHASE5A_STABLE_CANDIDATE.md). Durable incident record: [`CI_INCIDENTS.md`](CI_INCIDENTS.md).
+
+**Phase 5A is complete.**
+
+## Phase 5B — immutable GitHub release + final package lifecycle proof — next
+
+Phase 5B is the next permitted workstream. Acceptance requires:
+
+```text
+[ ] immutable tag 0.5.0 points to the accepted source
+[ ] GitHub Release is tied to the accepted tag/source
+[ ] published ZIP/checksum match accepted/reproducible identity
+[ ] clean install from released ZIP PASS
+[ ] upgrade from accepted prior candidate to 0.5.0 PASS
+[ ] deactivate + preserve uninstall path PASS
+[ ] deactivate + delete uninstall path PASS
+[ ] release/tag/package identity drift fails closed
+[ ] blocking security/privacy/accessibility defects = 0
+```
+
+Phase 5B may not silently redefine the accepted `0.5.0` source tree or package identity.
+
+## Phase 5C — WordPress.org publication gate — blocked by Phase 5B
 
 Directory availability must not be claimed until:
 
-- a deliberate stable complete version exists;
-- plugin header and `readme.txt` metadata agree;
-- immutable Git tag and GitHub Release package/checksum exist;
-- the final package passes official Plugin Check and repository release gates;
+- the final release package remains Plugin Check clean;
 - external services are fully and plainly documented;
 - no prohibited trialware/tracking/deceptive claims/admin hijacking exist;
 - code/assets/dependencies have compatible licensing;
-- install/upgrade/deactivate/uninstall acceptance passes on the final package;
+- WordPress.org submission uses the accepted release metadata/package;
 - WordPress.org independently approves and publishes the plugin.
 
 `ai-search-optimizer` remains only the target directory slug until actually accepted/reserved.
