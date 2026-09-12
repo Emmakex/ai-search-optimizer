@@ -15,8 +15,8 @@ These rules inherit the Kairoseth global engineering baseline and apply to this 
 11. **Feature branch → PR → CI → merge → release verification.** No release-only shortcut.
 12. **Independent repository CI.** This repository owns PHP/static tests, package validation and WordPress-specific acceptance.
 13. **No false release truth.** Source on `main` is not automatically an Available product, WordPress.org listing or stable public release.
-14. **Learn from failures.** Non-obvious build/test/runtime/WordPress failures and their verified fixes are recorded before related work advances.
-15. **Actionable diagnostics.** Failures should produce product/version, host version, operation, primary error, normalized signature, root-cause status, recovery/fix and validation evidence.
+14. **Learn from failures.** Non-obvious build/test/runtime/WordPress failures and their verified fixes or recoveries are recorded in [`CI_INCIDENTS.md`](CI_INCIDENTS.md) before related work advances. A repeated failure may reuse a prior classification only when its signature and failure boundary actually match.
+15. **Actionable diagnostics.** Failures should produce product/version, pipeline/job/step, command, exit code, primary error, file/line when available, normalized signature, root-cause status, recovery/fix and validation evidence.
 16. **No hidden telemetry.** Remote transmission/analytics must be explicit, necessary for the feature, documented and compliant with host/store policy.
 17. **Compatibility is a contract.** Legacy REST/capability/state identifiers are not renamed casually; breaking changes require migration, versioning and regression evidence.
 18. **Package provenance.** Release ZIPs come from repository source/CI and are tied to an immutable tag/commit with checksum when releases begin.

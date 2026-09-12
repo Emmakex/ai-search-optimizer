@@ -4,7 +4,7 @@
 
 [English](#english) · [Español](#español)
 
-Status: **Stable candidate `0.5.0` — release metadata aligned and final public-distribution validation in progress; WordPress.org publication not yet claimed**
+Status: **Stable candidate `0.5.0` accepted in Phase 5A; immutable GitHub release and final packaged lifecycle proof are next; WordPress.org publication is not yet claimed**
 
 ```text
 Product: AI Search Optimizer
@@ -12,7 +12,7 @@ Host: WordPress / WooCommerce
 Technical slug: ai-search-optimizer
 WordPress text domain: ai-search-optimizer
 License: MIT
-Current stable candidate: 0.5.0
+Current accepted stable candidate: 0.5.0
 Historical accepted Free release candidate: 0.4.0
 ```
 
@@ -39,7 +39,7 @@ Safeguards include a dedicated least-privilege WordPress capability/role for the
 
 ### Optional Kairoseth support
 
-The `0.5.0` stable candidate includes an administrator-only **Tools → AI Search Optimizer Support** page with two optional actions:
+The accepted `0.5.0` stable candidate includes an administrator-only **Tools → AI Search Optimizer Support** page with two optional actions:
 
 - **Improve with Kairoseth** — implementation guidance and help improving an AI Search / llms.txt setup.
 - **Request custom development** — tailored integrations, automation, workflows and additional features.
@@ -84,9 +84,22 @@ Deactivation preserves the stored `llms.txt` deployment and uninstall preference
 
 See [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md).
 
-### Stable candidate 0.5.0
+### Accepted stable candidate 0.5.0
 
-`0.5.0` is the current stable candidate. Its final source commit/tree/package SHA-256 are intentionally not frozen in this README until Phase 5A acceptance completes after PR and post-merge CI.
+Phase 5A accepted the exact reproducible candidate below after PR and post-merge validation:
+
+```text
+version            0.5.0
+source commit      b116ae5df76c7a72ad37ff4e8e80632d6ebb457b
+source tree        6a837ed67049ae04cdf59656cc15997a8d9bb7b3
+package            ai-search-optimizer-0.5.0.zip
+package bytes      29397
+package entries    13
+package SHA-256    0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e
+CI artifact ID     10290013554
+```
+
+The candidate package was built twice with the same SHA-256. PR CI #87 passed, and post-merge `main` CI #88 passed on attempt 2 after a transient Docker Hub connection reset in the WP 5.6/PHP 7.4 image pull was diagnosed and re-run without any code change.
 
 The historical accepted `0.4.0` candidate remains preserved as prior evidence:
 
@@ -102,9 +115,9 @@ package SHA-256    27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd5
 
 ### WordPress.org readiness
 
-WordPress.org compatibility is a design constraint, not a post-release cleanup task. Phase 3 hardening is accepted: production PHP passes WordPress Coding Standards and PHPCompatibilityWP, and CI blocks on the official WordPress Plugin Check in addition to the WordPress/PHP runtime matrix, Multisite/WooCommerce checks, EN/ES browser acceptance and reproducible package evidence.
+WordPress.org compatibility is a design constraint, not a post-release cleanup task. Production PHP passes WordPress Coding Standards and PHPCompatibilityWP, and CI blocks on the official WordPress Plugin Check in addition to the WordPress/PHP runtime matrix, Multisite/WooCommerce checks, EN/ES browser acceptance and reproducible package evidence.
 
-The stable `0.5.0` metadata is now the candidate line, but the plugin is not yet claimed as published on WordPress.org. Final public distribution still requires accepted reproducible package evidence, immutable tag/GitHub Release work, final install/upgrade/uninstall release proof, final policy/readme review and successful external WordPress.org approval.
+The exact stable `0.5.0` candidate is accepted, but the plugin is **not yet claimed as published on WordPress.org**. Phase 5B must still create the immutable `0.5.0` tag/GitHub Release and prove clean install, upgrade, deactivate and uninstall behavior from the released package. WordPress.org submission/review remains a later external gate.
 
 `ai-search-optimizer` remains the target WordPress.org slug until it is actually accepted/reserved.
 
@@ -135,7 +148,7 @@ Las protecciones incluyen capability/rol WordPress de mínimo privilegio para el
 
 ### Soporte Kairoseth opcional
 
-El candidato estable `0.5.0` incluye **Herramientas → Soporte de AI Search Optimizer** con dos acciones opcionales:
+El candidato estable aceptado `0.5.0` incluye **Herramientas → Soporte de AI Search Optimizer** con dos acciones opcionales:
 
 - **Mejorar con Kairoseth** — orientación de implementación y ayuda para mejorar la configuración AI Search / llms.txt.
 - **Solicitar desarrollo a medida** — integraciones, automatizaciones, flujos y funciones adaptadas.
@@ -180,9 +193,22 @@ Desactivar conserva el despliegue `llms.txt` y la preferencia de desinstalación
 
 Consulta [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md).
 
-### Candidato estable 0.5.0
+### Candidato estable 0.5.0 aceptado
 
-`0.5.0` es el candidato estable actual. Su commit/tree/SHA-256 definitivos se congelarán únicamente cuando termine la aceptación de Fase 5A tras CI del PR y CI post-merge.
+La Fase 5A aceptó la identidad reproducible exacta siguiente tras validar PR y `main` post-merge:
+
+```text
+versión             0.5.0
+commit fuente       b116ae5df76c7a72ad37ff4e8e80632d6ebb457b
+tree fuente         6a837ed67049ae04cdf59656cc15997a8d9bb7b3
+paquete             ai-search-optimizer-0.5.0.zip
+bytes               29397
+entradas            13
+SHA-256             0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e
+artifact CI ID      10290013554
+```
+
+El paquete se construyó dos veces con el mismo SHA-256. El CI #87 del PR pasó y el CI #88 post-merge de `main` pasó en el intento 2 después de diagnosticar un reset transitorio de Docker Hub durante la descarga de la imagen WP 5.6/PHP 7.4; no fue necesario modificar código.
 
 Se conserva la evidencia histórica del candidato `0.4.0`:
 
@@ -198,9 +224,9 @@ SHA-256             27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd
 
 ### Preparación para WordPress.org
 
-La compatibilidad con WordPress.org se trata como una restricción de diseño desde el desarrollo. El hardening de la Fase 3 está aceptado: el PHP de producción supera WordPress Coding Standards y PHPCompatibilityWP, y el CI bloquea con WordPress Plugin Check oficial, matriz WordPress/PHP, Multisite/WooCommerce, navegador EN/ES y empaquetado reproducible.
+La compatibilidad con WordPress.org se trata como una restricción de diseño desde el desarrollo. El PHP de producción supera WordPress Coding Standards y PHPCompatibilityWP, y el CI bloquea con WordPress Plugin Check oficial, matriz WordPress/PHP, Multisite/WooCommerce, navegador EN/ES y empaquetado reproducible.
 
-La metadata estable `0.5.0` es ahora la línea candidata, pero todavía no se afirma que el plugin esté publicado en WordPress.org. La distribución pública final requiere evidencia reproducible aceptada, tag/GitHub Release inmutables, prueba final install/upgrade/uninstall, revisión de políticas/readme y aprobación externa de WordPress.org.
+El candidato estable exacto `0.5.0` está aceptado, pero **todavía no se afirma que el plugin esté publicado en WordPress.org**. La Fase 5B debe crear el tag inmutable `0.5.0`/GitHub Release y probar instalación limpia, actualización, desactivación y desinstalación desde el paquete publicado. El envío/revisión de WordPress.org seguirá siendo una puerta externa posterior.
 
 `ai-search-optimizer` sigue siendo el slug objetivo hasta su aceptación/reserva real.
 
@@ -221,7 +247,9 @@ AI Search Optimizer mejora la preparación y proporciona evidencia técnica repr
 - [`docs/PHASE3A_ACCEPTANCE.md`](docs/PHASE3A_ACCEPTANCE.md)
 - [`docs/PHASE3B_CONTEXTUAL_SUPPORT.md`](docs/PHASE3B_CONTEXTUAL_SUPPORT.md)
 - [`docs/PHASE3C_ACCEPTANCE.md`](docs/PHASE3C_ACCEPTANCE.md)
+- [`docs/PHASE4_EXTENSIONS_INTEGRATION.md`](docs/PHASE4_EXTENSIONS_INTEGRATION.md)
 - [`docs/PHASE5A_STABLE_CANDIDATE.md`](docs/PHASE5A_STABLE_CANDIDATE.md)
+- [`docs/CI_INCIDENTS.md`](docs/CI_INCIDENTS.md)
 - [`docs/ENGINEERING_RULES.md`](docs/ENGINEERING_RULES.md)
 - [`SECURITY.md`](SECURITY.md)
 

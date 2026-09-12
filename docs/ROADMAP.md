@@ -1,7 +1,7 @@
 # AI Search Optimizer — Roadmap
 
-Status: **Phase 4 complete — Kairoseth Extensions integration accepted; Phase 5 stable public distribution / WordPress.org is the next release-gated workstream**  
-Last reviewed: **11 September 2026**
+Status: **Phase 5A complete — exact `0.5.0` stable candidate accepted; Phase 5B immutable tag/GitHub Release and final packaged lifecycle proof is next**  
+Last reviewed: **12 September 2026**
 
 ```text
 Phase 0  product/repository foundation              COMPLETE
@@ -15,7 +15,10 @@ Phase 3  optional support / custom-development UX  COMPLETE
   3B     contextual support + custom CTA            COMPLETE
   3C     support/privacy + directory hardening      COMPLETE
 Phase 4  Extensions catalog integration            COMPLETE
-Phase 5  stable public distribution / WordPress.org NEXT / RELEASE-GATED
+Phase 5  stable public distribution / WordPress.org IN PROGRESS / RELEASE-GATED
+  5A     stable candidate identity                 COMPLETE
+  5B     immutable GitHub release + lifecycle proof NEXT
+  5C     WordPress.org submission/review           BLOCKED BY 5B
 ```
 
 ## Product model
@@ -171,8 +174,8 @@ Accepted contract:
 - canonical Extensions registry slug is `ai-search-optimizer`;
 - public route is `https://kairoseth.com/products/ai-search-optimizer`;
 - public EN/ES copy and metadata describe the real plugin scope;
-- catalog status remains `building` at `0.5.0-dev`;
-- no stable download or WordPress.org availability is claimed;
+- catalog status remains `building` until a public distribution channel is actually released;
+- no WordPress.org availability is claimed;
 - Custom Requests uses the already accepted server-side extension allow-list and bounded context;
 - no separate share workflow was invented because it is not part of the accepted AI Search Optimizer Extensions contract;
 - public sitemap and shared SEO regression coverage include the canonical route;
@@ -204,23 +207,60 @@ Canonical acceptance record: [`PHASE4_EXTENSIONS_INTEGRATION.md`](PHASE4_EXTENSI
 
 **Phase 4 is closed.**
 
-## Phase 5 — stable public distribution / WordPress.org — next / release-gated
+## Phase 5 — stable public distribution / WordPress.org — in progress / release-gated
 
-Required before submission/release:
+### 5A — exact stable candidate identity — complete
 
-- deliberate stable version and matching plugin/readme metadata;
-- immutable Git tag and GitHub Release package/checksum;
-- reproducible accepted package;
-- official WordPress Plugin Check PASS;
+`0.5.0` has been deliberately promoted from the development line and accepted as the exact reproducible stable candidate.
+
+```text
+implementation PR                 #26 merged
+PR CI                             #87 / run 34670016667 — PASS
+main merge SHA                    b116ae5df76c7a72ad37ff4e8e80632d6ebb457b
+source tree                       6a837ed67049ae04cdf59656cc15997a8d9bb7b3
+post-merge CI                     #88 / run 34670143261 — PASS on attempt 2
+package                           ai-search-optimizer-0.5.0.zip
+package bytes                     29397
+package entries                   13
+package SHA-256                   0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e
+CI artifact ID                    10290013554
+blocking Phase 5A defects         0
+```
+
+CI #88 attempt 1 failed only because Docker Hub reset the connection while the WP 5.6/PHP 7.4 job attempted to pull `wordpress:5.6-php7.4-apache`. The failure occurred before the WordPress container started, had exit code `125` and signature `bf51ce903a3c0225ead510f42cb6594f4119f069df93e762f9d6c2edab72a8a5`. No code change was made. Re-running only the failed job passed, after which final reproducible package evidence also passed. The strict runtime gate remains unchanged.
+
+Canonical acceptance record: [`PHASE5A_STABLE_CANDIDATE.md`](PHASE5A_STABLE_CANDIDATE.md). Durable incident record: [`CI_INCIDENTS.md`](CI_INCIDENTS.md).
+
+**Phase 5A is closed.**
+
+### 5B — immutable GitHub release + final package lifecycle proof — next
+
+Required before Phase 5B acceptance:
+
+- immutable `0.5.0` Git tag points to the accepted source;
+- GitHub Release is tied to that tag/source;
+- released ZIP/checksum match accepted/reproducible package identity;
+- real clean install from the released package passes;
+- real upgrade path from the accepted prior candidate to `0.5.0` passes;
+- deactivate/uninstall preserve/delete behavior passes using the released package;
+- release/tag/package identity drift fails closed;
+- no blocking security/privacy/accessibility defect remains.
+
+Phase 5B must follow the same evidence-first release process and may not redefine the accepted `0.5.0` source tree silently.
+
+### 5C — WordPress.org submission/review — blocked by 5B
+
+Required before any directory availability claim:
+
 - final WordPress.org policy/readme/external-service acceptance;
 - compatible code/assets/licenses;
-- real install/upgrade/uninstall acceptance from the final package;
-- no blocking security/privacy/accessibility defects;
-- WordPress.org external review/approval before claiming directory availability.
+- official Plugin Check remains PASS on the final package;
+- WordPress.org submission is made using the accepted release package/metadata;
+- external WordPress.org review/approval completes successfully.
 
 `ai-search-optimizer` remains only the target WordPress.org slug until actually accepted/reserved.
 
-Phase 5 must again follow feature branch → PR → CI → merge → production/release verification. A stable version or directory claim cannot be made from documentation alone.
+Phase 5 must continue to follow feature branch → PR → CI → merge → release verification. A stable version, GitHub Release or directory claim cannot be made from documentation alone.
 
 ## Post-v1 candidates
 
