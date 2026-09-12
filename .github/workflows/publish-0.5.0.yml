@@ -1,0 +1,52 @@
+name: Publish GitHub Release 0.5.0
+
+on:
+  create:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    if: >-
+      github.event.ref_type == 'branch' &&
+      github.event.ref == 'release/publish-0.5.0' &&
+      github.actor == 'Emmakex'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Verify one-shot trigger branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected="$(git rev-parse HEAD)"
+          trigger="$(git ls-remote origin refs/heads/release/publish-0.5.0 | awk '{print $1}')"
+          if [[ -z "$trigger" || "$trigger" != "$expected" ]]; then
+            echo "Publication trigger branch must be created directly from current main." >&2
+            echo "main=$expected trigger=${trigger:-missing}" >&2
+            exit 1
+          fi
+
+      - name: Environment
+        run: |
+          git --version
+          gh --version
+          docker --version
+          php --version
+          node --version
+          curl --version | head -n 1
+
+      - name: Verify Kairoseth CTA production target
+        run: bash scripts/ci-run.sh "Kairoseth CTA production contract" bash scripts/verify-kairoseth-cta.sh
+
+      - name: Publish verified 0.5.0 GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/ci-run.sh "GitHub Release 0.5.0 publication" bash scripts/publish-github-release.sh
