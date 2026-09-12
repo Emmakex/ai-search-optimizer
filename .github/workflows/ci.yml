@@ -49,8 +49,8 @@ jobs:
       - name: Kairoseth contextual support regression
         run: bash scripts/ci-run.sh "Kairoseth contextual support regression" php tests/kairoseth-support-check.php
 
-      - name: Development and release metadata alignment
-        run: bash scripts/ci-run.sh "Development and release metadata alignment" php tests/release-metadata-check.php
+      - name: Stable release metadata alignment
+        run: bash scripts/ci-run.sh "Stable release metadata alignment" php tests/release-metadata-check.php
 
       - name: Build plugin package
         run: bash scripts/ci-run.sh "Build plugin package" bash scripts/build-plugin.sh
@@ -232,7 +232,7 @@ jobs:
         run: bash scripts/ci-run.sh "Real browser admin UX EN/ES" bash scripts/runtime-admin-ux.sh
 
   package_evidence:
-    name: Reproducible development package evidence
+    name: Reproducible stable candidate package evidence
     needs: [validate, php_quality, wordpress_plugin_check, runtime, multisite_woocommerce, admin_ux]
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -241,20 +241,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build reproducible development package
-        run: bash scripts/ci-run.sh "Development package reproducibility" bash scripts/build-development-package.sh
+      - name: Build reproducible stable candidate package
+        run: bash scripts/ci-run.sh "Stable candidate package reproducibility" bash scripts/build-release-candidate.sh
 
-      - name: Verify development package contents
-        run: bash scripts/ci-run.sh "Development package contents" bash scripts/check-package.sh
+      - name: Verify stable candidate package contents
+        run: bash scripts/ci-run.sh "Stable candidate package contents" bash scripts/check-package.sh
 
-      - name: Publish CI development-package evidence
+      - name: Publish CI stable-candidate package evidence
         uses: actions/upload-artifact@v4
         with:
-          name: ai-search-optimizer-development-package-${{ github.sha }}
+          name: ai-search-optimizer-stable-candidate-${{ github.sha }}
           path: |
             dist/ai-search-optimizer-*.zip
             dist/ai-search-optimizer-*.sha256
-            dist/development-manifest.txt
+            dist/release-manifest.txt
           if-no-files-found: error
           retention-days: 30
           compression-level: 0

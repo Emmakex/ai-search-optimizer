@@ -4,9 +4,9 @@ AI Search Optimizer is a local-first WordPress extension that can publish a site
 
 ## Supported versions
 
-`0.4.0` is the accepted standalone Free release candidate and remains identified by its accepted source commit/tree/package SHA-256. It is not yet claimed as publicly distributed through GitHub Releases or WordPress.org.
+`0.4.0` is the historical accepted standalone Free release candidate and remains identified by its accepted source commit/tree/package SHA-256. It is not claimed as publicly distributed through GitHub Releases or WordPress.org.
 
-`0.5.0-dev` is the current development line. It is not a release candidate or public release. Development packages must remain reproducible and must not overwrite or redefine the accepted 0.4.0 package identity.
+`0.5.0` is the current stable candidate. It is undergoing Phase 5A release acceptance and is not yet claimed as an official public GitHub Release or as published on WordPress.org. Stable-candidate packages must remain reproducible and must not overwrite or redefine the accepted 0.4.0 package identity.
 
 A new blocking security or WordPress.org policy finding affecting a candidate before public distribution must reopen the relevant acceptance decision. Public-user support begins when an official distribution channel is published.
 
@@ -107,7 +107,7 @@ See [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md).
 
 ## Release integrity
 
-The accepted `0.4.0` release-candidate package is identified by:
+The historical accepted `0.4.0` release-candidate package is identified by:
 
 ```text
 source commit      4d68b111d1f796fdc9bfbc3e670eeecc69c09a76
@@ -115,9 +115,9 @@ source tree        472e8c5e5bc20ed8f4eed412ab5515561b89ff16
 package SHA-256    27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c
 ```
 
-The repository build process normalizes package metadata. The 0.5.0 development line uses separate reproducible package evidence. Official WordPress Plugin Check is a blocking CI dependency for new development-package evidence; later public submission still requires final stable-version metadata, package/release acceptance and external WordPress.org review.
+The repository build process normalizes package metadata. The `0.5.0` stable candidate uses separate reproducible release-candidate evidence containing the exact source commit/tree, package bytes/entries and SHA-256. The stable package builder rejects prerelease/development version strings. Official WordPress Plugin Check remains a blocking CI dependency; public distribution still requires final candidate acceptance, immutable tag/GitHub Release proof and external WordPress.org review/approval.
 
-See [`docs/PHASE2C4_CLOSURE.md`](docs/PHASE2C4_CLOSURE.md).
+See [`docs/PHASE5A_STABLE_CANDIDATE.md`](docs/PHASE5A_STABLE_CANDIDATE.md).
 
 ## Diagnostics
 

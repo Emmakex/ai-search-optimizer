@@ -4,7 +4,7 @@
 
 [English](#english) · [Español](#español)
 
-Status: **Development `0.5.0-dev` — local Free workflow and optional contextual support accepted; WordPress.org hardening gates accepted; directory publication not yet claimed**
+Status: **Stable candidate `0.5.0` — release metadata aligned and final public-distribution validation in progress; WordPress.org publication not yet claimed**
 
 ```text
 Product: AI Search Optimizer
@@ -12,8 +12,8 @@ Host: WordPress / WooCommerce
 Technical slug: ai-search-optimizer
 WordPress text domain: ai-search-optimizer
 License: MIT
-Current development line: 0.5.0-dev
-Accepted Free release candidate: 0.4.0
+Current stable candidate: 0.5.0
+Historical accepted Free release candidate: 0.4.0
 ```
 
 ## English
@@ -39,7 +39,7 @@ Safeguards include a dedicated least-privilege WordPress capability/role for the
 
 ### Optional Kairoseth support
 
-The development line includes an administrator-only **Tools → AI Search Optimizer Support** page with two optional actions:
+The `0.5.0` stable candidate includes an administrator-only **Tools → AI Search Optimizer Support** page with two optional actions:
 
 - **Improve with Kairoseth** — implementation guidance and help improving an AI Search / llms.txt setup.
 - **Request custom development** — tailored integrations, automation, workflows and additional features.
@@ -84,7 +84,11 @@ Deactivation preserves the stored `llms.txt` deployment and uninstall preference
 
 See [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md).
 
-### Accepted 0.4.0 release candidate
+### Stable candidate 0.5.0
+
+`0.5.0` is the current stable candidate. Its final source commit/tree/package SHA-256 are intentionally not frozen in this README until Phase 5A acceptance completes after PR and post-merge CI.
+
+The historical accepted `0.4.0` candidate remains preserved as prior evidence:
 
 ```text
 version            0.4.0
@@ -96,13 +100,11 @@ package entries    11
 package SHA-256    27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c
 ```
 
-The current `0.5.0-dev` source must not be treated as that accepted package.
-
 ### WordPress.org readiness
 
 WordPress.org compatibility is a design constraint, not a post-release cleanup task. Phase 3 hardening is accepted: production PHP passes WordPress Coding Standards and PHPCompatibilityWP, and CI blocks on the official WordPress Plugin Check in addition to the WordPress/PHP runtime matrix, Multisite/WooCommerce checks, EN/ES browser acceptance and reproducible package evidence.
 
-The plugin is not yet claimed as published on WordPress.org. Final directory submission still requires a deliberate stable version/tag/package, aligned plugin/readme metadata, final release-policy/readme review and successful external WordPress.org approval.
+The stable `0.5.0` metadata is now the candidate line, but the plugin is not yet claimed as published on WordPress.org. Final public distribution still requires accepted reproducible package evidence, immutable tag/GitHub Release work, final install/upgrade/uninstall release proof, final policy/readme review and successful external WordPress.org approval.
 
 `ai-search-optimizer` remains the target WordPress.org slug until it is actually accepted/reserved.
 
@@ -133,7 +135,7 @@ Las protecciones incluyen capability/rol WordPress de mínimo privilegio para el
 
 ### Soporte Kairoseth opcional
 
-La línea de desarrollo incluye **Herramientas → Soporte de AI Search Optimizer** con dos acciones opcionales:
+El candidato estable `0.5.0` incluye **Herramientas → Soporte de AI Search Optimizer** con dos acciones opcionales:
 
 - **Mejorar con Kairoseth** — orientación de implementación y ayuda para mejorar la configuración AI Search / llms.txt.
 - **Solicitar desarrollo a medida** — integraciones, automatizaciones, flujos y funciones adaptadas.
@@ -178,7 +180,11 @@ Desactivar conserva el despliegue `llms.txt` y la preferencia de desinstalación
 
 Consulta [`docs/DATA_RETENTION.md`](docs/DATA_RETENTION.md).
 
-### Release candidate 0.4.0 aceptado
+### Candidato estable 0.5.0
+
+`0.5.0` es el candidato estable actual. Su commit/tree/SHA-256 definitivos se congelarán únicamente cuando termine la aceptación de Fase 5A tras CI del PR y CI post-merge.
+
+Se conserva la evidencia histórica del candidato `0.4.0`:
 
 ```text
 versión             0.4.0
@@ -190,13 +196,11 @@ entradas            11
 SHA-256             27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c
 ```
 
-El código actual `0.5.0-dev` no debe confundirse con ese paquete aceptado.
-
 ### Preparación para WordPress.org
 
 La compatibilidad con WordPress.org se trata como una restricción de diseño desde el desarrollo. El hardening de la Fase 3 está aceptado: el PHP de producción supera WordPress Coding Standards y PHPCompatibilityWP, y el CI bloquea con WordPress Plugin Check oficial, matriz WordPress/PHP, Multisite/WooCommerce, navegador EN/ES y empaquetado reproducible.
 
-Todavía no se afirma que el plugin esté publicado en WordPress.org. La presentación final requerirá una versión/tag/paquete estable deliberado, metadata alineada, revisión final de políticas/readme de release y aprobación externa de WordPress.org.
+La metadata estable `0.5.0` es ahora la línea candidata, pero todavía no se afirma que el plugin esté publicado en WordPress.org. La distribución pública final requiere evidencia reproducible aceptada, tag/GitHub Release inmutables, prueba final install/upgrade/uninstall, revisión de políticas/readme y aprobación externa de WordPress.org.
 
 `ai-search-optimizer` sigue siendo el slug objetivo hasta su aceptación/reserva real.
 
@@ -217,6 +221,7 @@ AI Search Optimizer mejora la preparación y proporciona evidencia técnica repr
 - [`docs/PHASE3A_ACCEPTANCE.md`](docs/PHASE3A_ACCEPTANCE.md)
 - [`docs/PHASE3B_CONTEXTUAL_SUPPORT.md`](docs/PHASE3B_CONTEXTUAL_SUPPORT.md)
 - [`docs/PHASE3C_ACCEPTANCE.md`](docs/PHASE3C_ACCEPTANCE.md)
+- [`docs/PHASE5A_STABLE_CANDIDATE.md`](docs/PHASE5A_STABLE_CANDIDATE.md)
 - [`docs/ENGINEERING_RULES.md`](docs/ENGINEERING_RULES.md)
 - [`SECURITY.md`](SECURITY.md)
 

@@ -4,7 +4,7 @@ Tags: llms.txt, ai seo, ai search, geo, aeo
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.5.0-dev
+Stable tag: 0.5.0
 License: MIT
 License URI: https://opensource.org/license/mit/
 
@@ -86,7 +86,7 @@ The plugin retains an authenticated WordPress REST connector for optional manage
 7. Verify the public llms.txt and SHA-256 result.
 8. Optionally open **Tools > AI Search Optimizer Support** for improvement help or custom development.
 
-`0.4.0` is the accepted standalone Free release candidate preserved by the repository. The current repository development line is `0.5.0-dev`; no WordPress.org availability is claimed until a later stable package passes the directory submission gates and is approved by WordPress.org.
+`0.5.0` is the current stable candidate prepared for final release validation. It is not yet claimed as published on WordPress.org or as an official public GitHub Release. The historical accepted `0.4.0` release-candidate evidence remains preserved by the repository.
 
 == Frequently Asked Questions ==
 
@@ -116,13 +116,14 @@ Under **Tools > AI Search Optimizer Data** you can choose whether uninstall pres
 
 == Changelog ==
 
-= 0.5.0-dev =
+= 0.5.0 =
 * Replaced the cloud-onboarding-oriented WordPress admin surface with an optional local-first support/custom-development bridge.
 * Added explicit **Improve with Kairoseth** and **Request custom development** actions.
 * Added a strict server-owned support-context allow-list and fail-closed canonical Kairoseth destination validation.
 * Support page load makes no external request and automatically sends no site URL, llms.txt content/hash, identity, credentials, WooCommerce content, logs or telemetry.
 * Added official WordPress Plugin Check to the blocking CI path for WordPress.org readiness.
 * Preserved the inherited REST connector protocol without making it a Free-feature entitlement or mandatory onboarding path.
+* Promoted release metadata and reproducible package evidence from the development line to the stable `0.5.0` candidate.
 
 = 0.4.0 =
 * First standalone Free release-candidate line based on accepted connector 0.3.2.
