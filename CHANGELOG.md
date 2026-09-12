@@ -2,7 +2,7 @@
 
 All notable standalone AI Search Optimizer changes are recorded here.
 
-## 0.5.0 — Stable candidate
+## 0.5.0 — Accepted stable candidate
 
 ### Added
 - Optional EN/ES **AI Search Optimizer Support** page under WordPress Tools.
@@ -15,6 +15,7 @@ All notable standalone AI Search Optimizer changes are recorded here.
 - WordPress Coding Standards and PHPCompatibilityWP as blocking production-code quality gates.
 - Machine-readable PHPCS diagnostics for actionable CI failures.
 - Reproducible stable-candidate package evidence with source commit/tree, package bytes/entries and SHA-256.
+- Durable CI incident record for non-product infrastructure failures and their verified recovery.
 
 ### Changed
 - The customer strategy follows the WordPress.org-first local-Free model: useful local functionality first, optional explicit support/improvement CTA, and bespoke development when requested.
@@ -23,8 +24,9 @@ All notable standalone AI Search Optimizer changes are recorded here.
 - WordPress-facing JSON encoding in the flagged publication path now uses `wp_json_encode()`.
 - Source-inspection regressions validate semantic contract markers without depending on formatter-specific whitespace or Yoda comparison orientation.
 - Browser runtime credentials are generated ephemerally and passed through the test environment instead of being hardcoded in the acceptance script.
-- Plugin/readme/connector metadata is promoted from the development line to the deliberate stable `0.5.0` candidate.
+- Plugin/readme/connector metadata was promoted from the development line to the deliberate stable `0.5.0` candidate.
 - CI release evidence now uses the stable/release-candidate reproducibility builder instead of development-package evidence.
+- Phase 5A froze the accepted candidate identity after PR and post-merge validation; Phase 5B is now the next release-gated workstream.
 
 ### Security / privacy
 - Loading the support page performs no automatic request to Kairoseth.
@@ -34,12 +36,31 @@ All notable standalone AI Search Optimizer changes are recorded here.
 - No Kairoseth token, credential, entitlement or support state is persisted by the plugin support bridge.
 - The inherited WordPress REST namespace, schema, exact site pin and compare-and-set deployment protocol remain unchanged.
 
+### Phase 5A acceptance evidence
+
+```text
+implementation PR        #26 merged
+PR CI                    #87 / run 34670016667 — PASS
+main merge SHA           b116ae5df76c7a72ad37ff4e8e80632d6ebb457b
+source tree              6a837ed67049ae04cdf59656cc15997a8d9bb7b3
+post-merge CI            #88 / run 34670143261 — PASS on attempt 2
+package                  ai-search-optimizer-0.5.0.zip
+package bytes            29397
+package entries          13
+package SHA-256          0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e
+CI artifact ID           10290013554
+blocking Phase 5A defects 0
+```
+
+The first post-merge CI #88 attempt failed only in the WP 5.6/PHP 7.4 runtime because Docker Hub reset the authentication connection while pulling `wordpress:5.6-php7.4-apache`. Exit code `125`, signature `bf51ce903a3c0225ead510f42cb6594f4119f069df93e762f9d6c2edab72a8a5`. No code change was made; rerunning only the failed job passed and final stable-package evidence then passed. The runtime gate was not weakened.
+
+`0.5.0` is an accepted stable candidate, not yet an immutable GitHub Release and not yet claimed as published on WordPress.org.
+
 ### Prior acceptance evidence
 - Phase 3B contextual support remains accepted with its privacy-bounded explicit CTA contract.
 - Phase 3C WordPress.org support/privacy hardening is accepted in PR #20.
 - Final PR CI #74 and post-merge main CI #75 passed all required quality, runtime, Plugin Check, browser and reproducible-package gates.
 - Historical post-merge development-package SHA-256: `c10b2a780824fc08e43b557def3423a3d25bf313412ac6436ef9f6c53bad0137`.
-- `0.5.0` is a stable candidate only until Phase 5A acceptance completes; no GitHub Release or WordPress.org publication is claimed yet.
 
 ## 0.4.0 — Release candidate
 
