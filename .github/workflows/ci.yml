@@ -29,7 +29,7 @@ jobs:
         run: bash scripts/ci-run.sh "PHP syntax" bash -c 'find ai-search-optimizer.php uninstall.php includes tests -name "*.php" -type f -print0 | xargs -0 -n1 php -l'
 
       - name: Shell syntax
-        run: bash scripts/ci-run.sh "Shell syntax" bash -n scripts/build-plugin.sh scripts/build-release-candidate.sh scripts/build-development-package.sh scripts/runtime-wordpress.sh scripts/runtime-multisite-woocommerce.sh scripts/runtime-admin-ux.sh scripts/runtime-release-lifecycle.sh scripts/publish-github-release.sh
+        run: bash scripts/ci-run.sh "Shell syntax" bash -n scripts/build-plugin.sh scripts/build-release-candidate.sh scripts/build-development-package.sh scripts/runtime-wordpress.sh scripts/runtime-multisite-woocommerce.sh scripts/runtime-admin-ux.sh scripts/runtime-release-lifecycle.sh scripts/publish-github-release.sh scripts/verify-kairoseth-cta.sh
 
       - name: Contract and security regression
         run: bash scripts/ci-run.sh "Contract and security regression" php tests/contract-check.php
@@ -49,7 +49,7 @@ jobs:
       - name: Kairoseth contextual support regression
         run: bash scripts/ci-run.sh "Kairoseth contextual support regression" php tests/kairoseth-support-check.php
 
-      - name: Stable release metadata alignment
+      - name: WordPress.org submission metadata alignment
         run: bash scripts/ci-run.sh "Stable release metadata alignment" php tests/release-metadata-check.php
 
       - name: GitHub release publication contract
@@ -234,8 +234,24 @@ jobs:
           PHP_VERSION: '8.3'
         run: bash scripts/ci-run.sh "Real browser admin UX EN/ES" bash scripts/runtime-admin-ux.sh
 
+  cta_production:
+    name: Kairoseth CTA production EN/ES
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify live production CTA for 0.5.1
+        env:
+          AISO_RELEASE_VERSION: '0.5.1'
+          AISO_WORDPRESS_VERSION: '7.1'
+        run: bash scripts/ci-run.sh "Kairoseth CTA production contract 0.5.1" bash scripts/verify-kairoseth-cta.sh
+
   release_lifecycle:
-    name: Release package lifecycle + 0.4.0 upgrade
+    name: Release package lifecycle + 0.5.0 upgrade
     needs: validate
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -246,38 +262,44 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Build exact current stable candidate
-        run: |
-          bash scripts/ci-run.sh "Build current stable candidate" bash scripts/build-release-candidate.sh
-          echo "0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e  dist/ai-search-optimizer-0.5.0.zip" | sha256sum -c -
-
-      - name: Rebuild accepted 0.4.0 package
+      - name: Build current 0.5.1 submission candidate
+        id: current_package
         shell: bash
         run: |
           set -euo pipefail
-          previous_dir="$RUNNER_TEMP/ai-search-optimizer-0.4.0-source"
-          previous_zip="$RUNNER_TEMP/ai-search-optimizer-0.4.0.zip"
-          git worktree add --detach "$previous_dir" 4d68b111d1f796fdc9bfbc3e670eeecc69c09a76
+          bash scripts/ci-run.sh "Build current 0.5.1 submission candidate" bash scripts/build-release-candidate.sh
+          current_sha="$(sha256sum dist/ai-search-optimizer-0.5.1.zip | awk '{print $1}')"
+          test -n "$current_sha"
+          echo "sha=$current_sha" >> "$GITHUB_OUTPUT"
+          echo "Current 0.5.1 candidate SHA-256: $current_sha"
+
+      - name: Rebuild accepted 0.5.0 package
+        shell: bash
+        run: |
+          set -euo pipefail
+          previous_dir="$RUNNER_TEMP/ai-search-optimizer-0.5.0-source"
+          previous_zip="$RUNNER_TEMP/ai-search-optimizer-0.5.0.zip"
+          git worktree add --detach "$previous_dir" b116ae5df76c7a72ad37ff4e8e80632d6ebb457b
           bash "$previous_dir/scripts/build-plugin.sh"
-          echo "27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c  $previous_dir/dist/ai-search-optimizer-0.4.0.zip" | sha256sum -c -
-          cp "$previous_dir/dist/ai-search-optimizer-0.4.0.zip" "$previous_zip"
+          echo "0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e  $previous_dir/dist/ai-search-optimizer-0.5.0.zip" | sha256sum -c -
+          cp "$previous_dir/dist/ai-search-optimizer-0.5.0.zip" "$previous_zip"
           git worktree remove --force "$previous_dir"
 
-      - name: Clean install, upgrade and uninstall acceptance
+      - name: Clean install, 0.5.0 upgrade and uninstall acceptance
         env:
-          CURRENT_PACKAGE: ${{ github.workspace }}/dist/ai-search-optimizer-0.5.0.zip
-          PREVIOUS_PACKAGE: ${{ runner.temp }}/ai-search-optimizer-0.4.0.zip
-          CURRENT_VERSION: '0.5.0'
-          PREVIOUS_VERSION: '0.4.0'
-          EXPECTED_CURRENT_SHA: 0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e
-          EXPECTED_PREVIOUS_SHA: 27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd558c
+          CURRENT_PACKAGE: ${{ github.workspace }}/dist/ai-search-optimizer-0.5.1.zip
+          PREVIOUS_PACKAGE: ${{ runner.temp }}/ai-search-optimizer-0.5.0.zip
+          CURRENT_VERSION: '0.5.1'
+          PREVIOUS_VERSION: '0.5.0'
+          EXPECTED_CURRENT_SHA: ${{ steps.current_package.outputs.sha }}
+          EXPECTED_PREVIOUS_SHA: 0eb87610ddd5c2d348d3450c45792f63e5a47acc8dc103e650d188f98f10c85e
           WP_VERSION: '7.1'
           PHP_VERSION: '8.3'
-        run: bash scripts/ci-run.sh "Release package lifecycle + upgrade" bash scripts/runtime-release-lifecycle.sh
+        run: bash scripts/ci-run.sh "Release package lifecycle 0.5.0 -> 0.5.1" bash scripts/runtime-release-lifecycle.sh
 
   package_evidence:
     name: Reproducible stable candidate package evidence
-    needs: [validate, php_quality, wordpress_plugin_check, runtime, multisite_woocommerce, admin_ux, release_lifecycle]
+    needs: [validate, php_quality, wordpress_plugin_check, runtime, multisite_woocommerce, admin_ux, cta_production, release_lifecycle]
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
