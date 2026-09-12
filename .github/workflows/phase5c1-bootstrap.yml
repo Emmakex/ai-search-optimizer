@@ -19,31 +19,37 @@ jobs:
           ref: release/phase5c1-wordpress-0.5.1
           fetch-depth: 0
 
-      - name: Apply 0.5.1 hardening
-        run: python3 scripts/phase5c1-bootstrap.py
-
-      - name: Validate generated diff
-        run: |
-          git diff --check
-          git status --short
-
-      - name: Stage generated candidate without workflow mutation
+      - name: Correct generated CI snapshot indentation
+        shell: bash
         run: |
           set -euo pipefail
-          cp .github/workflows/ci.yml phase5c1-ci.generated.yml
-          git checkout -- .github/workflows/ci.yml
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path('phase5c1-ci.generated.yml')
+          text = p.read_text()
+          marker = 'cta_production:\n'
+          if marker not in text:
+              print('Generated CI snapshot already normalized.')
+              raise SystemExit(0)
+          start = text.index(marker)
+          end = text.index('\n  package_evidence:\n', start)
+          block = text[start:end]
+          block = '\n'.join(('  ' + line) if line else line for line in block.split('\n'))
+          p.write_text(text[:start] + block + text[end:])
+          PY
+          git diff --check -- phase5c1-ci.generated.yml
+
+      - name: Commit corrected snapshot when changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- phase5c1-ci.generated.yml; then
+            echo "No snapshot correction required."
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add \
-            ai-search-optimizer.php \
-            readme.txt \
-            tests/release-metadata-check.php \
-            scripts/runtime-release-lifecycle.sh \
-            scripts/verify-kairoseth-cta.sh \
-            README.md \
-            CHANGELOG.md \
-            SECURITY.md \
-            phase5c1-ci.generated.yml
-          git diff --cached --check
-          git commit -m "release: prepare WordPress.org 0.5.1 submission candidate"
+          git add phase5c1-ci.generated.yml
+          git commit -m "ci: normalize Phase 5C.1 generated workflow"
           git push origin HEAD:release/phase5c1-wordpress-0.5.1
