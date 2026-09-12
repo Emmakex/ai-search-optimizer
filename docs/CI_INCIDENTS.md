@@ -4,6 +4,87 @@ This file is the durable failure-learning register required by the repository en
 
 Record only non-obvious CI/build/test/runtime failures that are useful for future diagnosis. Each incident must preserve the actionable diagnosis contract: pipeline/job/step, command, exit code, primary error, file/line when available, minimal context, normalized signature, root-cause status, verified fix/recovery and validation evidence.
 
+## 2026-09-12 — CI #104 — transient HTTP 403 during live Kairoseth CTA preflight
+
+Status: **RESOLVED — failure boundary confirmed outside plugin runtime; underlying transient edge mechanism not independently confirmed; no product-code or Kairoseth application-code change required**
+
+```text
+pipeline              GitHub Actions / CI
+run                   #104 / 34686969817
+attempt               1
+commit                e8999aedbf5b1ca4cb5fa99e79b147884330c9ed
+job                   Kairoseth CTA production EN/ES / 103535550331
+step                  Verify live production CTA for 0.5.1
+command               bash scripts/ci-run.sh "Kairoseth CTA production contract 0.5.1" bash scripts/verify-kairoseth-cta.sh
+exit code             22
+file/line             n/a — public HTTP request failed before page assertions
+primary error         curl: (22) The requested URL returned error: 403
+error signature       1598253c24787c71715b2186a5591c02e5bbcc5bbbb77d930378da86283b164f
+root-cause status     exact edge/WAF mechanism unconfirmed; version allow-list defect ruled out
+```
+
+### Observed failure boundary
+
+The GitHub-hosted runner for CI #104 was provisioned in Azure `mexicocentral`. The first production request to `https://kairoseth.com/custom-requests` for the exact `0.5.1` extension context received HTTP 403. Because the original verifier used `curl --fail-with-body` under `set -e`, curl terminated before the script could preserve final status, response headers or safe response markers. `--retry-all-errors` produced the same 403 three times before `ci-run.sh` emitted the normalized signature above.
+
+No plugin page/runtime assertion was reached. The other candidate gates established that the `0.5.1` package itself was healthy, including the real `0.5.0 -> 0.5.1` lifecycle proof.
+
+### Evidence against a version-specific application defect
+
+Kairoseth Platform's accepted Custom Requests implementation does not allow-list individual extension versions. It allow-lists `ai-search-optimizer` as an extension identity and bounds `extensionVersion` as a token. The `/custom-requests` page passes the query through that normalizer rather than rejecting `0.5.1`.
+
+No Kairoseth application-code change was made after CI #104. The verifier was hardened only to preserve diagnostics and to test the customer-realistic browser navigation client class.
+
+CI #105 then ran from a fresh GitHub-hosted runner in Azure `westus3` and proved on the same public route:
+
+```text
+CTA_PROBE version=0.5.1 profile=curl-default status=200
+CTA_PROBE version=0.5.1 profile=browser      status=200
+EN + implementation_support                 PASS / HTTP 200
+EN + business_customization                 PASS / HTTP 200
+ES + implementation_support                 PASS / HTTP 200
+ES + business_customization                 PASS / HTTP 200
+```
+
+Because both curl-default and browser-equivalent requests returned 200 on the confirmation run, the earlier 403 cannot be attributed to the curl User-Agent. Because Kairoseth application code and plugin packaged code were unchanged, it also cannot be attributed to a `0.5.1` product/version allow-list change. The precise upstream edge/security condition that emitted the earlier 403 was not captured and therefore remains explicitly **unconfirmed**.
+
+### Recovery and diagnostic hardening
+
+`scripts/verify-kairoseth-cta.sh` now:
+
+- captures HTTP status, effective URL, response headers and body before deciding whether an HTTP status fails;
+- emits only bounded/safe edge diagnostics such as server/edge headers and known block-page markers;
+- probes curl-default and browser-equivalent behavior for the exact candidate;
+- uses browser-equivalent navigation for the blocking customer CTA contract because the actual CTA is opened by a browser;
+- probes accepted `0.5.0` as a control if the candidate browser request fails;
+- preserves exact destination, query allow-list, forbidden-context and EN/ES form assertions.
+
+The gate was not weakened and no 403 was ignored: any non-200 browser-equivalent candidate response still blocks CI.
+
+### Validation
+
+```text
+CI run                         #105 / 34692395181
+workflow conclusion            success
+candidate package              ai-search-optimizer-0.5.1.zip
+candidate bytes                29560
+candidate entries              13
+candidate SHA-256              2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b
+CTA curl-default               PASS / HTTP 200
+CTA browser-equivalent         PASS / HTTP 200
+CTA EN/ES × 2 request types    PASS
+0.5.0 -> 0.5.1 lifecycle       PASS
+full blocking suite            PASS
+Kairoseth app change           none
+packaged product recovery fix  none
+```
+
+### Regression boundary
+
+Do **not** classify every future CTA 403 as this incident automatically. A future recurrence may reuse this incident only when the public request fails before page-contract assertions and a fresh control/differential proves the packaged product and server-side extension contract are unchanged.
+
+If `0.5.0` control succeeds while the candidate fails persistently, if the response reaches the application and rejects normalized context, if redirects/destination drift, or if a browser-equivalent request remains non-200 across runners, treat it as a new defect and diagnose the responsible layer rather than retrying blindly.
+
 ## 2026-09-12 — CI #94 — transient Playwright login submission timeout before ES browser acceptance
 
 Status: **RESOLVED — harness/login flake; exact tree/package passed on selective rerun; no product code change required**
