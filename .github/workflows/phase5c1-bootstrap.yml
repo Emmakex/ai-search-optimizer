@@ -27,12 +27,23 @@ jobs:
           git diff --check
           git status --short
 
-      - name: Commit generated candidate
+      - name: Stage generated candidate without workflow mutation
         run: |
           set -euo pipefail
-          rm -f .github/workflows/phase5c1-bootstrap.yml scripts/phase5c1-bootstrap.py
+          cp .github/workflows/ci.yml phase5c1-ci.generated.yml
+          git checkout -- .github/workflows/ci.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
+          git add \
+            ai-search-optimizer.php \
+            readme.txt \
+            tests/release-metadata-check.php \
+            scripts/runtime-release-lifecycle.sh \
+            scripts/verify-kairoseth-cta.sh \
+            README.md \
+            CHANGELOG.md \
+            SECURITY.md \
+            phase5c1-ci.generated.yml
+          git diff --cached --check
           git commit -m "release: prepare WordPress.org 0.5.1 submission candidate"
           git push origin HEAD:release/phase5c1-wordpress-0.5.1
