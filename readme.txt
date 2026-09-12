@@ -4,7 +4,7 @@ Tags: llms.txt, ai seo, ai search, geo, aeo
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.5.0
+Stable tag: 0.5.1
 License: MIT
 License URI: https://opensource.org/license/mit/
 
@@ -86,7 +86,7 @@ The plugin retains an authenticated WordPress REST connector for optional manage
 7. Verify the public llms.txt and SHA-256 result.
 8. Optionally open **Tools > AI Search Optimizer Support** for improvement help or custom development.
 
-`0.5.0` is the current stable candidate prepared for final release validation. It is not yet claimed as published on WordPress.org or as an official public GitHub Release. The historical accepted `0.4.0` release-candidate evidence remains preserved by the repository.
+`0.5.1` is the WordPress.org submission-hardening release line. The plugin is not claimed as published on WordPress.org until the directory has actually accepted and published it. The immutable public GitHub `0.5.0` release remains preserved as prior release evidence.
 
 == Frequently Asked Questions ==
 
@@ -115,6 +115,12 @@ Deactivation preserves the stored llms.txt deployment and the uninstall preferen
 Under **Tools > AI Search Optimizer Data** you can choose whether uninstall preserves or deletes the stored llms.txt deployment. Preserve is the default. Uninstall always removes the plugin setup marker, custom deployer role, administrator capability and retention preference. Multisite cleanup runs site by site.
 
 == Changelog ==
+
+= 0.5.1 =
+* Aligned the plugin version, connector version and WordPress Stable tag for the WordPress.org submission package.
+* Removed stale pre-publication release wording from the packaged readme.
+* Preserved the local-first privacy boundary, optional Kairoseth support flow and existing product behavior without adding new features.
+* Prepared a reproducible patch package for WordPress.org review with the public 0.5.0 release retained as immutable prior evidence.
 
 = 0.5.0 =
 * Replaced the cloud-onboarding-oriented WordPress admin surface with an optional local-first support/custom-development bridge.

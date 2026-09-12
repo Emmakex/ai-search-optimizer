@@ -2,7 +2,7 @@
 set -euo pipefail
 
 BASE_URL="${KAIROSETH_CUSTOM_REQUESTS_URL:-https://kairoseth.com/custom-requests}"
-PLUGIN_VERSION="${AISO_RELEASE_VERSION:-0.5.0}"
+PLUGIN_VERSION="${AISO_RELEASE_VERSION:-0.5.1}"
 WORDPRESS_VERSION="${AISO_WORDPRESS_VERSION:-7.1}"
 WORK_DIR="${RUNNER_TEMP:-$(mktemp -d)}/aiso-cta-check-$$"
 mkdir -p "$WORK_DIR"

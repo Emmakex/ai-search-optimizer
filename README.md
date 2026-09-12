@@ -4,7 +4,7 @@
 
 [English](#english) · [Español](#español)
 
-Status: **Public GitHub Release `0.5.0` published and Phase 5B accepted; WordPress.org publication is not yet claimed**
+Status: **Public GitHub Release `0.5.0` accepted; WordPress.org submission candidate `0.5.1` is in validation; WordPress.org publication is not yet claimed**
 
 ```text
 Product: AI Search Optimizer
@@ -13,6 +13,7 @@ Technical slug: ai-search-optimizer
 WordPress text domain: ai-search-optimizer
 License: MIT
 Current public GitHub release: 0.5.0
+WordPress.org submission candidate: 0.5.1
 Historical accepted Free release candidate: 0.4.0
 ```
 
@@ -132,7 +133,7 @@ package SHA-256    27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd5
 
 WordPress.org compatibility is a design constraint, not a post-release cleanup task. Production PHP passes WordPress Coding Standards and PHPCompatibilityWP, and CI blocks on official WordPress Plugin Check, the WordPress/PHP runtime matrix, Multisite/WooCommerce, EN/ES browser acceptance, release lifecycle and reproducible package evidence.
 
-GitHub Release `0.5.0` is public, but the plugin is **not yet claimed as published on WordPress.org**. Phase 5C is the separate WordPress.org submission/review/approval gate.
+`0.5.1` is the current WordPress.org submission-hardening candidate. GitHub Release `0.5.0` remains public and immutable, but the plugin is **not yet claimed as published on WordPress.org**. Phase 5C remains the separate WordPress.org submission/review/approval gate.
 
 `ai-search-optimizer` remains only the target WordPress.org slug until it is actually accepted/reserved and published by WordPress.org.
 
@@ -251,7 +252,7 @@ SHA-256             27e5212a6bba188bc79d30a0edf3d1d662339f50f9938fa3618bb6b21bcd
 
 El PHP de producción supera WordPress Coding Standards y PHPCompatibilityWP, y el CI bloquea con WordPress Plugin Check oficial, matriz WordPress/PHP, Multisite/WooCommerce, navegador EN/ES, lifecycle y empaquetado reproducible.
 
-El GitHub Release `0.5.0` ya es público, pero **todavía no se afirma que el plugin esté publicado en WordPress.org**. La Fase 5C cubre el envío, revisión y aprobación externa del directorio.
+`0.5.1` es el candidato actual de hardening para el envío a WordPress.org. El GitHub Release `0.5.0` sigue público e inmutable, pero **todavía no se afirma que el plugin esté publicado en WordPress.org**. La Fase 5C cubre el envío, revisión y aprobación externa del directorio.
 
 `ai-search-optimizer` sigue siendo el slug objetivo hasta su aceptación/reserva y publicación real.
 
