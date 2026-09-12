@@ -1,6 +1,6 @@
 # Phase 5C — WordPress.org submission contract
 
-Status: **5C.1 TECHNICAL CANDIDATE GREEN IN PR CI #105 — exact 0.5.1 package identity frozen; merge/post-merge verification pending; WordPress.org not submitted**
+Status: **5C.1 ACCEPTED — exact 0.5.1 package frozen and verified on PR + post-merge main; 5C.2 immutable GitHub release is next; WordPress.org not submitted**
 
 Date frozen: 2026-09-12
 
@@ -45,40 +45,59 @@ The submission-hardening line is:
 
 `0.5.1` is a submission-hardening patch only unless a separately diagnosed blocker requires more.
 
-Required changes:
+Accepted changes:
 
-- promote plugin header and connector version constant from `0.5.0` to `0.5.1`;
-- set WordPress `readme.txt` Stable tag to `0.5.1`;
-- replace the stale pre-publication sentence with truthful GitHub-release / WordPress.org-pending copy;
-- add a concise `0.5.1` changelog entry describing submission hardening;
-- preserve every historical `0.5.0` release identity and hash in repository evidence;
-- keep customer-facing claims within the existing readiness/evidence boundary;
-- do not add unrelated product behavior.
+- plugin header and connector version constant promoted from `0.5.0` to `0.5.1`;
+- WordPress `readme.txt` Stable tag set to `0.5.1`;
+- stale pre-publication sentence replaced with truthful GitHub-release / WordPress.org-pending copy;
+- concise `0.5.1` changelog entry added;
+- every historical `0.5.0` release identity and hash preserved;
+- customer-facing claims kept within the existing readiness/evidence boundary;
+- no unrelated product behavior added.
 
-## 5C.1 technical candidate evidence
+## 5C.1 accepted package identity
 
-PR #32 produced a byte-reproducible `0.5.1` submission candidate with this frozen package identity:
+PR #32 produced and accepted a byte-reproducible `0.5.1` submission package:
 
 ```text
-version             0.5.1
-package             ai-search-optimizer-0.5.1.zip
-package bytes       29560
-package entries     13
-package SHA-256     2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b
-PR                  #32
-PR CI discovery     #104 / run 34686969817
-PR CI confirmation  #105 / run 34692395181 — PASS
+version              0.5.1
+package              ai-search-optimizer-0.5.1.zip
+package bytes        29560
+package entries      13
+package SHA-256      2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b
+PR                   #32
+PR head              78f36816bd7bedc5f907f2d6ab9ad4fbf5898d4c
+PR CI discovery      #104 / run 34686969817
+PR CI confirmation   #105 / run 34692395181 — PASS
+final PR CI           #107 / run 34692689075 — PASS
+merge commit          c93ac68c3698fa2c7e003dabc41f72e2e423b5cd
+accepted source tree  e1cc7c3f017e92a5ed3de8835e3f9c8764f3d37b
+post-merge main CI    #108 / run 34692826856 — PASS
 ```
+
+CI #107 reproduced the ZIP twice with the exact frozen SHA before merge. Post-merge CI #108 rebuilt from canonical `main` at `c93ac68c3698fa2c7e003dabc41f72e2e423b5cd` and again produced exactly:
+
+```text
+Bytes:     29560
+Entries:   13
+SHA-256:   2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b
+```
+
+No packaged file changed between final PR acceptance and post-merge acceptance.
+
+## CTA incident and diagnostic boundary
 
 CI #104 passed metadata, package, coding-quality, Plugin Check, runtime, Multisite/WooCommerce, browser and `0.5.0 -> 0.5.1` lifecycle gates, but the production CTA job received HTTP 403 from the public endpoint and blocked final package evidence. The package itself was not changed to recover.
 
 The CTA diagnostic was hardened so an HTTP response is captured before failure, safe edge markers can be emitted, browser-equivalent navigation is tested, and a `0.5.0` control is probed only when the candidate browser request also fails. On CI #105, the exact `0.5.1` endpoint returned HTTP 200 for both curl-default and browser profiles, all four EN/ES × request-type cases passed, and the full workflow completed successfully without any Kairoseth application-code or plugin-product change. The underlying transient edge mechanism that produced the earlier 403 could not be independently confirmed; it must not be misclassified as a version allow-list defect.
 
-This package identity is the 5C.1 candidate to carry forward. Any packaged-file change requires a new SHA and a new complete acceptance pass.
+Final PR CI #107 and post-merge main CI #108 both re-proved the production CTA gate successfully.
+
+Durable evidence: [`CI_INCIDENTS.md`](CI_INCIDENTS.md).
 
 ## Plugin URI / Author URI rule
 
-The accepted `0.5.0` plugin header currently declares neither `Plugin URI` nor `Author URI`.
+The plugin header declares neither `Plugin URI` nor `Author URI`.
 
 For `0.5.1`, **do not add either field merely for submission**. They are optional. This intentionally avoids the class of WordPress.org submission error where Plugin URI and Author URI are identical.
 
@@ -88,7 +107,7 @@ If a future release adds them, the rule is mandatory:
 Plugin URI != Author URI
 ```
 
-and the Plugin URI must be unique to AI Search Optimizer. The canonical product landing available for a future Plugin URI is:
+The canonical product landing available for a future Plugin URI is:
 
 ```text
 https://kairoseth.com/products/ai-search-optimizer
@@ -124,11 +143,9 @@ Reference material:
 - https://developer.wordpress.org/plugins/wordpress-org/common-issues/
 - https://developer.wordpress.org/plugins/wordpress-org/planning-submitting-and-maintaining-plugins/
 
-## Current compatibility facts
+## Compatibility baseline
 
-WordPress `7.1` is the current stable major release as of this contract freeze, so the existing `Tested up to: 7.1` declaration is valid and must not be increased beyond actually tested/current release policy.
-
-Current minimums remain:
+Current declared/tested minimums remain:
 
 ```text
 Requires at least: 5.6
@@ -136,11 +153,11 @@ Requires PHP:      7.4
 Tested up to:      7.1
 ```
 
+The accepted package passed the blocking WordPress/PHP matrix for WP 5.6/PHP 7.4, WP 6.8/PHP 8.2 and WP 7.1/PHP 8.3.
+
 ## License decision
 
-The current plugin declares MIT. WordPress.org requires a GPL-compatible license and explicitly accepts GPL-compatible licenses while recommending GPLv2-or-later.
-
-MIT is GPL-compatible, so Phase 5C does **not** require a licensing change. Do not introduce a license change solely to pass submission unless WordPress.org review provides a specific blocker requiring action.
+The plugin declares MIT. WordPress.org requires a GPL-compatible license and MIT is GPL-compatible, so Phase 5C does **not** require a licensing change. Do not introduce a license change solely to pass submission unless WordPress.org review provides a specific blocker requiring action.
 
 ## External-service / privacy boundary
 
@@ -153,13 +170,13 @@ The optional Kairoseth Custom Requests CTA:
 - sends only bounded product/platform/request context in the navigation URL;
 - does not automatically attach site URL, llms.txt content/hash, inventory, identities, WooCommerce content, credentials, tokens, prompts, logs or database contents;
 - was proven live in production before the public `0.5.0` GitHub Release for EN/ES and both accepted request types;
-- was re-proven live for the exact `0.5.1` context in PR CI #105.
+- was re-proven live for the exact `0.5.1` context through final PR CI #107 and post-merge main CI #108.
 
 No new telemetry/account/entitlement dependency is introduced by `0.5.1`.
 
 ## 0.5.1 blocking validation
 
-Before the WordPress.org upload package may be considered accepted:
+The 5C.1 package acceptance is complete:
 
 ```text
 [x] exact 0.5.1 semantic version aligned in plugin header, connector constant and Stable tag
@@ -168,7 +185,7 @@ Before the WordPress.org upload package may be considered accepted:
 [x] readme.txt policy and external-service disclosure reviewed
 [x] package contents gate PASS
 [x] WPCS + PHPCompatibility PASS
-[x] official WordPress Plugin Check PASS
+[x] official WordPress Plugin Check PASS — No errors found
 [x] WordPress 5.6 / PHP 7.4 runtime PASS
 [x] WordPress 6.8 / PHP 8.2 runtime PASS
 [x] WordPress 7.1 / PHP 8.3 runtime PASS
@@ -179,14 +196,16 @@ Before the WordPress.org upload package may be considered accepted:
 [x] upgrade 0.5.0 -> 0.5.1 preserves expected local state
 [x] preserve/reinstall/delete uninstall lifecycle PASS
 [x] package reproducibility PASS
-[ ] PR #32 merged and post-merge main CI PASS
+[x] final PR CI #107 PASS
+[x] PR #32 merged at c93ac68c3698fa2c7e003dabc41f72e2e423b5cd
+[x] post-merge main CI #108 PASS
 [ ] immutable 0.5.1 GitHub tag/release published and exact package SHA recorded
 [ ] WordPress.org upload uses that exact accepted 0.5.1 ZIP
 ```
 
 ## External WordPress.org gate
 
-After the exact `0.5.1` package is submitted:
+After the exact released `0.5.1` package is submitted:
 
 ```text
 submission -> automated/manual review -> requested changes if any -> approval -> SVN/directory publication
@@ -200,11 +219,11 @@ The directory state remains **not published** until the external approval/public
 
 ```text
 5C.0 freeze submission-hardening contract                         COMPLETE
-5C.1 implement and accept 0.5.1 submission package              PR CI GREEN / MERGE PENDING
-5C.2 publish immutable 0.5.1 GitHub release + exact evidence     BLOCKED ON 5C.1 MERGE
-5C.3 submit exact 0.5.1 ZIP to WordPress.org                     BLOCKED ON 5C.2
+5C.1 implement and accept exact 0.5.1 submission package         COMPLETE
+5C.2 publish immutable 0.5.1 GitHub release + exact evidence     NEXT
+5C.3 submit exact released 0.5.1 ZIP to WordPress.org            BLOCKED ON 5C.2
 5C.4 resolve external review findings, if any                    FUTURE
 5C.5 confirm live directory listing and update availability      FUTURE
 ```
 
-**Next:** merge PR #32 only after its final CI remains green, verify post-merge `main`, then begin Phase 5C.2. WordPress.org submission remains blocked until the immutable `0.5.1` release exists.
+**Next:** Phase 5C.2 must publish an immutable GitHub `0.5.1` tag/release from the exact accepted package identity above and verify the released ZIP remains SHA-256 `2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b`. WordPress.org submission remains blocked until that release exists.

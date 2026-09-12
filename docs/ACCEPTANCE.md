@@ -1,6 +1,6 @@
 # AI Search Optimizer — Acceptance
 
-Status: **Phases 0–4, 5A and 5B accepted; Phase 5C.0 accepted; exact `0.5.1` 5C.1 candidate is green in PR CI, with merge/post-merge verification still pending; WordPress.org availability is not claimed**  
+Status: **Phases 0–4, 5A and 5B accepted; Phase 5C.0 and 5C.1 accepted; exact `0.5.1` package frozen; Phase 5C.2 immutable GitHub release is next; WordPress.org availability is not claimed**  
 Last reviewed: **12 September 2026**
 
 ## Engineering inheritance
@@ -207,21 +207,25 @@ The WordPress.org preflight found a real release-metadata issue before submissio
 [x] no WordPress.org availability claim made
 ```
 
-### 5C.1 — exact 0.5.1 submission package — PR CI accepted; merge pending
+### 5C.1 — exact 0.5.1 submission package — accepted
 
-Frozen technical candidate:
+Accepted identity:
 
 ```text
-version             0.5.1
-package             ai-search-optimizer-0.5.1.zip
-package bytes       29560
-package entries     13
-package SHA-256     2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b
-PR                  #32
-PR CI confirmation  #105 / run 34692395181 — PASS
+version              0.5.1
+package              ai-search-optimizer-0.5.1.zip
+package bytes        29560
+package entries      13
+package SHA-256      2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b
+PR                   #32
+PR head              78f36816bd7bedc5f907f2d6ab9ad4fbf5898d4c
+final PR CI           #107 / run 34692689075 — PASS
+merge commit          c93ac68c3698fa2c7e003dabc41f72e2e423b5cd
+source tree           e1cc7c3f017e92a5ed3de8835e3f9c8764f3d37b
+post-merge main CI    #108 / run 34692826856 — PASS
 ```
 
-Technical gates proven on the exact 0.5.1 line:
+Technical acceptance:
 
 ```text
 [x] plugin Version = 0.5.1
@@ -233,7 +237,7 @@ Technical gates proven on the exact 0.5.1 line:
 [x] readme/external-service policy review complete
 [x] package contents PASS
 [x] WPCS + PHPCompatibilityWP PASS
-[x] official Plugin Check PASS
+[x] official Plugin Check PASS — No errors found
 [x] WP 5.6 / PHP 7.4 PASS
 [x] WP 6.8 / PHP 8.2 PASS
 [x] WP 7.1 / PHP 8.3 PASS
@@ -243,14 +247,28 @@ Technical gates proven on the exact 0.5.1 line:
 [x] clean install 0.5.1 PASS
 [x] 0.5.0 -> 0.5.1 upgrade PASS with expected state preserved
 [x] preserve/reinstall/delete lifecycle PASS
-[x] byte-reproducible 0.5.1 package PASS
-[ ] PR #32 merged
-[ ] post-merge main CI PASS
+[x] byte-reproducible package PASS
+[x] PR #32 merged
+[x] post-merge main CI PASS with identical package SHA
 ```
 
-CI #104's transient CTA HTTP 403 is recorded in [`CI_INCIDENTS.md`](CI_INCIDENTS.md). CI #105 re-proved the same `0.5.1` endpoint with HTTP 200 for curl-default, browser-equivalent, EN/ES and both request types without Kairoseth application-code or packaged product changes. The exact upstream mechanism that caused the earlier 403 remains explicitly unconfirmed.
+CI #104's transient CTA HTTP 403 is recorded in [`CI_INCIDENTS.md`](CI_INCIDENTS.md). Subsequent CI proved both curl-default and browser-equivalent HTTP 200 without Kairoseth application-code or packaged-product changes; the exact upstream edge condition behind the earlier 403 remains unconfirmed rather than being mislabeled as a version defect.
 
 Canonical contract/evidence: [`PHASE5C_WORDPRESS_ORG_SUBMISSION.md`](PHASE5C_WORDPRESS_ORG_SUBMISSION.md).
+
+**Phase 5C.1 is complete.**
+
+### 5C.2 — immutable 0.5.1 GitHub release — next
+
+The public release must preserve the accepted package exactly:
+
+```text
+expected package SHA-256  2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b
+expected bytes            29560
+expected entries          13
+```
+
+The release/tag publication must fail closed on identity drift and must not mutate the already accepted packaged files.
 
 ### Remaining external/publication gates
 
