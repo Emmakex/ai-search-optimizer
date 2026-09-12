@@ -1,6 +1,6 @@
 # AI Search Optimizer — Acceptance
 
-Status: **Phases 0–4, 5A and 5B accepted; Phase 5C WordPress.org submission/review is next; WordPress.org availability is not yet claimed**  
+Status: **Phases 0–4, 5A and 5B accepted; Phase 5C.0 submission-hardening contract frozen; 0.5.1 implementation is next; WordPress.org availability is not yet claimed**  
 Last reviewed: **12 September 2026**
 
 ## Engineering inheritance
@@ -197,15 +197,57 @@ Canonical evidence: [`PHASE5B_GITHUB_RELEASE.md`](PHASE5B_GITHUB_RELEASE.md). Du
 
 **Phase 5B is complete.**
 
-## Phase 5C — WordPress.org publication gate — next
+## Phase 5C — WordPress.org publication gate — in progress
 
-WordPress.org availability must not be claimed until:
+### 5C.0 — submission-hardening contract — accepted by documentation
+
+The WordPress.org preflight found a real release-metadata issue before submission: the immutable public `0.5.0` package contains a bundled `readme.txt` sentence that still describes `0.5.0` as a stable candidate and says a public GitHub Release is not yet claimed.
+
+The accepted `0.5.0` package must not be modified or republished under the same version because its source/tag/package SHA is already frozen. The submission line therefore advances to `0.5.1`.
 
 ```text
-[ ] final WordPress.org policy/readme/external-service review complete
-[ ] compatible code/assets/dependencies/licenses confirmed
-[ ] official Plugin Check remains PASS on the submission line
-[ ] WordPress.org submission uses accepted release metadata/package
+[x] 0.5.0 immutable release identity preserved
+[x] stale packaged readme statement identified before WordPress.org upload
+[x] 0.5.1 selected as minimal submission-hardening patch
+[x] Plugin URI / Author URI same-value rejection class explicitly prevented
+[x] current header intentionally keeps both URI fields absent
+[x] MIT confirmed as GPL-compatible for directory policy
+[x] Tested up to 7.1 matches current stable WordPress major
+[x] local-first / no-silent-telemetry boundary preserved
+[x] external Kairoseth Custom Requests service remains explicitly documented
+[x] no WordPress.org availability claim made
+```
+
+Canonical contract: [`PHASE5C_WORDPRESS_ORG_SUBMISSION.md`](PHASE5C_WORDPRESS_ORG_SUBMISSION.md).
+
+### 5C.1 — exact 0.5.1 submission package — next
+
+WordPress.org upload is blocked until:
+
+```text
+[ ] plugin Version = 0.5.1
+[ ] connector version constant = 0.5.1
+[ ] Stable tag = 0.5.1
+[ ] stale 0.5.0 pre-publication statement removed from packaged readme.txt
+[ ] concise 0.5.1 changelog entry added
+[ ] no Plugin URI / Author URI equality hazard
+[ ] readme/external-service policy review complete
+[ ] package contents PASS
+[ ] WPCS + PHPCompatibilityWP PASS
+[ ] official Plugin Check PASS
+[ ] WP 5.6 / PHP 7.4 PASS
+[ ] WP 6.8 / PHP 8.2 PASS
+[ ] WP 7.1 / PHP 8.3 PASS
+[ ] Multisite + WooCommerce PASS
+[ ] real browser EN/ES PASS
+[ ] production CTA preflight PASS
+[ ] clean install 0.5.1 PASS
+[ ] 0.5.0 -> 0.5.1 upgrade PASS with expected state preserved
+[ ] preserve/reinstall/delete lifecycle PASS
+[ ] byte-reproducible 0.5.1 package PASS
+[ ] immutable GitHub 0.5.1 tag/release published
+[ ] exact 0.5.1 package SHA recorded
+[ ] WordPress.org submission uses that exact ZIP
 [ ] external WordPress.org review/approval completes successfully
 [ ] directory listing is actually published
 [ ] only then customer/catalog copy may claim WordPress.org availability
