@@ -1,6 +1,6 @@
 # AI Search Optimizer — Roadmap
 
-Status: **Phase 5B complete — public GitHub Release `0.5.0` verified; Phase 5C WordPress.org submission/review is next**  
+Status: **Phase 5B complete — public GitHub Release `0.5.0` verified; Phase 5C.0 submission-hardening contract frozen; `0.5.1` is required before WordPress.org upload**  
 Last reviewed: **12 September 2026**
 
 ```text
@@ -18,7 +18,9 @@ Phase 4  Extensions catalog integration            COMPLETE
 Phase 5  stable public distribution / WordPress.org IN PROGRESS
   5A     stable candidate identity                 COMPLETE
   5B     GitHub release + lifecycle proof          COMPLETE
-  5C     WordPress.org submission/review           NEXT
+  5C     WordPress.org submission/review           IN PROGRESS
+    5C.0 submission-hardening contract             COMPLETE
+    5C.1 0.5.1 package hardening                   NEXT
 ```
 
 ## Product model
@@ -171,20 +173,43 @@ Canonical acceptance: [`PHASE5B_GITHUB_RELEASE.md`](PHASE5B_GITHUB_RELEASE.md). 
 
 **Phase 5B is closed.**
 
-### 5C — WordPress.org submission/review — next
+### 5C — WordPress.org submission/review — in progress
+
+#### 5C.0 — submission-hardening contract — complete by documentation
+
+The Phase 5C preflight found that the immutable public `0.5.0` ZIP still contains a bundled `readme.txt` sentence from before GitHub publication, describing `0.5.0` as a stable candidate and saying an official public GitHub Release is not yet claimed.
+
+The released `0.5.0` ZIP must **not** be modified in place because its public package SHA-256 is already frozen. WordPress.org submission therefore moves to a minimal `0.5.1` submission-hardening patch.
+
+`0.5.1` will:
+
+- update only release/submission metadata unless a separately confirmed blocker requires more;
+- remove the stale pre-publication statement from packaged `readme.txt`;
+- align plugin Version, connector version constant and Stable tag at `0.5.1`;
+- preserve the exact historical `0.5.0` source/tag/package identity;
+- keep Plugin URI and Author URI absent rather than introduce an unnecessary equality hazard;
+- retain MIT as the GPL-compatible license;
+- retain `Tested up to: 7.1`, which matches the current stable WordPress major verified for this preflight;
+- require official Plugin Check, the runtime matrix, Multisite/WooCommerce, browser EN/ES, CTA production preflight, reproducibility and a real `0.5.0 -> 0.5.1` lifecycle proof before upload;
+- publish an immutable GitHub `0.5.1` package first, then submit that exact ZIP to WordPress.org.
+
+Canonical contract: [`PHASE5C_WORDPRESS_ORG_SUBMISSION.md`](PHASE5C_WORDPRESS_ORG_SUBMISSION.md).
+
+**Next: 5C.1 — implement and accept the minimal `0.5.1` submission-hardening package.**
 
 Required before any WordPress.org availability claim:
 
+- exact `0.5.1` submission package accepted and released;
 - final directory-policy/readme/external-service review;
 - compatible code/assets/licenses;
-- official Plugin Check remains PASS on the exact release line;
-- submission uses the accepted `0.5.0` release package/metadata;
+- official Plugin Check PASS on the exact submission line;
+- WordPress.org upload uses the exact accepted `0.5.1` ZIP;
 - WordPress.org external review/approval completes successfully;
 - only after real approval/publication may Kairoseth/catalog/readme copy claim directory availability.
 
 `ai-search-optimizer` remains only the target WordPress.org slug until actually accepted/reserved.
 
-Phase 5 continues to follow feature branch → PR → CI → merge → verification. GitHub publication is now real; WordPress.org publication remains an external gate.
+Phase 5 continues to follow feature branch → PR → CI → merge → verification. GitHub publication is real; WordPress.org publication remains an external gate.
 
 ## Post-v1 candidates
 
