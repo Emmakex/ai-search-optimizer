@@ -1,0 +1,38 @@
+name: Phase 5C.1 bootstrap
+
+on:
+  push:
+    branches:
+      - release/phase5c1-wordpress-0.5.1
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: release/phase5c1-wordpress-0.5.1
+          fetch-depth: 0
+
+      - name: Apply 0.5.1 hardening
+        run: python3 scripts/phase5c1-bootstrap.py
+
+      - name: Validate generated diff
+        run: |
+          git diff --check
+          git status --short
+
+      - name: Commit generated candidate
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/phase5c1-bootstrap.yml scripts/phase5c1-bootstrap.py
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "release: prepare WordPress.org 0.5.1 submission candidate"
+          git push origin HEAD:release/phase5c1-wordpress-0.5.1
