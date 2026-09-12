@@ -1,6 +1,6 @@
 # AI Search Optimizer — Acceptance
 
-Status: **Phases 0–4, 5A and 5B accepted; Phase 5C.0 submission-hardening contract frozen; 0.5.1 implementation is next; WordPress.org availability is not yet claimed**  
+Status: **Phases 0–4, 5A and 5B accepted; Phase 5C.0 accepted; exact `0.5.1` 5C.1 candidate is green in PR CI, with merge/post-merge verification still pending; WordPress.org availability is not claimed**  
 Last reviewed: **12 September 2026**
 
 ## Engineering inheritance
@@ -182,16 +182,7 @@ Acceptance gates:
 
 The publication workflow creates a draft first, verifies the uploaded assets by downloading them back from GitHub, reruns lifecycle acceptance against that downloaded ZIP, and only then makes the release public. A pre-publication failure cleans draft/tag state rather than leaving partial release state.
 
-The production CTA preflight verifies `https://kairoseth.com/custom-requests` for:
-
-```text
-en + implementation_support   PASS
-en + business_customization   PASS
-es + implementation_support   PASS
-es + business_customization   PASS
-```
-
-The tag is annotated but unsigned. Cryptographic tag signing was not a Phase 5B acceptance requirement; integrity is instead pinned by exact source/tree/package SHA, reproducible build and asset round-trip verification.
+The production CTA preflight verifies `https://kairoseth.com/custom-requests` for EN/ES and both supported request types. The tag is annotated but unsigned; integrity is pinned by exact source/tree/package SHA, reproducible build and asset round-trip verification.
 
 Canonical evidence: [`PHASE5B_GITHUB_RELEASE.md`](PHASE5B_GITHUB_RELEASE.md). Durable incidents: [`CI_INCIDENTS.md`](CI_INCIDENTS.md).
 
@@ -199,11 +190,9 @@ Canonical evidence: [`PHASE5B_GITHUB_RELEASE.md`](PHASE5B_GITHUB_RELEASE.md). Du
 
 ## Phase 5C — WordPress.org publication gate — in progress
 
-### 5C.0 — submission-hardening contract — accepted by documentation
+### 5C.0 — submission-hardening contract — accepted
 
-The WordPress.org preflight found a real release-metadata issue before submission: the immutable public `0.5.0` package contains a bundled `readme.txt` sentence that still describes `0.5.0` as a stable candidate and says a public GitHub Release is not yet claimed.
-
-The accepted `0.5.0` package must not be modified or republished under the same version because its source/tag/package SHA is already frozen. The submission line therefore advances to `0.5.1`.
+The WordPress.org preflight found a real release-metadata issue before submission: the immutable public `0.5.0` package contains stale pre-publication copy in bundled `readme.txt`. The accepted `0.5.0` package must not be modified under the same version, so the submission line advances to `0.5.1`.
 
 ```text
 [x] 0.5.0 immutable release identity preserved
@@ -212,41 +201,62 @@ The accepted `0.5.0` package must not be modified or republished under the same 
 [x] Plugin URI / Author URI same-value rejection class explicitly prevented
 [x] current header intentionally keeps both URI fields absent
 [x] MIT confirmed as GPL-compatible for directory policy
-[x] Tested up to 7.1 matches current stable WordPress major
+[x] Tested up to 7.1 matches tested/current release baseline
 [x] local-first / no-silent-telemetry boundary preserved
-[x] external Kairoseth Custom Requests service remains explicitly documented
+[x] external Kairoseth Custom Requests service explicitly documented
 [x] no WordPress.org availability claim made
 ```
 
-Canonical contract: [`PHASE5C_WORDPRESS_ORG_SUBMISSION.md`](PHASE5C_WORDPRESS_ORG_SUBMISSION.md).
+### 5C.1 — exact 0.5.1 submission package — PR CI accepted; merge pending
 
-### 5C.1 — exact 0.5.1 submission package — next
-
-WordPress.org upload is blocked until:
+Frozen technical candidate:
 
 ```text
-[ ] plugin Version = 0.5.1
-[ ] connector version constant = 0.5.1
-[ ] Stable tag = 0.5.1
-[ ] stale 0.5.0 pre-publication statement removed from packaged readme.txt
-[ ] concise 0.5.1 changelog entry added
-[ ] no Plugin URI / Author URI equality hazard
-[ ] readme/external-service policy review complete
-[ ] package contents PASS
-[ ] WPCS + PHPCompatibilityWP PASS
-[ ] official Plugin Check PASS
-[ ] WP 5.6 / PHP 7.4 PASS
-[ ] WP 6.8 / PHP 8.2 PASS
-[ ] WP 7.1 / PHP 8.3 PASS
-[ ] Multisite + WooCommerce PASS
-[ ] real browser EN/ES PASS
-[ ] production CTA preflight PASS
-[ ] clean install 0.5.1 PASS
-[ ] 0.5.0 -> 0.5.1 upgrade PASS with expected state preserved
-[ ] preserve/reinstall/delete lifecycle PASS
-[ ] byte-reproducible 0.5.1 package PASS
+version             0.5.1
+package             ai-search-optimizer-0.5.1.zip
+package bytes       29560
+package entries     13
+package SHA-256     2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b
+PR                  #32
+PR CI confirmation  #105 / run 34692395181 — PASS
+```
+
+Technical gates proven on the exact 0.5.1 line:
+
+```text
+[x] plugin Version = 0.5.1
+[x] connector version constant = 0.5.1
+[x] Stable tag = 0.5.1
+[x] stale 0.5.0 pre-publication statement removed from packaged readme.txt
+[x] concise 0.5.1 changelog entry added
+[x] no Plugin URI / Author URI equality hazard
+[x] readme/external-service policy review complete
+[x] package contents PASS
+[x] WPCS + PHPCompatibilityWP PASS
+[x] official Plugin Check PASS
+[x] WP 5.6 / PHP 7.4 PASS
+[x] WP 6.8 / PHP 8.2 PASS
+[x] WP 7.1 / PHP 8.3 PASS
+[x] Multisite + WooCommerce PASS
+[x] real browser EN/ES PASS
+[x] production CTA preflight PASS
+[x] clean install 0.5.1 PASS
+[x] 0.5.0 -> 0.5.1 upgrade PASS with expected state preserved
+[x] preserve/reinstall/delete lifecycle PASS
+[x] byte-reproducible 0.5.1 package PASS
+[ ] PR #32 merged
+[ ] post-merge main CI PASS
+```
+
+CI #104's transient CTA HTTP 403 is recorded in [`CI_INCIDENTS.md`](CI_INCIDENTS.md). CI #105 re-proved the same `0.5.1` endpoint with HTTP 200 for curl-default, browser-equivalent, EN/ES and both request types without Kairoseth application-code or packaged product changes. The exact upstream mechanism that caused the earlier 403 remains explicitly unconfirmed.
+
+Canonical contract/evidence: [`PHASE5C_WORDPRESS_ORG_SUBMISSION.md`](PHASE5C_WORDPRESS_ORG_SUBMISSION.md).
+
+### Remaining external/publication gates
+
+```text
 [ ] immutable GitHub 0.5.1 tag/release published
-[ ] exact 0.5.1 package SHA recorded
+[ ] exact released 0.5.1 package SHA = frozen candidate SHA
 [ ] WordPress.org submission uses that exact ZIP
 [ ] external WordPress.org review/approval completes successfully
 [ ] directory listing is actually published

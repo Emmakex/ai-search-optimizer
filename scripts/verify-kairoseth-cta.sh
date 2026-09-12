@@ -2,8 +2,9 @@
 set -euo pipefail
 
 BASE_URL="${KAIROSETH_CUSTOM_REQUESTS_URL:-https://kairoseth.com/custom-requests}"
-PLUGIN_VERSION="${AISO_RELEASE_VERSION:-0.5.0}"
+PLUGIN_VERSION="${AISO_RELEASE_VERSION:-0.5.1}"
 WORDPRESS_VERSION="${AISO_WORDPRESS_VERSION:-7.1}"
+BROWSER_USER_AGENT="${AISO_CTA_USER_AGENT:-Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36}"
 WORK_DIR="${RUNNER_TEMP:-$(mktemp -d)}/aiso-cta-check-$$"
 mkdir -p "$WORK_DIR"
 trap 'rm -rf "$WORK_DIR"' EXIT
@@ -13,18 +14,16 @@ fail() {
   exit 1
 }
 
-for command in curl python3 grep; do
+for command in curl python3 grep sed awk; do
   command -v "$command" >/dev/null 2>&1 || fail "Required CTA verification tool missing: $command"
 done
 
-verify_case() {
+build_request_url() {
   local locale="$1"
   local request_type="$2"
-  local body="$WORK_DIR/body-${locale}-${request_type}.html"
-  local meta="$WORK_DIR/meta-${locale}-${request_type}.txt"
+  local plugin_version="$3"
 
-  local request_url
-  request_url="$(python3 - "$BASE_URL" "$locale" "$request_type" "$PLUGIN_VERSION" "$WORDPRESS_VERSION" <<'PY'
+  python3 - "$BASE_URL" "$locale" "$request_type" "$plugin_version" "$WORDPRESS_VERSION" <<'PY'
 import sys
 from urllib.parse import urlencode
 base, locale, request_type, plugin_version, wp_version = sys.argv[1:]
@@ -40,26 +39,106 @@ params = {
 }
 print(base + "?" + urlencode(params))
 PY
-)"
+}
 
-  curl \
-    --fail-with-body \
-    --silent \
-    --show-error \
-    --location \
-    --connect-timeout 10 \
-    --max-time 30 \
-    --retry 2 \
-    --retry-delay 2 \
-    --retry-all-errors \
-    --output "$body" \
-    --write-out '%{http_code}\n%{url_effective}\n' \
-    "$request_url" > "$meta"
+http_fetch() {
+  local request_url="$1"
+  local prefix="$2"
+  local user_agent="${3:-}"
+  local body="$WORK_DIR/${prefix}.html"
+  local headers="$WORK_DIR/${prefix}.headers"
+  local meta="$WORK_DIR/${prefix}.meta"
+  local -a curl_args=(
+    --silent
+    --show-error
+    --location
+    --connect-timeout 10
+    --max-time 30
+    --retry 2
+    --retry-delay 2
+    --retry-all-errors
+    --output "$body"
+    --dump-header "$headers"
+    --write-out '%{http_code}\n%{url_effective}\n'
+  )
 
-  local status final_url
+  if [[ -n "$user_agent" ]]; then
+    curl_args+=(--user-agent "$user_agent")
+  fi
+
+  if ! curl "${curl_args[@]}" "$request_url" > "$meta"; then
+    fail "Kairoseth CTA network request failed before an HTTP response was available prefix=$prefix"
+  fi
+
+  printf '%s\n%s\n%s\n' "$body" "$headers" "$meta"
+}
+
+safe_edge_summary() {
+  local headers="$1"
+  local body="$2"
+  local header_summary marker_summary
+
+  header_summary="$(awk 'BEGIN { IGNORECASE=1 } /^(server|via|cf-ray|x-vercel-id|x-vercel-error|x-matched-path|location):/ { gsub(/\r$/, ""); print }' "$headers" | tail -n 20 || true)"
+  marker_summary="$(grep -Eio 'cloudflare|vercel|forbidden|access denied|security checkpoint|request blocked' "$body" | sort -u | paste -sd ',' - || true)"
+
+  [[ -n "$header_summary" ]] && printf '%s\n' "$header_summary" >&2
+  [[ -n "$marker_summary" ]] && printf 'body_markers=%s\n' "$marker_summary" >&2
+}
+
+probe_client_profile() {
+  local plugin_version="$1"
+  local profile="$2"
+  local user_agent="${3:-}"
+  local request_url prefix body headers meta status final_url
+
+  request_url="$(build_request_url en implementation_support "$plugin_version")"
+  prefix="probe-${plugin_version}-${profile}"
+  mapfile -t files < <(http_fetch "$request_url" "$prefix" "$user_agent")
+  body="${files[0]}"
+  headers="${files[1]}"
+  meta="${files[2]}"
   status="$(sed -n '1p' "$meta")"
   final_url="$(sed -n '2p' "$meta")"
-  [[ "$status" == "200" ]] || fail "Kairoseth CTA returned HTTP $status for locale=$locale requestType=$request_type"
+
+  printf 'CTA_PROBE version=%s profile=%s status=%s final=%s\n' "$plugin_version" "$profile" "$status" "$final_url" >&2
+  if [[ "$status" != "200" ]]; then
+    safe_edge_summary "$headers" "$body"
+  fi
+  printf '%s\n' "$status"
+}
+
+# The CTA is opened by a human browser. Keep one curl-default probe as an edge diagnostic,
+# but make the blocking contract representative of the real navigation client class.
+default_status="$(probe_client_profile "$PLUGIN_VERSION" curl-default)"
+browser_status="$(probe_client_profile "$PLUGIN_VERSION" browser "$BROWSER_USER_AGENT")"
+
+if [[ "$default_status" != "$browser_status" ]]; then
+  echo "CTA_DIAG client-profile differential version=$PLUGIN_VERSION curl_default=$default_status browser=$browser_status" >&2
+fi
+
+if [[ "$browser_status" != "200" ]]; then
+  control_default="$(probe_client_profile 0.5.0 curl-default)"
+  control_browser="$(probe_client_profile 0.5.0 browser "$BROWSER_USER_AGENT")"
+  fail "Kairoseth CTA browser-equivalent preflight failed candidate=$PLUGIN_VERSION candidate_status=$browser_status control=0.5.0 control_curl_status=$control_default control_browser_status=$control_browser"
+fi
+
+verify_case() {
+  local locale="$1"
+  local request_type="$2"
+  local request_url body headers meta status final_url
+
+  request_url="$(build_request_url "$locale" "$request_type" "$PLUGIN_VERSION")"
+  mapfile -t files < <(http_fetch "$request_url" "case-${locale}-${request_type}" "$BROWSER_USER_AGENT")
+  body="${files[0]}"
+  headers="${files[1]}"
+  meta="${files[2]}"
+  status="$(sed -n '1p' "$meta")"
+  final_url="$(sed -n '2p' "$meta")"
+
+  if [[ "$status" != "200" ]]; then
+    safe_edge_summary "$headers" "$body"
+    fail "Kairoseth CTA returned HTTP $status for locale=$locale requestType=$request_type"
+  fi
 
   python3 - "$final_url" "$locale" "$request_type" "$PLUGIN_VERSION" "$WORDPRESS_VERSION" <<'PY'
 import sys

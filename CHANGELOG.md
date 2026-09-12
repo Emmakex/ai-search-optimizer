@@ -2,6 +2,21 @@
 
 All notable standalone AI Search Optimizer changes are recorded here.
 
+## 0.5.1 — WordPress.org submission candidate
+
+### Changed
+- Aligned plugin header, inherited connector version and WordPress Stable tag to `0.5.1`.
+- Removed stale pre-publication wording from the packaged WordPress readme.
+- Changed the plugin header description to describe the actual local-first AI Search / `llms.txt` workflow rather than the inherited connector implementation detail.
+- Updated release lifecycle acceptance to prove `0.5.0 → 0.5.1` upgrade compatibility.
+- Added a blocking live Kairoseth CTA EN/ES preflight for the exact `0.5.1` submission line.
+
+### Boundary
+- No customer feature, data model, REST namespace, authorization rule, storage schema or outbound-data policy changes.
+- Plugin URI and Author URI remain intentionally absent.
+- Public GitHub Release `0.5.0` remains immutable prior evidence.
+- WordPress.org availability is not claimed until actual directory publication.
+
 ## 0.5.0 — Public GitHub release
 
 ### Added

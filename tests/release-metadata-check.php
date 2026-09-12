@@ -30,7 +30,8 @@ $readmeRequiresWp = aiso_capture('/^Requires at least:\s*(.+)$/m', $readme, 'rea
 $readmeRequiresPhp = aiso_capture('/^Requires PHP:\s*(.+)$/m', $readme, 'readme minimum PHP version');
 $testedUpTo = aiso_capture('/^Tested up to:\s*(.+)$/m', $readme, 'readme Tested up to');
 
-$expectedStableVersion = '0.5.0';
+$expectedStableVersion = '0.5.1';
+$publicGitHubReleaseVersion = '0.5.0';
 $historicalReleaseCandidate = '0.4.0';
 $expectedTestedWp = '7.1';
 $acceptedSource = 'b116ae5df76c7a72ad37ff4e8e80632d6ebb457b';
@@ -48,7 +49,8 @@ $checks = array(
     array($testedUpTo === $expectedTestedWp, "Tested up to expected {$expectedTestedWp}, received {$testedUpTo}"),
     array(strpos($changelog, '## 0.5.0 — Public GitHub release') !== false, 'CHANGELOG must identify 0.5.0 as the public GitHub release'),
     array(strpos($changelog, '## 0.4.0 — Release candidate') !== false, 'CHANGELOG must retain the historical 0.4.0 release candidate'),
-    array(strpos($readme, '= 0.5.0 =') !== false, 'WordPress readme changelog must contain 0.5.0'),
+    array(strpos($readme, '= 0.5.1 =') !== false, 'WordPress readme changelog must contain 0.5.1'),
+    array(strpos($readme, '= 0.5.0 =') !== false, 'WordPress readme changelog must retain public 0.5.0'),
     array(strpos($readme, '= 0.4.0 =') !== false, 'WordPress readme changelog must retain 0.4.0'),
     array(strpos($repoReadme, 'Public GitHub Release `0.5.0`') !== false, 'repository README must describe the current public GitHub release'),
     array(strpos($repoReadme, $acceptedPackageSha) !== false, 'repository README must publish the accepted 0.5.0 package identity'),
@@ -60,6 +62,9 @@ $checks = array(
     array(strpos($phase5b, $acceptedSource) !== false, 'Phase 5B canonical record must retain the accepted source commit'),
     array(strpos($phase5b, $acceptedPackageSha) !== false, 'Phase 5B canonical record must retain the accepted package SHA-256'),
     array(strpos($phase5b, 'WordPress.org') !== false, 'Phase 5B canonical record must retain the WordPress.org boundary'),
+    array(strpos($plugin, ' * Plugin URI:') === false, '0.5.1 submission line must keep Plugin URI absent'),
+    array(strpos($plugin, ' * Author URI:') === false, '0.5.1 submission line must keep Author URI absent'),
+    array(strpos($readme, 'not yet claimed as published on WordPress.org or as an official public GitHub Release') === false, 'stale 0.5.0 pre-publication sentence remains in packaged readme'),
     array(strpos($releaseMetadata, '0.5.0-dev') === false, 'stale 0.5.0-dev release metadata remains after public release'),
     array(strpos($changelog, '## 0.5.0 — Unreleased') === false, 'public 0.5.0 must not be marked Unreleased'),
     array(strpos($changelog, 'not yet an immutable GitHub Release') === false, 'stale pre-publication GitHub Release claim remains in CHANGELOG'),
@@ -74,4 +79,4 @@ foreach ($checks as $check) {
     }
 }
 
-echo "PASS: public GitHub release metadata alignment {$version} with historical RC {$historicalReleaseCandidate}\n";
+echo "PASS: WordPress.org submission metadata alignment {$version}; public GitHub release {$publicGitHubReleaseVersion}; historical RC {$historicalReleaseCandidate}\n";

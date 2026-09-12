@@ -1,6 +1,6 @@
 # Phase 5C — WordPress.org submission contract
 
-Status: **5C.0 CONTRACT FROZEN — 0.5.1 submission hardening required before upload**
+Status: **5C.1 TECHNICAL CANDIDATE GREEN IN PR CI #105 — exact 0.5.1 package identity frozen; merge/post-merge verification pending; WordPress.org not submitted**
 
 Date frozen: 2026-09-12
 
@@ -54,6 +54,27 @@ Required changes:
 - preserve every historical `0.5.0` release identity and hash in repository evidence;
 - keep customer-facing claims within the existing readiness/evidence boundary;
 - do not add unrelated product behavior.
+
+## 5C.1 technical candidate evidence
+
+PR #32 produced a byte-reproducible `0.5.1` submission candidate with this frozen package identity:
+
+```text
+version             0.5.1
+package             ai-search-optimizer-0.5.1.zip
+package bytes       29560
+package entries     13
+package SHA-256     2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b
+PR                  #32
+PR CI discovery     #104 / run 34686969817
+PR CI confirmation  #105 / run 34692395181 — PASS
+```
+
+CI #104 passed metadata, package, coding-quality, Plugin Check, runtime, Multisite/WooCommerce, browser and `0.5.0 -> 0.5.1` lifecycle gates, but the production CTA job received HTTP 403 from the public endpoint and blocked final package evidence. The package itself was not changed to recover.
+
+The CTA diagnostic was hardened so an HTTP response is captured before failure, safe edge markers can be emitted, browser-equivalent navigation is tested, and a `0.5.0` control is probed only when the candidate browser request also fails. On CI #105, the exact `0.5.1` endpoint returned HTTP 200 for both curl-default and browser profiles, all four EN/ES × request-type cases passed, and the full workflow completed successfully without any Kairoseth application-code or plugin-product change. The underlying transient edge mechanism that produced the earlier 403 could not be independently confirmed; it must not be misclassified as a version allow-list defect.
+
+This package identity is the 5C.1 candidate to carry forward. Any packaged-file change requires a new SHA and a new complete acceptance pass.
 
 ## Plugin URI / Author URI rule
 
@@ -131,7 +152,8 @@ The optional Kairoseth Custom Requests CTA:
 - uses the canonical `https://kairoseth.com/custom-requests` destination;
 - sends only bounded product/platform/request context in the navigation URL;
 - does not automatically attach site URL, llms.txt content/hash, inventory, identities, WooCommerce content, credentials, tokens, prompts, logs or database contents;
-- was proven live in production before the public `0.5.0` GitHub Release for EN/ES and both accepted request types.
+- was proven live in production before the public `0.5.0` GitHub Release for EN/ES and both accepted request types;
+- was re-proven live for the exact `0.5.1` context in PR CI #105.
 
 No new telemetry/account/entitlement dependency is introduced by `0.5.1`.
 
@@ -140,23 +162,24 @@ No new telemetry/account/entitlement dependency is introduced by `0.5.1`.
 Before the WordPress.org upload package may be considered accepted:
 
 ```text
-[ ] exact 0.5.1 semantic version aligned in plugin header, connector constant and Stable tag
-[ ] stale 0.5.0 pre-publication sentence removed from packaged readme.txt
-[ ] no Plugin URI / Author URI equality hazard
-[ ] readme.txt policy and external-service disclosure reviewed
-[ ] package contents gate PASS
-[ ] WPCS + PHPCompatibility PASS
-[ ] official WordPress Plugin Check PASS
-[ ] WordPress 5.6 / PHP 7.4 runtime PASS
-[ ] WordPress 6.8 / PHP 8.2 runtime PASS
-[ ] WordPress 7.1 / PHP 8.3 runtime PASS
-[ ] Multisite + WooCommerce PASS
-[ ] real browser admin UX EN/ES PASS
-[ ] Kairoseth CTA production preflight PASS
-[ ] clean install 0.5.1 PASS
-[ ] upgrade 0.5.0 -> 0.5.1 preserves expected local state
-[ ] preserve/reinstall/delete uninstall lifecycle PASS
-[ ] package reproducibility PASS
+[x] exact 0.5.1 semantic version aligned in plugin header, connector constant and Stable tag
+[x] stale 0.5.0 pre-publication sentence removed from packaged readme.txt
+[x] no Plugin URI / Author URI equality hazard
+[x] readme.txt policy and external-service disclosure reviewed
+[x] package contents gate PASS
+[x] WPCS + PHPCompatibility PASS
+[x] official WordPress Plugin Check PASS
+[x] WordPress 5.6 / PHP 7.4 runtime PASS
+[x] WordPress 6.8 / PHP 8.2 runtime PASS
+[x] WordPress 7.1 / PHP 8.3 runtime PASS
+[x] Multisite + WooCommerce PASS
+[x] real browser admin UX EN/ES PASS
+[x] Kairoseth CTA production preflight PASS
+[x] clean install 0.5.1 PASS
+[x] upgrade 0.5.0 -> 0.5.1 preserves expected local state
+[x] preserve/reinstall/delete uninstall lifecycle PASS
+[x] package reproducibility PASS
+[ ] PR #32 merged and post-merge main CI PASS
 [ ] immutable 0.5.1 GitHub tag/release published and exact package SHA recorded
 [ ] WordPress.org upload uses that exact accepted 0.5.1 ZIP
 ```
@@ -176,12 +199,12 @@ The directory state remains **not published** until the external approval/public
 ## Phase sequence
 
 ```text
-5C.0 freeze submission-hardening contract
-5C.1 implement and accept 0.5.1 submission package
-5C.2 publish immutable 0.5.1 GitHub release + exact lifecycle evidence
-5C.3 submit exact 0.5.1 ZIP to WordPress.org
-5C.4 resolve external review findings, if any
-5C.5 confirm live directory listing and only then update availability claims
+5C.0 freeze submission-hardening contract                         COMPLETE
+5C.1 implement and accept 0.5.1 submission package              PR CI GREEN / MERGE PENDING
+5C.2 publish immutable 0.5.1 GitHub release + exact evidence     BLOCKED ON 5C.1 MERGE
+5C.3 submit exact 0.5.1 ZIP to WordPress.org                     BLOCKED ON 5C.2
+5C.4 resolve external review findings, if any                    FUTURE
+5C.5 confirm live directory listing and update availability      FUTURE
 ```
 
-**Next:** Phase 5C.1 — implement the minimal `0.5.1` metadata/readme hardening without changing product behavior.
+**Next:** merge PR #32 only after its final CI remains green, verify post-merge `main`, then begin Phase 5C.2. WordPress.org submission remains blocked until the immutable `0.5.1` release exists.
