@@ -2,7 +2,7 @@
 
 All notable standalone AI Search Optimizer changes are recorded here.
 
-## 0.5.0 — Accepted stable candidate
+## 0.5.0 — Stable candidate
 
 ### Added
 - Optional EN/ES **AI Search Optimizer Support** page under WordPress Tools.
