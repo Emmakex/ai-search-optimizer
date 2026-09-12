@@ -1,6 +1,6 @@
 # AI Search Optimizer — Roadmap
 
-Status: **Phase 5B complete; Phase 5C.0 complete; exact `0.5.1` 5C.1 candidate is green in PR CI and awaiting merge/post-merge verification; WordPress.org submission has not started**  
+Status: **Phase 5B complete; Phase 5C.0 and 5C.1 complete; exact `0.5.1` package accepted on PR + post-merge main; Phase 5C.2 immutable GitHub release is next; WordPress.org submission has not started**  
 Last reviewed: **12 September 2026**
 
 ```text
@@ -20,8 +20,8 @@ Phase 5  stable public distribution / WordPress.org IN PROGRESS
   5B     GitHub release + lifecycle proof          COMPLETE
   5C     WordPress.org submission/review           IN PROGRESS
     5C.0 submission-hardening contract             COMPLETE
-    5C.1 0.5.1 package hardening                   PR CI GREEN / MERGE PENDING
-    5C.2 immutable 0.5.1 GitHub release            BLOCKED ON 5C.1 MERGE
+    5C.1 0.5.1 package hardening                   COMPLETE
+    5C.2 immutable 0.5.1 GitHub release            NEXT
     5C.3 WordPress.org exact-ZIP submission         BLOCKED ON 5C.2
 ```
 
@@ -181,11 +181,11 @@ Canonical acceptance: [`PHASE5B_GITHUB_RELEASE.md`](PHASE5B_GITHUB_RELEASE.md). 
 
 The Phase 5C preflight found that immutable public `0.5.0` still contains stale pre-publication readme wording. That release remains immutable, so WordPress.org submission moved to the minimal `0.5.1` submission-hardening line.
 
-#### 5C.1 — exact 0.5.1 package hardening — PR CI green / merge pending
+#### 5C.1 — exact 0.5.1 package hardening — complete
 
 The patch aligns Version/connector/Stable tag at `0.5.1`, removes stale packaged readme wording, preserves the absent Plugin URI/Author URI safety choice and changes no customer feature, REST namespace, schema, authorization rule or outbound-data policy.
 
-Frozen candidate identity:
+Accepted identity:
 
 ```text
 version                   0.5.1
@@ -194,25 +194,28 @@ package bytes             29560
 package entries           13
 package SHA-256           2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b
 PR                        #32
-PR CI discovery           #104 / run 34686969817
-PR CI confirmation        #105 / run 34692395181 — PASS
+PR head                   78f36816bd7bedc5f907f2d6ab9ad4fbf5898d4c
+final PR CI               #107 / run 34692689075 — PASS
+merge SHA                 c93ac68c3698fa2c7e003dabc41f72e2e423b5cd
+accepted source tree      e1cc7c3f017e92a5ed3de8835e3f9c8764f3d37b
+post-merge CI             #108 / run 34692826856 — PASS
 ```
 
-The exact candidate passed metadata alignment, WPCS/PHPCompatibility, official Plugin Check, WP 5.6/PHP 7.4, WP 6.8/PHP 8.2, WP 7.1/PHP 8.3, Multisite/WooCommerce, real-browser EN/ES, production CTA EN/ES × both request types, clean install, `0.5.0 -> 0.5.1` upgrade, preserve/reinstall/delete lifecycle and reproducible packaging.
+The exact candidate passed metadata alignment, WPCS/PHPCompatibility, official Plugin Check, WP 5.6/PHP 7.4, WP 6.8/PHP 8.2, WP 7.1/PHP 8.3, Multisite/WooCommerce, real-browser EN/ES, production CTA EN/ES × both request types, clean install, `0.5.0 -> 0.5.1` upgrade, preserve/reinstall/delete lifecycle and reproducible packaging. Final PR CI #107 and post-merge main CI #108 both reproduced SHA-256 `2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b` with 29560 bytes and 13 entries.
 
-CI #104's CTA 403 is retained as a structured incident. CI #105 proved both curl-default and browser-equivalent HTTP 200 without Kairoseth application-code or packaged-product changes; the exact upstream edge condition behind the earlier 403 remains unconfirmed rather than being mislabeled as a version defect.
+CI #104's CTA 403 is retained as a structured incident. Subsequent CI proved both curl-default and browser-equivalent HTTP 200 without Kairoseth application-code or packaged-product changes; the exact upstream edge condition behind the earlier 403 remains unconfirmed rather than being mislabeled as a version defect.
 
 Canonical contract/evidence: [`PHASE5C_WORDPRESS_ORG_SUBMISSION.md`](PHASE5C_WORDPRESS_ORG_SUBMISSION.md). Incident evidence: [`CI_INCIDENTS.md`](CI_INCIDENTS.md).
 
-**Current gate:** merge PR #32 only after its final CI on the documentation-complete head passes, then require post-merge `main` CI with the same package SHA.
+**Phase 5C.1 is closed.**
 
-#### 5C.2 — immutable 0.5.1 GitHub release — blocked on 5C.1 merge
+#### 5C.2 — immutable 0.5.1 GitHub release — next
 
-After 5C.1 merge/post-merge acceptance, publish an immutable GitHub `0.5.1` release from the accepted package identity and prove the released ZIP SHA remains exactly `2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b`.
+Publish an immutable GitHub `0.5.1` tag/release from the accepted package identity and prove the released ZIP SHA remains exactly `2193c5ba79c467cff22d821abc5527ea775ce34705c0b2d040a7b05608e0507b`. Publication must fail closed on source/tree/package drift.
 
 #### 5C.3+ — external WordPress.org gate
 
-Only after 5C.2 may the exact accepted ZIP be submitted to WordPress.org. External review, requested changes, approval and actual directory publication remain separate gates. `ai-search-optimizer` remains only the target directory slug until accepted/reserved, and no customer-facing copy may claim WordPress.org availability before the directory listing is genuinely live.
+Only after 5C.2 may the exact accepted/released ZIP be submitted to WordPress.org. External review, requested changes, approval and actual directory publication remain separate gates. `ai-search-optimizer` remains only the target directory slug until accepted/reserved, and no customer-facing copy may claim WordPress.org availability before the directory listing is genuinely live.
 
 Phase 5 continues to follow feature branch → PR → CI → merge → verification.
 
